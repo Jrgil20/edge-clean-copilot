@@ -6,7 +6,8 @@
 [![Architecture](https://img.shields.io/badge/Architecture-Hexagonal%20%2F%20Clean-emerald.svg)](propuesta.md)
 [![Base Model](https://img.shields.io/badge/Base%20SLM-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
 [![Quantization](https://img.shields.io/badge/Edge%20Target-GGUF%20Q4__K__M%20(45--70%20tok%2Fs)-purple.svg)](training/convert_to_gguf.sh)
-[![Tests](https://img.shields.io/badge/Vitest-28%2F28%20Passing-brightgreen.svg)](cli/tests/)
+[![Tests](https://img.shields.io/badge/Vitest-41%2F41%20Passing-brightgreen.svg)](cli/tests/)
+[![Web Portal](https://img.shields.io/badge/Docs-Interactive%20Portal-teal.svg)](docs/index.html)
 [![License](https://img.shields.io/badge/License-Academic%20%2F%20MIT-lightgrey.svg)](README.md)
 
 🌐 **[Versión en español disponible →](./es/README.md)**

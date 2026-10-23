@@ -11,6 +11,7 @@ Este directorio contiene la documentación técnica oficial, registros de teleme
 
 | Documento | Propósito | Contenido Clave |
 | :--- | :--- | :--- |
+| **[Portal Web Interactivo (docs/index.html)](./index.html)** | Presentación Visual y Showcase Interactivo | Portal responsivo de un solo archivo con comparador de código Before/After y métricas CAS. |
 | **[Arquitectura de Factoría de Modelos](./model-factory-architecture.md)** | Arquitectura de Especialización Escalable de SLMs | Especificación para incorporar nuevos SLMs base, etapas desacopladas y reproducibilidad técnica. |
 | **[Memoria Técnica Final y Guion de Defensa](./final-report-and-presentation.md)** | Paper Académico y Guion de Exposición | Informe exhaustivo de ingeniería, hallazgos formales de CAS y guion de 12 diapositivas. |
 | **[Roadmap Detallado de Ejecución](./detailed-roadmap.md)** | Plan Maestro Operativo (Semanas 4–15) | Hiperparámetros, metas de cuantización, métricas de evaluación automatizadas y tareas semanales. |
