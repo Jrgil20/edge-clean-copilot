@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Scratch & temporary session files
+scratch/
+*.log
+
+# Environments
+.venv/
+env/
+
+# Node & PNPM
+node_modules/
+dist/
+.pnpm-debug.log*
+
+# AI Models & Weights
+*.gguf
+*.safetensors
+*.bin
+output/
