@@ -48,7 +48,11 @@ Where:
 Evaluate generated datasets or model completion files without needing an active inference server:
 
 ```bash
-python3 eval_benchmark.py --offline test_benchmark_cases.jsonl --output benchmark_report.json
+# Evaluate the 30-case legacy benchmark suite
+python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl --output benchmark_report.json
+
+# Evaluate the initial 10 control test cases
+python3 eval_benchmark.py --cases test_benchmark_cases.jsonl --output benchmark_report.json
 ```
 
 ### 3.2 Live Evaluation (Real-Time Endpoint)
@@ -57,6 +61,16 @@ Evaluate live inference responses against a local or remote `llama-server` (e.g.
 ```bash
 python3 eval_benchmark.py \
   --url "http://192.168.6.35:8085/v1/chat/completions" \
-  --prompts "prompts_suite.jsonl" \
+  --prompts "legacy_benchmark_suite.jsonl" \
   --output "live_report.json"
 ```
+
+---
+
+## 4. Benchmark Suites & Datasets
+
+| File | Cases | Scope & Antipatterns |
+| :--- | :---: | :--- |
+| **[`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl)** | **30** | Full empirical benchmark covering ORMs/Prisma (7), HTTP/SDK leakage (7), Primitive Obsession (8), `any` proliferation (5), and God Classes (3). |
+| **[`test_benchmark_cases.jsonl`](./test_benchmark_cases.jsonl)** | **10** | Control validation dataset for harness calibration and quick dry-runs. |
+| **[`generate_benchmark_suite.py`](./generate_benchmark_suite.py)** | — | Synthetic deterministic generator for the 30-case benchmark suite. |

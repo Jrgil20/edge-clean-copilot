@@ -67,10 +67,13 @@ def main() -> None:
     print("\n[4] EVALUATION & BENCHMARK HARNESS")
     eval_script = PROYECTO_DIR / "evaluation" / "eval_benchmark.py"
     control_cases = PROYECTO_DIR / "evaluation" / "test_benchmark_cases.jsonl"
+    legacy_suite = PROYECTO_DIR / "evaluation" / "legacy_benchmark_suite.jsonl"
     control_count = count_lines(control_cases)
+    legacy_count = count_lines(legacy_suite)
     print(f"  • Benchmark harness      : {'OK' if eval_script.exists() else 'MISSING'} ({eval_script.name})")
     print(f"  • Clean Arch Score (CAS) : 0-100 pts calibrated")
     print(f"  • Control test suite     : {control_count} cases ({control_cases.name})")
+    print(f"  • Legacy benchmark suite : {legacy_count} cases ({legacy_suite.name})")
 
     # 5. Phase Completion Summary
     print("\n" + "-" * 70)
@@ -79,16 +82,16 @@ def main() -> None:
     print("  Phase 1: Infrastructure & Teacher Dataset  : 100% [COMPLETED & VERIFIED]")
     print("  Phase 2: LoRA Adaptation & Specialization  :  85% [STAGED / READY FOR BURST]")
     print("  Phase 3: Weights Merge & GGUF Quantization :  50% [AUTOMATION SCRIPT READY]")
-    print("  Phase 4: Hexagonal CLI & Benchmark Harness :  75% [CLI HARDENED WITH DIFF FORMATTER & 34 TESTS]")
+    print("  Phase 4: Hexagonal CLI & Benchmark Harness :  80% [CLI HARDENED & 30-CASE BENCHMARK READY]")
     print("  -------------------------------------------------------------")
-    print("  GLOBAL PROJECT PROGRESS                    :  72%")
+    print("  GLOBAL PROJECT PROGRESS                    :  75%")
     print("-" * 70)
 
     # 6. Immediate Next Actions
     print("\nHOW TO RESUME:")
     print("  A. If continuing on LAPTOP (offline cold staging):")
     print("     1. Run CLI tests: cd proyecto/cli && pnpm test")
-    print("     2. Create 30 legacy code snippets in proyecto/evaluation/legacy_benchmark_suite.jsonl")
+    print("     2. Run 30-case benchmark: python3 proyecto/evaluation/eval_benchmark.py --cases proyecto/evaluation/legacy_benchmark_suite.jsonl")
     print("     3. Test CLI diff on sample code: pnpm --dir proyecto/cli run dev refactor <file> --mock --diff")
     print("\n  B. If resuming on NVIDIA DGX SPARK (hot burst):")
     print("     1. Resume base weights (~800MB, ~3 min):")

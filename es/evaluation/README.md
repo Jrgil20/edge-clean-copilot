@@ -48,7 +48,11 @@ Donde:
 Evaluar datasets generados o salidas de modelos sin necesidad de encender un servidor de inferencia:
 
 ```bash
-python3 eval_benchmark.py --offline test_benchmark_cases.jsonl --output benchmark_report.json
+# Evaluar la suite completa de 30 casos de código legado
+python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl --output benchmark_report.json
+
+# Evaluar la suite de control inicial de 10 casos
+python3 eval_benchmark.py --cases test_benchmark_cases.jsonl --output benchmark_report.json
 ```
 
 ### 3.2 Evaluación en Vivo (Endpoints HTTP)
@@ -57,6 +61,16 @@ Evaluar respuestas en tiempo real contra un endpoint local o remoto de `llama-se
 ```bash
 python3 eval_benchmark.py \
   --url "http://192.168.6.35:8085/v1/chat/completions" \
-  --prompts "prompts_suite.jsonl" \
+  --prompts "legacy_benchmark_suite.jsonl" \
   --output "live_report.json"
 ```
+
+---
+
+## 4. Suites de Benchmark y Datasets
+
+| Archivo | Casos | Alcance y Antipatrones |
+| :--- | :---: | :--- |
+| **[`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl)** | **30** | Benchmark empírico completo cubriendo ORMs/Prisma (7), fuga de HTTP/SDKs (7), Obsesión por Primitivas (8), proliferación de `any` (5) y God Classes (3). |
+| **[`test_benchmark_cases.jsonl`](./test_benchmark_cases.jsonl)** | **10** | Dataset de validación y control para calibración del arnés y dry-runs rápidos. |
+| **[`generate_benchmark_suite.py`](./generate_benchmark_suite.py)** | — | Generador determinista sintético de la suite de 30 casos. |
