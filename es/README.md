@@ -19,6 +19,8 @@
 
 Los modelos comerciales de código suelen fallar en los límites arquitectónicos: introducen tipos `any`, generan acoplamientos circulares entre capas, mezclan SDKs de bases de datos dentro de entidades de dominio y crean dependencias innecesarias de frameworks. ECC resuelve esto entrenando un Small Language Model ágil (**Qwen2.5-Coder-1.5B-Instruct**) con pares curados de refactorización arquitectónica de alta señal, desplegándolo localmente mediante cuantización **GGUF Q4_K_M** servido con `llama.cpp` a **45–70 tokens/segundo** en hardware estándar.
 
+> **Valor Arquitectónico Clave:** Más allá de un checkpoint único, ECC está concebido como una **[Factoría de Modelos](docs/model-factory-architecture.md)** reproducible. El pipeline está desacoplado de pesos específicos, permitiendo incorporar, especializar y cuantizar nuevos SLMs de pesos abiertos (Llama-3.2, Gemma-2, DeepSeek) a través de un flujo automatizado y estandarizado.
+
 ---
 
 ## 2. Metodología Principal: "Cold Staging, Hot Burst"

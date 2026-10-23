@@ -19,6 +19,8 @@
 
 Mainstream commercial code LLMs frequently fail architectural boundaries: they inject `any` types, introduce circular layer dependencies, mix database SDKs directly into business entities, and hallucinate external framework couplings. ECC solves this by fine-tuning an agile Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) on high-signal architectural refactoring pairs, deploying it locally via **GGUF Q4_K_M** quantization served through `llama.cpp` at **45–70 tokens/second** on standard commodity hardware.
 
+> **Key Architectural Value:** Beyond a single model checkpoint, ECC is designed as a reproducible **[Model Factory](docs/model-factory-architecture.md)**. The pipeline decoupled from specific model weights, allowing new open-weight SLMs (Llama-3.2, Gemma-2, DeepSeek) to be ingested, specialized, and edge-quantized through an automated, repeatable workflow.
+
 ---
 
 ## 2. Core Methodology: "Cold Staging, Hot Burst"
