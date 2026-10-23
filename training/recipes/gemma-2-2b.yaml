@@ -1,0 +1,39 @@
+# Model Recipe: Gemma-2-2B-it
+# Google Gemma-2 2B compact model with sliding window attention
+
+model_id: "google/gemma-2-2b-it"
+architecture_family: "gemma2"
+description: "Google Gemma 2 2B. Requires strict bfloat16 to avoid logit soft-capping overflow."
+
+# LoRA Hyperparameters
+target_modules:
+  - "q_proj"
+  - "k_proj"
+  - "v_proj"
+  - "o_proj"
+  - "gate_proj"
+  - "up_proj"
+  - "down_proj"
+r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+bias: "none"
+
+# Tokenization & Masking
+response_template: "<start_of_turn>model\n"
+max_seq_len: 2048
+trust_remote_code: true
+
+# Precision & Training (Gemma-2 requires bfloat16)
+torch_dtype: "bfloat16"
+device_map: "auto"
+learning_rate: 0.0001
+batch_size: 2
+grad_accum_steps: 4
+num_train_epochs: 3
+warmup_ratio: 0.05
+weight_decay: 0.01
+
+# Edge Quantization
+recommended_quant: "Q4_K_M"
+target_vram_gb: 8.0

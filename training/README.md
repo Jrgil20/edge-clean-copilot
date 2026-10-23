@@ -15,27 +15,30 @@ The training script supports dual-mode execution to enforce our **Cold Staging, 
 
 ---
 
-## 2. LoRA Fine-Tuning CLI Options
+## 2. Recipe-Driven LoRA Training CLI
+
+The training harness is decoupled from specific model architectures via **[Model Recipes](recipes/README.md)**. Target linear projections, precision, response delimiters, and default hyperparameters are declared in YAML/JSON.
 
 ```bash
+# Execute training using a declarative Model Recipe:
 python3 train_lora.py \
-  --model-id "Qwen/Qwen2.5-Coder-1.5B-Instruct" \
-  --dataset "../dataset/train.jsonl" \
-  --output-dir "./output" \
-  --epochs 3 \
-  --batch-size 2 \
-  --grad-accum 4 \
-  --lr 2e-4 \
-  --lora-r 16 \
-  --lora-alpha 32 \
+  --recipe "recipes/qwen2.5-coder-1.5b.yaml" \
   --max-time-minutes 15.0 \
+  --merge
+
+# Optional: Override any recipe parameter via CLI flags:
+python3 train_lora.py \
+  --recipe "recipes/llama-3.2-3b.yaml" \
+  --lora-r 32 \
+  --max-time-minutes 20.0 \
   --merge
 ```
 
 ### Key Arguments:
+- `--recipe`: Path to declarative Model Recipe (default: `recipes/qwen2.5-coder-1.5b.yaml`). See [recipes/README.md](recipes/README.md).
 - `--dry-run`: Runs exactly 1 training step on CPU/GPU to verify the pipeline without downloading or running full models.
 - `--merge`: Automatically executes `model.merge_and_unload()` after training to save consolidated 16-bit weights ready for `llama.cpp` GGUF quantization.
-- `--model-id`: Base model identifier on Hugging Face (default: `Qwen/Qwen2.5-Coder-1.5B-Instruct`).
+- `--model-id`: Overrides base model repository (defaults to recipe `model_id`).
 - `--dataset`: Path to ChatML JSONL dataset (default: `../dataset/train.jsonl`).
 - `--max-time-minutes`: Defensive time cutoff preventing sudden termination in shared compute environments.
 

@@ -15,27 +15,30 @@ El script de entrenamiento soporta ejecución en modo dual según la metodologí
 
 ---
 
-## 2. Opciones de CLI para Fine-Tuning LoRA
+## 2. CLI de Entrenamiento LoRA Basado en Recetas
+
+El harness de entrenamiento está desacoplado de arquitecturas específicas mediante **[Recetas de Modelos](recipes/README.md)**. Las proyecciones lineales objetivo, la precisión, los delimitadores de respuesta y los hiperparámetros se declaran en YAML/JSON.
 
 ```bash
+# Ejecutar entrenamiento usando una Receta de Modelo declarativa:
 python3 train_lora.py \
-  --model-id "Qwen/Qwen2.5-Coder-1.5B-Instruct" \
-  --dataset "../dataset/train.jsonl" \
-  --output-dir "./output" \
-  --epochs 3 \
-  --batch-size 2 \
-  --grad-accum 4 \
-  --lr 2e-4 \
-  --lora-r 16 \
-  --lora-alpha 32 \
+  --recipe "recipes/qwen2.5-coder-1.5b.yaml" \
   --max-time-minutes 15.0 \
+  --merge
+
+# Opcional: Sobreescribir cualquier parámetro de la receta mediante flags CLI:
+python3 train_lora.py \
+  --recipe "recipes/llama-3.2-3b.yaml" \
+  --lora-r 32 \
+  --max-time-minutes 20.0 \
   --merge
 ```
 
 ### Argumentos Principales:
+- `--recipe`: Ruta a la Receta declarativa del modelo (default: `recipes/qwen2.5-coder-1.5b.yaml`). Ver [recipes/README.md](recipes/README.md).
 - `--dry-run`: Ejecuta exactamente 1 paso de entrenamiento en CPU/GPU para verificar el pipeline sin descargar ni correr modelos enteros.
 - `--merge`: Ejecuta automáticamente `model.merge_and_unload()` tras entrenar para consolidar los pesos de 16-bit listos para `llama.cpp`.
-- `--model-id`: Identificador del modelo base en Hugging Face (default: `Qwen/Qwen2.5-Coder-1.5B-Instruct`).
+- `--model-id`: Sobreescribe el repositorio base en Hugging Face (default: `model_id` de la receta).
 - `--dataset`: Ruta al dataset ChatML (default: `../dataset/train.jsonl`).
 - `--max-time-minutes`: Límite defensivo de tiempo que previene cortes abruptos en infraestructuras compartidas.
 

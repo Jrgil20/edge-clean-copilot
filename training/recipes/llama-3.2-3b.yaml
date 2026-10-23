@@ -1,0 +1,39 @@
+# Model Recipe: Llama-3.2-3B-Instruct
+# Scaled 3B model for edge developers requiring deeper architectural reasoning
+
+model_id: "meta-llama/Llama-3.2-3B-Instruct"
+architecture_family: "llama3"
+description: "Meta Llama-3.2 3B. High general reasoning capabilities with GQA attention."
+
+# LoRA Hyperparameters
+target_modules:
+  - "q_proj"
+  - "k_proj"
+  - "v_proj"
+  - "o_proj"
+  - "gate_proj"
+  - "up_proj"
+  - "down_proj"
+r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+bias: "none"
+
+# Tokenization & Masking
+response_template: "<|start_header_id|>assistant<|end_header_id|>\n\n"
+max_seq_len: 2048
+trust_remote_code: true
+
+# Precision & Training
+torch_dtype: "bfloat16"
+device_map: "auto"
+learning_rate: 0.0002
+batch_size: 2
+grad_accum_steps: 4
+num_train_epochs: 3
+warmup_ratio: 0.05
+weight_decay: 0.01
+
+# Edge Quantization
+recommended_quant: "Q4_K_M"
+target_vram_gb: 10.0
