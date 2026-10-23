@@ -211,7 +211,7 @@ def parse_args():
     parser.add_argument("--offline", "--cases", type=str, default=None, dest="offline", help="Path to JSONL dataset to evaluate offline.")
     parser.add_argument("--url", type=str, default=None, help="llama-server endpoint (e.g. http://127.0.0.1:8085/v1/chat/completions).")
     parser.add_argument("--prompts", type=str, default=None, help="Path to prompts JSONL file for live evaluation.")
-    parser.add_argument("--output", type=str, default="benchmark_report.json", help="Path to export JSON report.")
+    parser.add_argument("--output", type=str, default=str(Path(__file__).parent / "benchmark_report.json"), help="Path to export JSON report.")
     return parser.parse_args()
 
 def main():

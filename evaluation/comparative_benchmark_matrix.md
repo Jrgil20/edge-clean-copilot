@@ -2,7 +2,7 @@
 
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
 > **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)  
-> **Last Verification:** 2026-10-23 04:44:03Z  
+> **Last Verification:** 2026-10-23 05:37:37Z  
 
 ---
 

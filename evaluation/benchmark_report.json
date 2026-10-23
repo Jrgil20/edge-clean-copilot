@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-10-23T04:21:36Z",
-  "total_samples": 30,
-  "duration_seconds": 0.02,
-  "average_score": 66.17,
+  "timestamp": "2026-10-23T05:40:16Z",
+  "total_samples": 10,
+  "duration_seconds": 0.01,
+  "average_score": 66.0,
   "results": [
     {
-      "total_score": 85.0,
+      "total_score": 100.0,
       "grade": "A (Clean Architecture Certified)",
       "metrics": {
         "domain_boundary": {
@@ -14,11 +14,9 @@
           "violations": []
         },
         "invariant_safety": {
-          "score": 10.0,
+          "score": 25.0,
           "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
+          "violations": []
         },
         "ports_decoupling": {
           "score": 25.0,
@@ -31,20 +29,137 @@
           "violations": []
         }
       },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern."
-      ],
+      "all_notes": [],
       "sample_index": 1,
-      "label": "Case 01: Direct Prisma Client Coupling in Domain Entity"
+      "label": "CANONICAL-01: Pure Entity with Invariant and Value Object"
     },
     {
-      "total_score": 65.0,
-      "grade": "C (Architectural Violations)",
+      "total_score": 100.0,
+      "grade": "A (Clean Architecture Certified)",
       "metrics": {
         "domain_boundary": {
           "score": 30.0,
           "max": 30.0,
           "violations": []
+        },
+        "invariant_safety": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "ports_decoupling": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20.0,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [],
+      "sample_index": 2,
+      "label": "CANONICAL-02: Use Case with Dependency Injection and Result Pattern"
+    },
+    {
+      "total_score": 100.0,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30.0,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "ports_decoupling": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20.0,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [],
+      "sample_index": 3,
+      "label": "CANONICAL-03: Domain Port and In-Memory Adapter Double"
+    },
+    {
+      "total_score": 100.0,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30.0,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "ports_decoupling": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20.0,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [],
+      "sample_index": 4,
+      "label": "CANONICAL-04: Value Object Money with Strict Validation"
+    },
+    {
+      "total_score": 100.0,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30.0,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "ports_decoupling": {
+          "score": 25.0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20.0,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [],
+      "sample_index": 5,
+      "label": "CANONICAL-05: Strict Boundary without External Frameworks"
+    },
+    {
+      "total_score": 15.0,
+      "grade": "F (Coupled / Anti-Pattern)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 0.0,
+          "max": 30.0,
+          "violations": [
+            "Prohibited import detected: 'express'",
+            "Prohibited import detected: 'mongoose'"
+          ]
         },
         "invariant_safety": {
           "score": 0.0,
@@ -55,163 +170,36 @@
           ]
         },
         "ports_decoupling": {
-          "score": 15.0,
+          "score": 0.0,
           "max": 25.0,
           "violations": [
+            "No explicit Port/Repository abstraction interface found.",
             "Missing constructor dependency injection or adapter implementation."
           ]
         },
         "any_penalty": {
-          "score": 20.0,
+          "score": 15.0,
           "max": 20.0,
-          "violations": []
+          "violations": [
+            "Detected 1 explicit TypeScript `any` usage(s) (-5.0 pts)."
+          ]
         }
       },
       "all_notes": [
+        "Prohibited import detected: 'express'",
+        "Prohibited import detected: 'mongoose'",
         "Missing Result<T, E> functional return type pattern.",
         "No explicit invariant validation guard or factory constructor found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 2,
-      "label": "Case 02: TypeORM ActiveRecord Entity Coupling"
-    },
-    {
-      "total_score": 85.0,
-      "grade": "A (Clean Architecture Certified)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 10.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern."
-      ],
-      "sample_index": 3,
-      "label": "Case 03: Raw PostgreSQL Client in Domain Logic"
-    },
-    {
-      "total_score": 85.0,
-      "grade": "A (Clean Architecture Certified)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 10.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern."
-      ],
-      "sample_index": 4,
-      "label": "Case 04: Mongoose Model Direct Usage in Domain"
-    },
-    {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
-      ],
-      "sample_index": 5,
-      "label": "Case 05: SQLite Direct Query in Order Processing"
-    },
-    {
-      "total_score": 85.0,
-      "grade": "A (Clean Architecture Certified)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 10.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern."
+        "No explicit Port/Repository abstraction interface found.",
+        "Missing constructor dependency injection or adapter implementation.",
+        "Detected 1 explicit TypeScript `any` usage(s) (-5.0 pts)."
       ],
       "sample_index": 6,
-      "label": "Case 06: Knex Query Builder in Domain Logic"
+      "label": "VIOLATION-01: Prohibited Express and Mongoose Imports in Domain"
     },
     {
-      "total_score": 65.0,
-      "grade": "C (Architectural Violations)",
+      "total_score": 30.0,
+      "grade": "F (Coupled / Anti-Pattern)",
       "metrics": {
         "domain_boundary": {
           "score": 30.0,
@@ -227,34 +215,41 @@
           ]
         },
         "ports_decoupling": {
-          "score": 15.0,
+          "score": 0.0,
           "max": 25.0,
           "violations": [
+            "No explicit Port/Repository abstraction interface found.",
             "Missing constructor dependency injection or adapter implementation."
           ]
         },
         "any_penalty": {
-          "score": 20.0,
+          "score": 0.0,
           "max": 20.0,
-          "violations": []
+          "violations": [
+            "Detected 4 explicit TypeScript `any` usage(s) (-20.0 pts)."
+          ]
         }
       },
       "all_notes": [
         "Missing Result<T, E> functional return type pattern.",
         "No explicit invariant validation guard or factory constructor found.",
-        "Missing constructor dependency injection or adapter implementation."
+        "No explicit Port/Repository abstraction interface found.",
+        "Missing constructor dependency injection or adapter implementation.",
+        "Detected 4 explicit TypeScript `any` usage(s) (-20.0 pts)."
       ],
       "sample_index": 7,
-      "label": "Case 07: Sequelize Model Inheritance in Domain"
+      "label": "VIOLATION-02: Multiple Explicit Any Types in TypeScript"
     },
     {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
+      "total_score": 35.0,
+      "grade": "F (Coupled / Anti-Pattern)",
       "metrics": {
         "domain_boundary": {
-          "score": 30.0,
+          "score": 15.0,
           "max": 30.0,
-          "violations": []
+          "violations": [
+            "Prohibited import detected: 'axios'"
+          ]
         },
         "invariant_safety": {
           "score": 0.0,
@@ -265,9 +260,12 @@
           ]
         },
         "ports_decoupling": {
-          "score": 25.0,
+          "score": 0.0,
           "max": 25.0,
-          "violations": []
+          "violations": [
+            "No explicit Port/Repository abstraction interface found.",
+            "Missing constructor dependency injection or adapter implementation."
+          ]
         },
         "any_penalty": {
           "score": 20.0,
@@ -276,15 +274,18 @@
         }
       },
       "all_notes": [
+        "Prohibited import detected: 'axios'",
         "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
+        "No explicit invariant validation guard or factory constructor found.",
+        "No explicit Port/Repository abstraction interface found.",
+        "Missing constructor dependency injection or adapter implementation."
       ],
       "sample_index": 8,
-      "label": "Case 08: Direct Axios HTTP Client in Domain Entity"
+      "label": "VIOLATION-03: Coupled Axios Call and No Result Pattern"
     },
     {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
+      "total_score": 50.0,
+      "grade": "C (Architectural Violations)",
       "metrics": {
         "domain_boundary": {
           "score": 30.0,
@@ -300,9 +301,12 @@
           ]
         },
         "ports_decoupling": {
-          "score": 25.0,
+          "score": 0.0,
           "max": 25.0,
-          "violations": []
+          "violations": [
+            "No explicit Port/Repository abstraction interface found.",
+            "Missing constructor dependency injection or adapter implementation."
+          ]
         },
         "any_penalty": {
           "score": 20.0,
@@ -312,19 +316,23 @@
       },
       "all_notes": [
         "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
+        "No explicit invariant validation guard or factory constructor found.",
+        "No explicit Port/Repository abstraction interface found.",
+        "Missing constructor dependency injection or adapter implementation."
       ],
       "sample_index": 9,
-      "label": "Case 09: Direct Global Fetch in Domain Logic"
+      "label": "VIOLATION-04: Missing Invariants and No Port Interfaces"
     },
     {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
+      "total_score": 30.0,
+      "grade": "F (Coupled / Anti-Pattern)",
       "metrics": {
         "domain_boundary": {
-          "score": 30.0,
+          "score": 15.0,
           "max": 30.0,
-          "violations": []
+          "violations": [
+            "Prohibited import detected: 'pg'"
+          ]
         },
         "invariant_safety": {
           "score": 0.0,
@@ -335,779 +343,31 @@
           ]
         },
         "ports_decoupling": {
-          "score": 25.0,
+          "score": 0.0,
           "max": 25.0,
-          "violations": []
+          "violations": [
+            "No explicit Port/Repository abstraction interface found.",
+            "Missing constructor dependency injection or adapter implementation."
+          ]
         },
         "any_penalty": {
-          "score": 20.0,
+          "score": 15.0,
           "max": 20.0,
-          "violations": []
+          "violations": [
+            "Detected 1 explicit TypeScript `any` usage(s) (-5.0 pts)."
+          ]
         }
       },
       "all_notes": [
+        "Prohibited import detected: 'pg'",
         "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
+        "No explicit invariant validation guard or factory constructor found.",
+        "No explicit Port/Repository abstraction interface found.",
+        "Missing constructor dependency injection or adapter implementation.",
+        "Detected 1 explicit TypeScript `any` usage(s) (-5.0 pts)."
       ],
       "sample_index": 10,
-      "label": "Case 10: Direct SendGrid SDK Coupling"
-    },
-    {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
-      ],
-      "sample_index": 11,
-      "label": "Case 11: Direct Redis Client Coupling in Cache"
-    },
-    {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
-      ],
-      "sample_index": 12,
-      "label": "Case 12: Direct Stripe SDK Coupling"
-    },
-    {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
-      ],
-      "sample_index": 13,
-      "label": "Case 13: Direct AWS S3 Client in Domain"
-    },
-    {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
-      ],
-      "sample_index": 14,
-      "label": "Case 14: Direct Twilio Client in SMS Verification"
-    },
-    {
-      "total_score": 60.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 10.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 15,
-      "label": "Case 15: Primitive Obsession on Money & Negative Amounts"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 16,
-      "label": "Case 16: Raw String Email with Untyped Generic Throw"
-    },
-    {
-      "total_score": 60.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 10.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 17,
-      "label": "Case 17: Password Primitive without Security Invariants"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 18,
-      "label": "Case 18: Unbounded Order Quantity Primitive"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 19,
-      "label": "Case 19: Unbounded Discount Percentage Calculation"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 20,
-      "label": "Case 20: Inverted Date Range Period Primitives"
-    },
-    {
-      "total_score": 60.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 10.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 21,
-      "label": "Case 21: Raw Tax Identification Number Primitive"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 22,
-      "label": "Case 22: Raw String IP Address Primitive"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 23,
-      "label": "Case 23: Untyped Any Payment Payload"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 24,
-      "label": "Case 24: Untyped Webhook Event Handler"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 25,
-      "label": "Case 25: Untyped Order Item Calculation"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 26,
-      "label": "Case 26: Loose Untyped User Profile Metadata"
-    },
-    {
-      "total_score": 50.0,
-      "grade": "C (Architectural Violations)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "No explicit Port/Repository abstraction interface found.",
-            "Missing constructor dependency injection or adapter implementation."
-          ]
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found.",
-        "No explicit Port/Repository abstraction interface found.",
-        "Missing constructor dependency injection or adapter implementation."
-      ],
-      "sample_index": 27,
-      "label": "Case 27: Untyped Batch Importer"
-    },
-    {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
-      ],
-      "sample_index": 28,
-      "label": "Case 28: Monolithic Checkout Controller (Multi-Antipattern)"
-    },
-    {
-      "total_score": 75.0,
-      "grade": "B (Partially Clean)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 0.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern.",
-            "No explicit invariant validation guard or factory constructor found."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern.",
-        "No explicit invariant validation guard or factory constructor found."
-      ],
-      "sample_index": 29,
-      "label": "Case 29: Monolithic User Registration Manager"
-    },
-    {
-      "total_score": 85.0,
-      "grade": "A (Clean Architecture Certified)",
-      "metrics": {
-        "domain_boundary": {
-          "score": 30.0,
-          "max": 30.0,
-          "violations": []
-        },
-        "invariant_safety": {
-          "score": 10.0,
-          "max": 25.0,
-          "violations": [
-            "Missing Result<T, E> functional return type pattern."
-          ]
-        },
-        "ports_decoupling": {
-          "score": 25.0,
-          "max": 25.0,
-          "violations": []
-        },
-        "any_penalty": {
-          "score": 20.0,
-          "max": 20.0,
-          "violations": []
-        }
-      },
-      "all_notes": [
-        "Missing Result<T, E> functional return type pattern."
-      ],
-      "sample_index": 30,
-      "label": "Case 30: Monolithic Invoice & PDF Dispatcher"
+      "label": "VIOLATION-05: Direct SQL Query with pg Import and Any Parameter"
     }
   ]
 }

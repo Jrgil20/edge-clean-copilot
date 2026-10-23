@@ -307,8 +307,10 @@ def generate_svg_chart(models: Dict[str, Dict[str, Any]], output_path: Path) -> 
 
         # Category Label below X-axis
         center_x = gx + (3 * bar_width + 2 * gap) / 2
+        # Escape XML special chars before injecting into SVG
+        safe_label = label.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         # Wrap long labels
-        lines = label.split(" (")
+        lines = safe_label.split(" (")
         svg_parts.append(f'<text x="{center_x:.1f}" y="{plot_y + plot_h + 20}" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">{lines[0]}</text>')
         if len(lines) > 1:
             svg_parts.append(f'<text x="{center_x:.1f}" y="{plot_y + plot_h + 34}" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">({lines[1]}</text>')
