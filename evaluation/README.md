@@ -74,3 +74,24 @@ python3 eval_benchmark.py \
 | **[`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl)** | **30** | Full empirical benchmark covering ORMs/Prisma (7), HTTP/SDK leakage (7), Primitive Obsession (8), `any` proliferation (5), and God Classes (3). |
 | **[`test_benchmark_cases.jsonl`](./test_benchmark_cases.jsonl)** | **10** | Control validation dataset for harness calibration and quick dry-runs. |
 | **[`generate_benchmark_suite.py`](./generate_benchmark_suite.py)** | — | Synthetic deterministic generator for the 30-case benchmark suite. |
+
+---
+
+## 5. Model Comparison & Visualization Tool
+
+Compare the Base SLM, Edge Clean Copilot, and Commercial Baselines across all CAS dimensions:
+
+```bash
+# Generate comparison matrix and SVG chart using empirical baselines
+python3 compare_models.py --demo
+
+# Generate comparison using specific benchmark JSON reports
+python3 compare_models.py \
+  --base-report base_report.json \
+  --ecc-report ecc_report.json \
+  --cloud-report cloud_report.json
+```
+
+### Generated Artifacts
+- **[`comparative_benchmark_matrix.md`](./comparative_benchmark_matrix.md):** Consolidated comparative report with delta percentages and edge operational metrics.
+- **[`benchmark_comparison_chart.svg`](./benchmark_comparison_chart.svg):** High-resolution vector chart ready for academic presentations.

@@ -74,3 +74,24 @@ python3 eval_benchmark.py \
 | **[`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl)** | **30** | Benchmark empírico completo cubriendo ORMs/Prisma (7), fuga de HTTP/SDKs (7), Obsesión por Primitivas (8), proliferación de `any` (5) y God Classes (3). |
 | **[`test_benchmark_cases.jsonl`](./test_benchmark_cases.jsonl)** | **10** | Dataset de validación y control para calibración del arnés y dry-runs rápidos. |
 | **[`generate_benchmark_suite.py`](./generate_benchmark_suite.py)** | — | Generador determinista sintético de la suite de 30 casos. |
+
+---
+
+## 5. Herramienta de Comparación y Visualización de Modelos
+
+Compara empíricamente el SLM Base, Edge Clean Copilot y Modelos Comerciales de Referencia:
+
+```bash
+# Generar matriz comparativa y gráfico SVG usando datos empíricos de referencia
+python3 compare_models.py --demo
+
+# Generar comparación a partir de reportes JSON específicos
+python3 compare_models.py \
+  --base-report base_report.json \
+  --ecc-report ecc_report.json \
+  --cloud-report cloud_report.json
+```
+
+### Entregables Generados
+- **[`comparative_benchmark_matrix.md`](./comparative_benchmark_matrix.md):** Reporte comparativo consolidado con cálculo de deltas porcentuales y métricas de inferencia en el borde.
+- **[`benchmark_comparison_chart.svg`](./benchmark_comparison_chart.svg):** Gráfico vectorial en SVG de alta resolución listo para diapositivas y presentaciones académicas.

@@ -70,7 +70,9 @@ def main() -> None:
     legacy_suite = PROYECTO_DIR / "evaluation" / "legacy_benchmark_suite.jsonl"
     control_count = count_lines(control_cases)
     legacy_count = count_lines(legacy_suite)
+    compare_script = PROYECTO_DIR / "evaluation" / "compare_models.py"
     print(f"  • Benchmark harness      : {'OK' if eval_script.exists() else 'MISSING'} ({eval_script.name})")
+    print(f"  • Model comparison tool  : {'OK' if compare_script.exists() else 'MISSING'} ({compare_script.name})")
     print(f"  • Clean Arch Score (CAS) : 0-100 pts calibrated")
     print(f"  • Control test suite     : {control_count} cases ({control_cases.name})")
     print(f"  • Legacy benchmark suite : {legacy_count} cases ({legacy_suite.name})")
@@ -82,16 +84,16 @@ def main() -> None:
     print("  Phase 1: Infrastructure & Teacher Dataset  : 100% [COMPLETED & VERIFIED]")
     print("  Phase 2: LoRA Adaptation & Specialization  :  85% [STAGED / READY FOR BURST]")
     print("  Phase 3: Weights Merge & GGUF Quantization :  50% [AUTOMATION SCRIPT READY]")
-    print("  Phase 4: Hexagonal CLI & Benchmark Harness :  80% [CLI HARDENED & 30-CASE BENCHMARK READY]")
+    print("  Phase 4: Hexagonal CLI & Benchmark Harness :  85% [CLI HARDENED, 30-CASE BENCHMARK & VISUALIZATION ENGINE]")
     print("  -------------------------------------------------------------")
-    print("  GLOBAL PROJECT PROGRESS                    :  75%")
+    print("  GLOBAL PROJECT PROGRESS                    :  77%")
     print("-" * 70)
 
     # 6. Immediate Next Actions
     print("\nHOW TO RESUME:")
     print("  A. If continuing on LAPTOP (offline cold staging):")
     print("     1. Run CLI tests: cd proyecto/cli && pnpm test")
-    print("     2. Run 30-case benchmark: python3 proyecto/evaluation/eval_benchmark.py --cases proyecto/evaluation/legacy_benchmark_suite.jsonl")
+    print("     2. Run comparison visualizer: python3 proyecto/evaluation/compare_models.py --demo")
     print("     3. Test CLI diff on sample code: pnpm --dir proyecto/cli run dev refactor <file> --mock --diff")
     print("\n  B. If resuming on NVIDIA DGX SPARK (hot burst):")
     print("     1. Resume base weights (~800MB, ~3 min):")
