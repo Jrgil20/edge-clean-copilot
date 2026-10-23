@@ -1,6 +1,8 @@
 export interface RefactorInputDTO {
   readonly filePath: string;
   readonly fileContent: string;
+  readonly temperature?: number;
+  readonly maxTokens?: number;
 }
 
 export interface RefactorOutputDTO {

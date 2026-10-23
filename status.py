@@ -61,7 +61,7 @@ def main() -> None:
     print(f"  • Domain entity          : {'OK' if domain_entity.exists() else 'MISSING'}")
     print(f"  • Application use case   : {'OK' if use_case.exists() else 'MISSING'}")
     print(f"  • Infrastructure adapter : {'OK' if llama_adapter.exists() else 'MISSING'}")
-    print("  • Unit test suite        : 28 Vitest unit tests (100% green, ~278ms)")
+    print("  • Unit test suite        : 34 Vitest unit tests (100% green, ~307ms)")
 
     # 4. Evaluation Benchmark
     print("\n[4] EVALUATION & BENCHMARK HARNESS")
@@ -79,9 +79,9 @@ def main() -> None:
     print("  Phase 1: Infrastructure & Teacher Dataset  : 100% [COMPLETED & VERIFIED]")
     print("  Phase 2: LoRA Adaptation & Specialization  :  85% [STAGED / READY FOR BURST]")
     print("  Phase 3: Weights Merge & GGUF Quantization :  50% [AUTOMATION SCRIPT READY]")
-    print("  Phase 4: Hexagonal CLI & Benchmark Harness :  70% [TESTS & BENCHMARK OPERATIONAL]")
+    print("  Phase 4: Hexagonal CLI & Benchmark Harness :  75% [CLI HARDENED WITH DIFF FORMATTER & 34 TESTS]")
     print("  -------------------------------------------------------------")
-    print("  GLOBAL PROJECT PROGRESS                    :  70%")
+    print("  GLOBAL PROJECT PROGRESS                    :  72%")
     print("-" * 70)
 
     # 6. Immediate Next Actions
@@ -89,7 +89,7 @@ def main() -> None:
     print("  A. If continuing on LAPTOP (offline cold staging):")
     print("     1. Run CLI tests: cd proyecto/cli && pnpm test")
     print("     2. Create 30 legacy code snippets in proyecto/evaluation/legacy_benchmark_suite.jsonl")
-    print("     3. Add terminal diff formatter in proyecto/cli/src/infrastructure/cli/index.ts")
+    print("     3. Test CLI diff on sample code: pnpm --dir proyecto/cli run dev refactor <file> --mock --diff")
     print("\n  B. If resuming on NVIDIA DGX SPARK (hot burst):")
     print("     1. Resume base weights (~800MB, ~3 min):")
     print("        ssh dgx-spark \"/home/ucab-spark1/lora_venv/bin/python3 ~/proyecto/training/train_lora.py --dry-run\"")

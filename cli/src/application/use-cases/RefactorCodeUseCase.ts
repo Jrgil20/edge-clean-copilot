@@ -31,8 +31,8 @@ export class RefactorCodeUseCase {
       const inferenceResult = await this.inferenceEngine.complete({
         systemPrompt: RefactorCodeUseCase.SYSTEM_PROMPT,
         userPrompt,
-        temperature: 0.1,
-        maxTokens: 2048
+        temperature: dto.temperature ?? 0.1,
+        maxTokens: dto.maxTokens ?? 2048
       });
 
       if (!inferenceResult.success) {
