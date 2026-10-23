@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edge Clean Copilot — SLM Especializado para Clean Architecture en el Borde</title>
-  <meta name="description" content="Factoría industrial de modelos y Small Language Model local especializado en Clean Architecture, Domain-Driven Design y Puertos y Adaptadores.">
-  <!-- Tailwind CSS via CDN with inline fallbacks -->
+  <title>Edge Clean Copilot — Dossier Técnico Interactivo y SLM Especializado en el Borde</title>
+  <meta name="description" content="Dossier técnico interactivo, arquitectura de factoría de modelos, comparador de refactorización y benchmark CAS empírico para Edge Clean Copilot.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -36,281 +35,290 @@
     }
   </script>
   <style>
-    /* Fundamental fallback styles for offline / air-gapped loading */
     body { background-color: #0a0f1d; color: #f1f5f9; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
     .glass-card-interactive:hover { border-color: rgba(16, 185, 129, 0.4); transform: translateY(-2px); transition: all 0.2s ease; }
-    .glow-emerald { box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.25); }
     pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .nav-active { border-color: #10b981; color: #34d399; font-weight: 700; background: rgba(16, 185, 129, 0.08); }
   </style>
 </head>
 <body class="bg-dark-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
 
-  <!-- Barra de Navegación -->
-  <nav class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-6 py-4">
+  <!-- Header Superior Fijo -->
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-6 py-4">
     <div class="max-w-7xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </div>
         <a href="#top" class="text-xl font-bold tracking-tight text-white hover:text-brand-400 transition-colors">
           Edge Clean <span class="text-brand-400 font-extrabold">Copilot</span>
         </a>
         <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/20">
-          v0.1.0 • Fase 4 Lista
+          Dossier Académico de Grado
         </span>
       </div>
 
-      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-        <a href="#overview" class="hover:text-brand-400 transition-colors">Visión</a>
-        <a href="#architecture" class="hover:text-brand-400 transition-colors">Factoría</a>
-        <a href="#diff-demo" class="hover:text-brand-400 transition-colors">Demo Refactor</a>
-        <a href="#benchmark" class="hover:text-brand-400 transition-colors">Benchmark CAS</a>
-        <a href="#quickstart" class="hover:text-brand-400 transition-colors">Inicio Rápido</a>
-      </div>
-
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-4">
         <a href="../../docs/index.html" class="text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white transition-all flex items-center gap-1.5">
           <span>🇺🇸</span>
           <span>English</span>
         </a>
         <a href="https://github.com/Jrgil20/edge-clean-copilot" target="_blank" rel="noopener" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all flex items-center gap-1.5">
           <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          <span>GitHub</span>
-        </a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <header id="top" class="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32 px-6">
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-500/15 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute top-1/3 left-1/4 -translate-x-1/2 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="max-w-5xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs text-slate-300 mb-8 shadow-inner">
-        <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
-        <span>Clean Architecture &amp; Domain-Driven Design en el Borde</span>
-      </div>
-
-      <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight mb-6">
-        SLM Especializado en el Borde para <br>
-        <span class="bg-gradient-to-r from-brand-400 via-emerald-300 to-sky-400 bg-clip-text text-transparent">
-          Clean Architecture Sin Filtraciones
-        </span>
-      </h1>
-
-      <p class="text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed font-normal">
-        Los LLMs generalistas inyectan tipos <code class="text-rose-400 bg-rose-950/50 px-1.5 py-0.5 rounded border border-rose-800/50 text-sm">any</code>, mezclan ORMs en entidades de dominio y rompen límites arquitectónicos. 
-        <strong>Edge Clean Copilot</strong> es una <strong>Factoría de Modelos</strong> que produce un Small Language Model local, con latencia sub-15ms, diseñado para forzar DDD estricto, Value Objects y Puertos y Adaptadores directamente en la laptop del desarrollador.
-      </p>
-
-      <!-- Tira de Métricas Clave -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-12">
-        <div class="glass-card p-4 rounded-2xl">
-          <div class="text-2xl sm:text-3xl font-black text-brand-400 font-mono">91.5 / 100</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Clean Arch Score (CAS)</div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl">
-          <div class="text-2xl sm:text-3xl font-black text-sky-400 font-mono">58 tok/s</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Velocidad en el Borde</div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl">
-          <div class="text-2xl sm:text-3xl font-black text-emerald-300 font-mono">0.98 GB</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">RAM (GGUF Q4_K_M)</div>
-        </div>
-        <div class="glass-card p-4 rounded-2xl">
-          <div class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">100% Offline</div>
-          <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Cero Dependencias Cloud</div>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap items-center justify-center gap-4">
-        <a href="#quickstart" class="px-6 py-3.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-dark-950 font-bold text-sm tracking-wide shadow-lg shadow-brand-500/25 transition-all">
-          Comenzar en 30 Segundos
-        </a>
-        <a href="#diff-demo" class="px-6 py-3.5 rounded-xl glass-card hover:bg-slate-800/80 text-white font-semibold text-sm border border-slate-700 transition-all flex items-center gap-2">
-          <span>Ver Diff de Refactorización</span>
-          <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          <span>Repositorio</span>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Sección 1: Visión y Problema Teórico -->
-  <section id="overview" class="py-20 px-6 border-t border-slate-800/60 bg-dark-900/40">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-3">La Crisis Arquitectónica en Modelos de Código</h2>
-        <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Por Qué los LLMs Generalistas Fallan en Arquitectura de Software</h3>
-      </div>
+  <div class="max-w-7xl mx-auto px-6 py-8 flex gap-10 w-full relative">
 
-      <div class="grid md:grid-cols-3 gap-8">
-        <div class="glass-card p-6 rounded-2xl border border-rose-900/30">
-          <div class="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center font-bold text-lg mb-4">✕</div>
-          <h4 class="text-lg font-bold text-white mb-2">Inversión de Límites</h4>
-          <p class="text-sm text-slate-400 leading-relaxed">
-            Los modelos comerciales importan ORMs (TypeORM, Prisma) y frameworks HTTP (Express, FastAPI) directamente en entidades de negocio, rompiendo la Regla de Dependencia.
-          </p>
+    <!-- Sidebar de Navegación Fijo (Scroll Spy) -->
+    <aside class="hidden lg:block w-64 shrink-0 sticky top-24 self-start text-xs space-y-1">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3 px-3">Tabla de Contenidos</div>
+      <a href="#hero" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">1. Visión Ejecutiva</a>
+      <a href="#taxonomy" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">2. Taxonomía de Antipatrones</a>
+      <a href="#factory" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">3. Factoría de Modelos</a>
+      <a href="#cli-architecture" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">4. Arquitectura Hexagonal CLI</a>
+      <a href="#diff-demo" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">5. Refactorización Interactiva</a>
+      <a href="#benchmark" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">6. Benchmark CAS Empírico</a>
+      <a href="#slides-viewer" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">7. Diapositivas de Defensa</a>
+      <a href="#quickstart" class="toc-link block px-3 py-2 rounded-lg text-slate-400 hover:text-white transition-all border-l-2 border-transparent">8. Inicio Rápido</a>
+    </aside>
+
+    <!-- Área Principal de Contenido -->
+    <main class="flex-1 min-w-0 space-y-24">
+
+      <!-- 1. Sección Hero -->
+      <section id="hero" class="relative pt-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700 text-xs text-slate-300 mb-6">
+          <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+          <span>Clean Architecture Sin Filtraciones en el Borde</span>
         </div>
 
-        <div class="glass-card p-6 rounded-2xl border border-amber-900/30">
-          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center font-bold text-lg mb-4">⚠</div>
-          <h4 class="text-lg font-bold text-white mb-2">Obsesión Primitiva y any</h4>
-          <p class="text-sm text-slate-400 leading-relaxed">
-            Las entidades aceptan tipos primitivos crudos (<code class="text-xs font-mono text-amber-300">string</code>, <code class="text-xs font-mono text-amber-300">number</code>) en lugar de encapsular invariantes en Value Objects puros, recurriendo a <code class="text-xs font-mono text-amber-300">any</code> ante cualquier duda.
-          </p>
-        </div>
+        <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
+          SLM Especializado en el Borde para <br>
+          <span class="bg-gradient-to-r from-brand-400 via-emerald-300 to-sky-400 bg-clip-text text-transparent">
+            Arquitectura de Software Determinista
+          </span>
+        </h1>
 
-        <div class="glass-card p-6 rounded-2xl border border-brand-900/30">
-          <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-lg mb-4">✓</div>
-          <h4 class="text-lg font-bold text-white mb-2">La Solución Edge Clean</h4>
-          <p class="text-sm text-slate-400 leading-relaxed">
-            Destilando pares canónicos de refactorización en un SLM ágil (1.5B/3B), Edge Clean Copilot garantiza aislamiento formal de capas y manejo funcional de errores sin excepciones no controladas.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Sección 2: Arquitectura de la Factoría -->
-  <section id="architecture" class="py-20 px-6 border-t border-slate-800/60">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-3">Plataforma de Especialización Continua</h2>
-        <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Los 5 Subsistemas Desacoplados de la Factoría</h3>
-        <p class="text-slate-400 mt-4 text-sm sm:text-base">
-          Más allá de producir un checkpoint único, Edge Clean Copilot es una factoría automatizada lista para adaptar nuevos SLMs de pesos abiertos conforme avance la tecnología.
+        <p class="text-base sm:text-lg text-slate-400 leading-relaxed max-w-3xl mb-10">
+          Los LLMs generalistas fallan de forma sistemática en los límites arquitectónicos: introducen tipos <code class="text-rose-400 bg-rose-950/50 px-1 py-0.5 rounded border border-rose-800/50 text-xs">any</code>, mezclan ORMs en entidades de negocio y crean excepciones en tiempo de ejecución no controladas. 
+          <strong>Edge Clean Copilot (ECC)</strong> es una <strong>Factoría de Modelos</strong> que produce un Small Language Model local (Qwen2.5-Coder-1.5B/3B) que garantiza DDD estricto, Value Objects y Puertos y Adaptadores directamente en la laptop del desarrollador.
         </p>
-      </div>
 
-      <!-- Grid de Subsistemas -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Subsistema A -->
-        <div class="glass-card glass-card-interactive p-6 rounded-2xl">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-slate-800 text-brand-400 border border-slate-700">Subsistema A</span>
-            <span class="text-xs text-slate-500">Motor de Datos</span>
+        <!-- Tarjetas de Métricas -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-2xl sm:text-3xl font-black text-brand-400 font-mono">91.5 / 100</div>
+            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Clean Arch Score (CAS)</div>
           </div>
-          <h4 class="text-base font-bold text-white mb-2">Factoría de Datos Sintéticos</h4>
-          <p class="text-xs text-slate-400 leading-relaxed mb-4">
-            Genera y valida pares de instrucción-refactorización. 138 pares de entrenamiento + 30 casos de evaluación auditados con validadores sintácticos y arquitectónicos.
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-2xl sm:text-3xl font-black text-sky-400 font-mono">58.5 tok/s</div>
+            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Velocidad de Inferencia</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-2xl sm:text-3xl font-black text-emerald-300 font-mono">0.98 GB</div>
+            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Consumo RAM (GGUF)</div>
+          </div>
+          <div class="glass-card p-4 rounded-xl">
+            <div class="text-2xl sm:text-3xl font-black text-amber-400 font-mono">100% Offline</div>
+            <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Cero Dependencias Cloud</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Taxonomía de Antipatrones (Categorías A–E) -->
+      <section id="taxonomy" class="scroll-mt-24">
+        <div class="mb-8">
+          <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-2">Especificación Formal</h2>
+          <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Las 5 Categorías de Antipatrones (Taxonomía A–E)</h3>
+          <p class="text-sm text-slate-400 mt-2">
+            Tanto el dataset sintético como el arnés de benchmark CAS se basan en cinco modos de fallo arquitectónicos de la IA comercial:
           </p>
-          <div class="text-[11px] font-mono text-slate-500 bg-slate-900/60 p-2 rounded border border-slate-800">
-            dataset/validate_dataset.py
-          </div>
         </div>
 
-        <!-- Subsistema B -->
-        <div class="glass-card glass-card-interactive p-6 rounded-2xl">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-slate-800 text-sky-400 border border-slate-700">Subsistema B</span>
-            <span class="text-xs text-slate-500">Harness LoRA</span>
+        <div class="grid md:grid-cols-2 gap-5">
+          <!-- Categoría A -->
+          <div class="glass-card p-6 rounded-2xl border-l-4 border-rose-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold font-mono text-rose-400">CATEGORÍA A</span>
+              <span class="text-xs text-slate-500">Frontera de Dominio</span>
+            </div>
+            <h4 class="text-base font-bold text-white mb-2">Filtración de ORM y Bases de Datos</h4>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+              Acoplar decoradores de TypeORM (<code class="text-rose-300 font-mono">@Entity</code>, <code class="text-rose-300 font-mono">@Column</code>) o el cliente de Prisma en entidades de dominio. Destruye la portabilidad e impide testing unitario sin base de datos activa.
+            </p>
+            <div class="text-[11px] font-mono text-emerald-300 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              ✓ Resolución: Entidades POJO/TS puras sin imports externos; persistencia delegada a adaptadores de repositorios.
+            </div>
           </div>
-          <h4 class="text-base font-bold text-white mb-2">Entrenamiento por Recetas</h4>
-          <p class="text-xs text-slate-400 leading-relaxed mb-4">
-            Harness en PyTorch desacoplado para Qwen, Llama 3.2 y Gemma 2 mediante recetas declarativas YAML, con enmascaramiento de pérdida en el prompt y validación fail-fast de capas.
+
+          <!-- Categoría B -->
+          <div class="glass-card p-6 rounded-2xl border-l-4 border-amber-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold font-mono text-amber-400">CATEGORÍA B</span>
+              <span class="text-xs text-slate-500">Adaptador de Interfaz</span>
+            </div>
+            <h4 class="text-base font-bold text-white mb-2">Fuga de Presentación y HTTP</h4>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+              Pasar objetos de Express (<code class="text-amber-300 font-mono">req</code>, <code class="text-amber-300 font-mono">res</code>) a los casos de uso. Provoca que las reglas de negocio dependan de cabeceras y códigos de estado HTTP.
+            </p>
+            <div class="text-[11px] font-mono text-emerald-300 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              ✓ Resolución: DTOs fuertemente tipados y retornos basados en la mónada funcional Result entregados a controladores.
+            </div>
+          </div>
+
+          <!-- Categoría C -->
+          <div class="glass-card p-6 rounded-2xl border-l-4 border-sky-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold font-mono text-sky-400">CATEGORÍA C</span>
+              <span class="text-xs text-slate-500">Invariantes</span>
+            </div>
+            <h4 class="text-base font-bold text-white mb-2">Obsesión Primitiva</h4>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+              Usar strings crudos para identificadores de dominio, correos o números de impuestos sin chequeo de invariantes. Permite que estados inválidos circulen por la aplicación.
+            </p>
+            <div class="text-[11px] font-mono text-emerald-300 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              ✓ Resolución: Value Objects con constructor privado, validación defensiva por regex y métodos fábrica estáticos.
+            </div>
+          </div>
+
+          <!-- Categoría D -->
+          <div class="glass-card p-6 rounded-2xl border-l-4 border-purple-500">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold font-mono text-purple-400">CATEGORÍA D</span>
+              <span class="text-xs text-slate-500">Rigor de Tipado</span>
+            </div>
+            <h4 class="text-base font-bold text-white mb-2">Proliferación Explícita de any</h4>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+              Recurrir a <code class="text-purple-300 font-mono">any</code> como atajo ante tipos complejos, anulando todas las garantías de seguridad del compilador de TypeScript.
+            </p>
+            <div class="text-[11px] font-mono text-emerald-300 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              ✓ Resolución: Genéricos estrictos, unknown con guardas de estrechamiento (type guards) y política de cero any.
+            </div>
+          </div>
+
+          <!-- Categoría E -->
+          <div class="glass-card p-6 rounded-2xl border-l-4 border-brand-500 md:col-span-2">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold font-mono text-brand-400">CATEGORÍA E</span>
+              <span class="text-xs text-slate-500">Responsabilidad Única</span>
+            </div>
+            <h4 class="text-base font-bold text-white mb-2">Antipatrón God Class (Clases Monolíticas)</h4>
+            <p class="text-xs text-slate-400 leading-relaxed mb-3">
+              Servicios monolíticos que realizan validación, persistencia en base de datos, envío de correos y llamadas a pasarelas de pago en un solo método de 400 líneas.
+            </p>
+            <div class="text-[11px] font-mono text-emerald-300 bg-slate-900/80 p-2.5 rounded-lg border border-slate-800">
+              ✓ Resolución: Casos de Uso orquestados con responsabilidad única que inyectan interfaces de Puertos abstractas.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Arquitectura de la Factoría -->
+      <section id="factory" class="scroll-mt-24">
+        <div class="mb-8">
+          <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-2">Ingeniería de IA Industrial</h2>
+          <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">La Factoría de Modelos: Ingesta Continua de SLMs</h3>
+          <p class="text-sm text-slate-400 mt-2">
+            El proyecto desacopla el entrenamiento de un modelo específico. Conforme surjan nuevos SLMs de pesos abiertos (Qwen 2.5, Llama 3.2, Gemma 2, DeepSeek), la factoría automatiza su especialización:
           </p>
-          <div class="text-[11px] font-mono text-slate-500 bg-slate-900/60 p-2 rounded border border-slate-800">
-            training/recipes/*.yaml
-          </div>
         </div>
 
-        <!-- Subsistema C -->
-        <div class="glass-card glass-card-interactive p-6 rounded-2xl">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-slate-800 text-purple-400 border border-slate-700">Subsistema C</span>
-            <span class="text-xs text-slate-500">Cuantización Edge</span>
+        <div class="grid sm:grid-cols-3 gap-4 mb-8">
+          <div class="glass-card p-5 rounded-2xl">
+            <div class="text-xs font-mono text-brand-400 font-bold mb-1">ETAPA 1: REGISTRO DE RECETAS</div>
+            <h4 class="text-sm font-bold text-white mb-2">Modelos Declarativos</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Recetas YAML (<code class="text-[11px] font-mono text-brand-300">recipes/*.yaml</code>) que definen proyecciones objetivo, delimitadores y precisión numérica.
+            </p>
           </div>
-          <h4 class="text-base font-bold text-white mb-2">Motor de Cuantización GGUF</h4>
-          <p class="text-xs text-slate-400 leading-relaxed mb-4">
-            Automatiza la conversión de pesos densos FP16 en binarios GGUF optimizados (Q4_K_M, Q8_0) para ejecución local con latencia mínima mediante llama.cpp.
+          <div class="glass-card p-5 rounded-2xl">
+            <div class="text-xs font-mono text-sky-400 font-bold mb-1">ETAPA 2: RÁFAGA LORA</div>
+            <h4 class="text-sm font-bold text-white mb-2">Pérdida Enmascarada</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Calcula gradientes exclusivamente sobre las refactorizaciones del asistente mediante <code class="text-[11px] font-mono text-sky-300">response_template</code>, con límites temporales automáticos.
+            </p>
+          </div>
+          <div class="glass-card p-5 rounded-2xl">
+            <div class="text-xs font-mono text-purple-400 font-bold mb-1">ETAPA 3: GGUF EN EL BORDE</div>
+            <h4 class="text-sm font-bold text-white mb-2">Cuantización Atómica</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Fusiona deltas LoRA en pesos FP16 y exporta binarios GGUF Q4_K_M para inferencia local con latencia inferior a 15ms.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Arquitectura Hexagonal CLI -->
+      <section id="cli-architecture" class="scroll-mt-24">
+        <div class="mb-8">
+          <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-2">Demostrando Principios en el Código</h2>
+          <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Arquitectura Hexagonal del Cliente CLI</h3>
+          <p class="text-sm text-slate-400 mt-2">
+            La propia CLI (<code class="text-brand-300 font-mono">clean-copilot</code>) fue construida bajo reglas estrictas de Clean Architecture con <strong>41 tests unitarios pasando y cero any</strong>:
           </p>
-          <div class="text-[11px] font-mono text-slate-500 bg-slate-900/60 p-2 rounded border border-slate-800">
-            training/convert_to_gguf.sh
-          </div>
         </div>
 
-        <!-- Subsistema D -->
-        <div class="glass-card glass-card-interactive p-6 rounded-2xl">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-slate-800 text-emerald-400 border border-slate-700">Subsistema D</span>
-            <span class="text-xs text-slate-500">CAS Determinista</span>
+        <div class="glass-card p-6 rounded-2xl border border-slate-800">
+          <div class="grid md:grid-cols-4 gap-4 text-xs font-mono mb-6">
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <div class="text-brand-400 font-bold mb-1">1. CAPA DE DOMINIO</div>
+              <div class="text-slate-300">SourceFile.ts</div>
+              <div class="text-[11px] text-slate-500 mt-1">Entidad pura, guardas defensivas, cero dependencias externas.</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <div class="text-sky-400 font-bold mb-1">2. APLICACIÓN</div>
+              <div class="text-slate-300">RefactorCodeUseCase.ts</div>
+              <div class="text-[11px] text-slate-500 mt-1">Orquestación de negocio, contrato del puerto IInferenceEngine.</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <div class="text-purple-400 font-bold mb-1">3. INFRAESTRUCTURA</div>
+              <div class="text-slate-300">LlamaServerAdapter.ts</div>
+              <div class="text-[11px] text-slate-500 mt-1">Adaptador HTTP, MockInferenceAdapter, FileDiskReader.</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900 border border-slate-800">
+              <div class="text-amber-400 font-bold mb-1">4. SHARED</div>
+              <div class="text-slate-300">Result.ts y DomainError.ts</div>
+              <div class="text-[11px] text-slate-500 mt-1">Mónada funcional de error, jerarquía tipada de excepciones.</div>
+            </div>
           </div>
-          <h4 class="text-base font-bold text-white mb-2">Evaluador AST del Compilador</h4>
-          <p class="text-xs text-slate-400 leading-relaxed mb-4">
-            Inspecciona el AST oficial de TypeScript para medir aislamiento de dominio, invariantes y tokens <code class="text-brand-300">any</code> reales con cero falsos positivos.
+          <div class="flex items-center justify-between text-xs font-mono pt-3 border-t border-slate-800 text-slate-400">
+            <span>Suite Vitest: <strong>41/41 Verde (~790ms)</strong></span>
+            <span>Política: <strong>ZERO ANY IN SRC</strong></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Refactorización Interactiva -->
+      <section id="diff-demo" class="scroll-mt-24">
+        <div class="mb-8">
+          <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-2">Demostración en Vivo</h2>
+          <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Comparador Interactivo de Código</h3>
+          <p class="text-sm text-slate-400 mt-2">
+            Haz clic en las pestañas para comparar el código acoplado frente al resultado limpio:
           </p>
-          <div class="text-[11px] font-mono text-slate-500 bg-slate-900/60 p-2 rounded border border-slate-800">
-            evaluation/ast_analyzer.ts
-          </div>
         </div>
 
-        <!-- Subsistema E -->
-        <div class="glass-card glass-card-interactive p-6 rounded-2xl">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-slate-800 text-amber-400 border border-slate-700">Subsistema E</span>
-            <span class="text-xs text-slate-500">Cliente Desarrollador</span>
+        <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+          <div class="flex border-b border-slate-800 bg-slate-950/60 px-4 pt-3 gap-2">
+            <button id="tab-btn-clean" onclick="switchTab('clean')" class="px-4 py-2.5 rounded-t-xl text-xs font-bold font-mono transition-all border-t-2 border-brand-400 bg-slate-800/90 text-brand-400 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-brand-400"></span>
+              <span>Clean Architecture (Refactorizado)</span>
+            </button>
+            <button id="tab-btn-legacy" onclick="switchTab('legacy')" class="px-4 py-2.5 rounded-t-xl text-xs font-bold font-mono transition-all text-slate-400 hover:text-slate-200 border-t-2 border-transparent flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+              <span>Código Acoplado Legado (Antes)</span>
+            </button>
           </div>
-          <h4 class="text-base font-bold text-white mb-2">Cliente CLI Hexagonal</h4>
-          <p class="text-xs text-slate-400 leading-relaxed mb-4">
-            Herramienta desconectada escrita en TypeScript estricto sin ningún <code class="text-amber-300">any</code>. Genera diffs ANSI coloreados y se conecta directamente al backend local.
-          </p>
-          <div class="text-[11px] font-mono text-slate-500 bg-slate-900/60 p-2 rounded border border-slate-800">
-            bin/clean-copilot
-          </div>
-        </div>
 
-        <!-- Tarjeta Metodología Operativa -->
-        <div class="glass-card p-6 rounded-2xl bg-gradient-to-br from-brand-950/40 to-slate-900/40 border-brand-500/20">
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-brand-500/20 text-brand-300 border border-brand-500/30">Metodología</span>
-            <span class="text-xs text-brand-400 font-semibold">Cold Staging, Hot Burst</span>
-          </div>
-          <h4 class="text-base font-bold text-white mb-2">Ingeniería para Clústeres</h4>
-          <p class="text-xs text-slate-300 leading-relaxed mb-4">
-            La laptop local prepara datasets, ejecuta tests unitarios y valida métricas AST; las ráfagas pesadas corren en la NVIDIA DGX Spark con cortes automáticos de tiempo.
-          </p>
-          <div class="text-[11px] font-mono text-brand-300/80">
-            41 Tests Vitest (100% en Verde)
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Sección 3: Demo Interactiva de Refactorización -->
-  <section id="diff-demo" class="py-20 px-6 border-t border-slate-800/60 bg-dark-900/40">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center max-w-3xl mx-auto mb-12">
-        <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-3">Transformación Arquitectónica en Vivo</h2>
-        <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Comparador Interactivo de Código</h3>
-        <p class="text-slate-400 mt-4 text-sm sm:text-base">
-          Observa cómo Edge Clean Copilot desacopla un controlador Express tradicional en Dominio puro, Casos de Uso y contratos de Puertos.
-        </p>
-      </div>
-
-      <!-- Tabs Interactivos -->
-      <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
-        <!-- Barra de Pestañas -->
-        <div class="flex border-b border-slate-800 bg-slate-950/60 px-4 pt-3 gap-2">
-          <button id="tab-btn-clean" onclick="switchTab('clean')" class="px-4 py-2.5 rounded-t-xl text-xs font-bold font-mono transition-all border-t-2 border-brand-400 bg-slate-800/90 text-brand-400 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-brand-400"></span>
-            <span>Clean Architecture (Refactorizado)</span>
-          </button>
-          <button id="tab-btn-legacy" onclick="switchTab('legacy')" class="px-4 py-2.5 rounded-t-xl text-xs font-bold font-mono transition-all text-slate-400 hover:text-slate-200 border-t-2 border-transparent flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-rose-400"></span>
-            <span>Código Acoplado Legado (Antes)</span>
-          </button>
-        </div>
-
-        <!-- Pestaña 1: Código Limpio -->
-        <div id="tab-content-clean" class="p-6 overflow-x-auto text-xs sm:text-sm font-mono text-slate-200 leading-relaxed">
-          <div class="mb-4 text-xs font-mono text-brand-400/90 bg-brand-500/10 p-3 rounded-xl border border-brand-500/20">
-            ✓ <strong>Invariantes de Clean Architecture Aplicadas:</strong> Cero ORM en dominio • Invariantes validadas en constructor • Puerto abstracto IOrderRepository • Mónada funcional Result.
-          </div>
+          <div id="tab-content-clean" class="p-6 overflow-x-auto text-xs sm:text-sm font-mono text-slate-200 leading-relaxed">
+            <div class="mb-4 text-xs font-mono text-brand-400 bg-brand-500/10 p-3 rounded-xl border border-brand-500/20">
+              ✓ <strong>Invariantes de Clean Architecture Aplicadas:</strong> Cero ORM en dominio • Invariante validada en constructor • Puerto abstracto IOrderRepository • Mónada funcional Result.
+            </div>
 <pre><code><span class="text-slate-500">// 1. CAPA DE DOMINIO: Entidad Pura de Negocio (src/domain/entities/Order.ts)</span>
 <span class="text-sky-400">export class</span> <span class="text-amber-300">Order</span> {
   <span class="text-sky-400">private constructor</span>(
@@ -348,13 +356,12 @@
     }
   }
 }</code></pre>
-        </div>
-
-        <!-- Pestaña 2: Código Legado -->
-        <div id="tab-content-legacy" class="hidden p-6 overflow-x-auto text-xs sm:text-sm font-mono text-slate-200 leading-relaxed">
-          <div class="mb-4 text-xs font-mono text-rose-400/90 bg-rose-500/10 p-3 rounded-xl border border-rose-500/20">
-            ✕ <strong>Antipatrones Arquitectónicos Detectados:</strong> Consulta SQL directa en handler HTTP • Cero validación en constructor • Express fuertemente acoplado a reglas de negocio.
           </div>
+
+          <div id="tab-content-legacy" class="hidden p-6 overflow-x-auto text-xs sm:text-sm font-mono text-slate-200 leading-relaxed">
+            <div class="mb-4 text-xs font-mono text-rose-400 bg-rose-500/10 p-3 rounded-xl border border-rose-500/20">
+              ✕ <strong>Antipatrones Arquitectónicos Detectados:</strong> Consulta SQL directa en handler HTTP • Cero validación en constructor • Express fuertemente acoplado a reglas de negocio.
+            </div>
 <pre><code><span class="text-slate-500">// Código Legado Acoplado (Express directo + SQL en el Handler)</span>
 <span class="text-rose-400">import</span> express <span class="text-rose-400">from</span> <span class="text-amber-200">'express'</span>;
 <span class="text-rose-400">import</span> { db } <span class="text-rose-400">from</span> <span class="text-amber-200">'./database'</span>;
@@ -377,196 +384,239 @@ app.post(<span class="text-amber-200">'/api/orders'</span>, <span class="text-sk
 
   res.status(201).json({ orderId: result.rows[0].id, total });
 });</code></pre>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- Sección 4: Benchmark CAS y Resultados Comparativos -->
-  <section id="benchmark" class="py-20 px-6 border-t border-slate-800/60">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-3">Resultados de Evaluación Empírica</h2>
-        <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Comparativa de Clean Architecture Score (CAS)</h3>
-        <p class="text-slate-400 mt-4 text-sm sm:text-base">
-          Calibrado sobre 30 casos de antipatrones legados evaluando Aislamiento de Dominio, Invariantes de Constructor, Abstracción de Puertos y Rigor de Tipos.
-        </p>
-      </div>
+      <!-- 6. Benchmark CAS Empírico (Con SVG Embebido) -->
+      <section id="benchmark" class="scroll-mt-24">
+        <div class="mb-8">
+          <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-2">Validación Empírica Rigurosa</h2>
+          <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Gráfico Comparativo de Clean Architecture Score (CAS)</h3>
+          <p class="text-sm text-slate-400 mt-2">
+            Evaluando 30 casos de prueba legados mediante el motor AST del compilador TypeScript:
+          </p>
+        </div>
 
-      <!-- Tabla Comparativa -->
-      <div class="glass-card rounded-2xl overflow-hidden mb-12 border border-slate-800">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-900/80 text-slate-300 font-mono text-[11px] uppercase tracking-wider border-b border-slate-800">
+        <!-- Gráfico Vectorial SVG Embebido -->
+        <div class="glass-card rounded-2xl p-4 sm:p-6 overflow-hidden mb-8 border border-slate-800">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 460" width="100%" height="100%">
+            <defs>
+              <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0f172a" />
+                <stop offset="100%" stop-color="#1e293b" />
+              </linearGradient>
+              <linearGradient id="eccGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#10b981" />
+                <stop offset="100%" stop-color="#059669" />
+              </linearGradient>
+              <linearGradient id="baseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#f59e0b" />
+                <stop offset="100%" stop-color="#d97706" />
+              </linearGradient>
+              <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#0284c7" />
+              </linearGradient>
+            </defs>
+            <rect width="840" height="460" rx="12" fill="url(#bgGrad)" />
+            <text x="80" y="38" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold">Edge Clean Copilot — Clean Architecture Score (CAS) Comparison</text>
+            <text x="80" y="56" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="12">Empirical evaluation on 30 legacy code refactoring benchmark pairs</text>
+            <line x1="80" y1="370.0" x2="780" y2="370.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+            <text x="68" y="374.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">0%</text>
+            <line x1="80" y1="295.0" x2="780" y2="295.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+            <text x="68" y="299.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">25%</text>
+            <line x1="80" y1="220.0" x2="780" y2="220.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+            <text x="68" y="224.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">50%</text>
+            <line x1="80" y1="145.0" x2="780" y2="145.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+            <text x="68" y="149.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">75%</text>
+            <line x1="80" y1="70.0" x2="780" y2="70.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+            <text x="68" y="74.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">100%</text>
+            <rect x="102.0" y="225.0" width="28" height="145.0" rx="4" fill="url(#baseGrad)" />
+            <text x="116.0" y="219.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">48%</text>
+            <rect x="136.0" y="85.0" width="28" height="285.0" rx="4" fill="url(#eccGrad)" />
+            <text x="150.0" y="79.0" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">95%</text>
+            <rect x="170.0" y="100.0" width="28" height="270.0" rx="4" fill="url(#cloudGrad)" />
+            <text x="184.0" y="94.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">90%</text>
+            <text x="150.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Domain Boundary</text>
+            <text x="150.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(30)</text>
+            <rect x="242.0" y="271.6" width="28" height="98.4" rx="4" fill="url(#baseGrad)" />
+            <text x="256.0" y="265.6" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">33%</text>
+            <rect x="276.0" y="96.4" width="28" height="273.6" rx="4" fill="url(#eccGrad)" />
+            <text x="290.0" y="90.4" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">91%</text>
+            <rect x="310.0" y="118.0" width="28" height="252.0" rx="4" fill="url(#cloudGrad)" />
+            <text x="324.0" y="112.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">84%</text>
+            <text x="290.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Invariants &amp; Result</text>
+            <text x="290.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(25)</text>
+            <rect x="382.0" y="244.0" width="28" height="126.0" rx="4" fill="url(#baseGrad)" />
+            <text x="396.0" y="238.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">42%</text>
+            <rect x="416.0" y="103.6" width="28" height="266.4" rx="4" fill="url(#eccGrad)" />
+            <text x="430.0" y="97.6" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">89%</text>
+            <rect x="450.0" y="112.0" width="28" height="258.0" rx="4" fill="url(#cloudGrad)" />
+            <text x="464.0" y="106.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">86%</text>
+            <text x="430.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Ports &amp; Adapters</text>
+            <text x="430.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(25)</text>
+            <rect x="522.0" y="145.0" width="28" height="225.0" rx="4" fill="url(#baseGrad)" />
+            <text x="536.0" y="139.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">75%</text>
+            <rect x="556.0" y="100.0" width="28" height="270.0" rx="4" fill="url(#eccGrad)" />
+            <text x="570.0" y="94.0" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">90%</text>
+            <rect x="590.0" y="92.5" width="28" height="277.5" rx="4" fill="url(#cloudGrad)" />
+            <text x="604.0" y="86.5" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">92%</text>
+            <text x="570.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Type Rigor</text>
+            <text x="570.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(20)</text>
+            <rect x="662.0" y="225.4" width="28" height="144.6" rx="4" fill="url(#baseGrad)" />
+            <text x="676.0" y="219.4" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">48%</text>
+            <rect x="696.0" y="95.5" width="28" height="274.5" rx="4" fill="url(#eccGrad)" />
+            <text x="710.0" y="89.5" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">92%</text>
+            <rect x="730.0" y="106.0" width="28" height="264.0" rx="4" fill="url(#cloudGrad)" />
+            <text x="744.0" y="100.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">88%</text>
+            <text x="710.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Composite CAS</text>
+            <text x="710.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(100)</text>
+            <rect x="220" y="430" width="12" height="12" rx="3" fill="url(#baseGrad)" />
+            <text x="240" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Qwen 1.5B (Base)</text>
+            <rect x="380" y="430" width="12" height="12" rx="3" fill="url(#eccGrad)" />
+            <text x="400" y="440" fill="#10b981" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">Edge Clean Copilot (GGUF)</text>
+            <rect x="580" y="430" width="12" height="12" rx="3" fill="url(#cloudGrad)" />
+            <text x="600" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Frontier Cloud (API)</text>
+          </svg>
+        </div>
+
+        <!-- Tabla de Métricas Comparativas -->
+        <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+          <table class="w-full text-left text-xs sm:text-sm font-mono">
+            <thead class="bg-slate-900 text-slate-300 uppercase text-[11px] border-b border-slate-800">
               <tr>
-                <th class="px-6 py-4">Dimensión Arquitectónica</th>
-                <th class="px-6 py-4">Peso</th>
-                <th class="px-6 py-4 text-amber-400">SLM Base (Qwen 1.5B)</th>
-                <th class="px-6 py-4 text-brand-400 font-bold bg-brand-500/10">Edge Clean Copilot</th>
-                <th class="px-6 py-4 text-sky-400">Frontier Cloud</th>
-                <th class="px-6 py-4 text-emerald-400">Mejora Neta</th>
+                <th class="px-6 py-3 font-sans">Dimensión Arquitectónica</th>
+                <th class="px-6 py-3 text-amber-400">SLM Base (Qwen 1.5B)</th>
+                <th class="px-6 py-3 text-brand-400 bg-brand-500/10 font-bold">Edge Clean Copilot</th>
+                <th class="px-6 py-3 text-sky-400">Frontier Cloud</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800/60 font-mono">
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 font-sans font-medium text-slate-200">1. Aislamiento de Dominio</td>
-                <td class="px-6 py-4 text-slate-400">30%</td>
-                <td class="px-6 py-4 text-amber-300">14.5 / 30</td>
-                <td class="px-6 py-4 text-brand-300 font-bold bg-brand-500/5">28.5 / 30</td>
-                <td class="px-6 py-4 text-sky-300">27.0 / 30</td>
-                <td class="px-6 py-4 text-emerald-400 font-bold">+14.0 pts (+96.6%)</td>
+            <tbody class="divide-y divide-slate-800/60">
+              <tr>
+                <td class="px-6 py-3 font-sans text-slate-200">1. Aislamiento de Dominio (30%)</td>
+                <td class="px-6 py-3 text-amber-300">14.5 / 30</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">28.5 / 30</td>
+                <td class="px-6 py-3 text-sky-300">27.0 / 30</td>
               </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 font-sans font-medium text-slate-200">2. Seguridad de Invariantes y Result</td>
-                <td class="px-6 py-4 text-slate-400">25%</td>
-                <td class="px-6 py-4 text-amber-300">8.2 / 25</td>
-                <td class="px-6 py-4 text-brand-300 font-bold bg-brand-500/5">22.8 / 25</td>
-                <td class="px-6 py-4 text-sky-300">21.0 / 25</td>
-                <td class="px-6 py-4 text-emerald-400 font-bold">+14.6 pts (+178.0%)</td>
+              <tr>
+                <td class="px-6 py-3 font-sans text-slate-200">2. Invariantes y Result (25%)</td>
+                <td class="px-6 py-3 text-amber-300">8.2 / 25</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">22.8 / 25</td>
+                <td class="px-6 py-3 text-sky-300">21.0 / 25</td>
               </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 font-sans font-medium text-slate-200">3. Puertos y Adaptadores</td>
-                <td class="px-6 py-4 text-slate-400">25%</td>
-                <td class="px-6 py-4 text-amber-300">10.5 / 25</td>
-                <td class="px-6 py-4 text-brand-300 font-bold bg-brand-500/5">22.2 / 25</td>
-                <td class="px-6 py-4 text-sky-300">21.5 / 25</td>
-                <td class="px-6 py-4 text-emerald-400 font-bold">+11.7 pts (+111.4%)</td>
+              <tr>
+                <td class="px-6 py-3 font-sans text-slate-200">3. Puertos y Adaptadores (25%)</td>
+                <td class="px-6 py-3 text-amber-300">10.5 / 25</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">22.2 / 25</td>
+                <td class="px-6 py-3 text-sky-300">21.5 / 25</td>
               </tr>
-              <tr class="hover:bg-slate-800/30">
-                <td class="px-6 py-4 font-sans font-medium text-slate-200">4. Rigor de Tipado (Cero any)</td>
-                <td class="px-6 py-4 text-slate-400">20%</td>
-                <td class="px-6 py-4 text-amber-300">15.0 / 20</td>
-                <td class="px-6 py-4 text-brand-300 font-bold bg-brand-500/5">18.0 / 20</td>
-                <td class="px-6 py-4 text-sky-300">18.5 / 20</td>
-                <td class="px-6 py-4 text-emerald-400 font-bold">+3.0 pts (+20.0%)</td>
+              <tr>
+                <td class="px-6 py-3 font-sans text-slate-200">4. Rigor de Tipado (20%)</td>
+                <td class="px-6 py-3 text-amber-300">15.0 / 20</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">18.0 / 20</td>
+                <td class="px-6 py-3 text-sky-300">18.5 / 20</td>
               </tr>
-              <tr class="bg-slate-900/90 font-bold text-sm border-t-2 border-brand-500/30">
-                <td class="px-6 py-4 font-sans text-white">CAS COMPUESTO (0–100 PTS)</td>
-                <td class="px-6 py-4 text-slate-400">100%</td>
-                <td class="px-6 py-4 text-amber-400">48.2 / 100</td>
-                <td class="px-6 py-4 text-brand-400 text-base bg-brand-500/10">91.5 / 100</td>
-                <td class="px-6 py-4 text-sky-400">88.0 / 100</td>
-                <td class="px-6 py-4 text-emerald-400 text-base">+43.3 pts (+89.8%)</td>
+              <tr class="bg-slate-900/90 font-bold text-sm">
+                <td class="px-6 py-4 font-sans text-white">CAS COMPUESTO (0–100)</td>
+                <td class="px-6 py-4 text-amber-400">48.2</td>
+                <td class="px-6 py-4 text-brand-400 bg-brand-500/10 text-base">91.5</td>
+                <td class="px-6 py-4 text-sky-400">88.0</td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
 
-      <!-- Métricas Operativas en el Borde -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass-card p-5 rounded-2xl text-center">
-          <div class="text-xs uppercase text-slate-400 font-semibold mb-1">Tiempo al Primer Token (TTFT)</div>
-          <div class="text-2xl font-bold font-mono text-brand-400">&lt; 15 ms</div>
-          <div class="text-[11px] text-slate-500 mt-1">Mapeo directo en memoria local</div>
+      <!-- 7. Diapositivas Interactivas de Defensa -->
+      <section id="slides-viewer" class="scroll-mt-24">
+        <div class="mb-8">
+          <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-2">Guion Académico de Exposición</h2>
+          <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Visor Interactivo de las 12 Diapositivas de Defensa</h3>
+          <p class="text-sm text-slate-400 mt-2">
+            Navega por la presentación formal y el guion técnico del paper académico:
+          </p>
         </div>
-        <div class="glass-card p-5 rounded-2xl text-center">
-          <div class="text-xs uppercase text-slate-400 font-semibold mb-1">Velocidad de Inferencia</div>
-          <div class="text-2xl font-bold font-mono text-sky-400">58.5 tok/seg</div>
-          <div class="text-[11px] text-slate-500 mt-1">Aceleración local CPU/Metal</div>
-        </div>
-        <div class="glass-card p-5 rounded-2xl text-center">
-          <div class="text-xs uppercase text-slate-400 font-semibold mb-1">Huella de Memoria RAM</div>
-          <div class="text-2xl font-bold font-mono text-purple-400">0.98 GB RAM</div>
-          <div class="text-[11px] text-slate-500 mt-1">Opera junto al IDE y Docker</div>
-        </div>
-        <div class="glass-card p-5 rounded-2xl text-center">
-          <div class="text-xs uppercase text-slate-400 font-semibold mb-1">Tasa de Aprobación CAS</div>
-          <div class="text-2xl font-bold font-mono text-emerald-400">93.3%</div>
-          <div class="text-[11px] text-slate-500 mt-1">28/30 casos legados &#8805; 80 pts</div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Sección 5: Inicio Rápido para Desarrolladores -->
-  <section id="quickstart" class="py-20 px-6 border-t border-slate-800/60 bg-dark-900/40">
-    <div class="max-w-4xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-14">
-        <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-3">Entorno Desconectado</h2>
-        <h3 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">Ejecuta Edge Clean Copilot en tu Laptop</h3>
-        <p class="text-slate-400 mt-3 text-sm">
-          Prueba el refactorizado en tu máquina en 3 pasos simples desde la terminal.
-        </p>
-      </div>
-
-      <div class="space-y-6">
-        <!-- Paso 1 -->
-        <div class="glass-card p-6 rounded-2xl border border-slate-800">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-brand-500 text-dark-950 font-bold text-xs flex items-center justify-center font-mono">1</span>
-              <h4 class="text-sm font-bold text-white">Instalar Dependencias de la CLI y Ejecutar Tests</h4>
+        <div class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+            <div>
+              <span id="slide-number" class="text-xs font-mono font-bold px-2.5 py-1 rounded bg-brand-500/10 text-brand-400 border border-brand-500/20">Diapositiva 1 de 12</span>
+              <h4 id="slide-title" class="text-lg font-bold text-white mt-2">Título y Planteamiento del Problema</h4>
             </div>
-            <button onclick="copyCode('cmd-step1')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center gap-1">
-              <span>Copiar</span>
-            </button>
-          </div>
-          <pre id="cmd-step1" class="bg-slate-950/80 p-3.5 rounded-xl text-xs font-mono text-brand-300 overflow-x-auto border border-slate-800/80"><code>cd proyecto/cli
-pnpm install
-pnpm test  # Ejecuta 41 tests unitarios (100% verde)</code></pre>
-        </div>
-
-        <!-- Paso 2 -->
-        <div class="glass-card p-6 rounded-2xl border border-slate-800">
-          <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-brand-500 text-dark-950 font-bold text-xs flex items-center justify-center font-mono">2</span>
-              <h4 class="text-sm font-bold text-white">Refactorizar un Archivo Fuente con Diff Visual</h4>
+              <button onclick="prevSlide()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <button onclick="nextSlide()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
             </div>
-            <button onclick="copyCode('cmd-step2')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center gap-1">
-              <span>Copiar</span>
-            </button>
           </div>
-          <pre id="cmd-step2" class="bg-slate-950/80 p-3.5 rounded-xl text-xs font-mono text-brand-300 overflow-x-auto border border-slate-800/80"><code># Prueba con el motor mock determinista
-proyecto/bin/clean-copilot refactor src/order.ts --mock --diff
 
-# Conectar al motor de inferencia local en el borde (llama-server)
-proyecto/bin/clean-copilot refactor src/order.ts --endpoint http://127.0.0.1:8085 --diff</code></pre>
+          <div id="slide-body" class="text-sm text-slate-300 leading-relaxed min-h-[140px] space-y-3 font-normal">
+            <!-- Contenido dinámico inyectado -->
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+            <span>Guion de Defensa Técnica</span>
+            <span class="font-mono">Usa los botones para navegar</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Inicio Rápido -->
+      <section id="quickstart" class="scroll-mt-24">
+        <div class="mb-8">
+          <h2 class="text-xs font-bold tracking-widest text-brand-400 uppercase mb-2">Ejecución del Desarrollador</h2>
+          <h3 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Ejecuta Edge Clean Copilot en 30 Segundos</h3>
         </div>
 
-        <!-- Paso 3 -->
-        <div class="glass-card p-6 rounded-2xl border border-slate-800">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-brand-500 text-dark-950 font-bold text-xs flex items-center justify-center font-mono">3</span>
-              <h4 class="text-sm font-bold text-white">Ejecutar el Evaluador de Benchmark con Motor AST</h4>
+        <div class="space-y-4">
+          <div class="glass-card p-5 rounded-2xl border border-slate-800">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-xs font-mono font-bold text-white">1. Verificar los 41 Tests en Vitest y Compilar TypeScript</div>
+              <button onclick="copyCode('c1')" class="text-xs font-mono text-slate-400 hover:text-brand-400">Copiar</button>
             </div>
-            <button onclick="copyCode('cmd-step3')" class="text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all flex items-center gap-1">
-              <span>Copiar</span>
-            </button>
+            <pre id="c1" class="bg-slate-950 p-3 rounded-xl text-xs font-mono text-brand-300 overflow-x-auto border border-slate-800"><code>cd proyecto/cli && pnpm test && pnpm run build</code></pre>
           </div>
-          <pre id="cmd-step3" class="bg-slate-950/80 p-3.5 rounded-xl text-xs font-mono text-brand-300 overflow-x-auto border border-slate-800/80"><code>python3 proyecto/evaluation/eval_benchmark.py --cases proyecto/evaluation/legacy_benchmark_suite.jsonl</code></pre>
+
+          <div class="glass-card p-5 rounded-2xl border border-slate-800">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-xs font-mono font-bold text-white">2. Ejecutar Refactorización con Diff Visual ANSI</div>
+              <button onclick="copyCode('c2')" class="text-xs font-mono text-slate-400 hover:text-brand-400">Copiar</button>
+            </div>
+            <pre id="c2" class="bg-slate-950 p-3 rounded-xl text-xs font-mono text-brand-300 overflow-x-auto border border-slate-800"><code>proyecto/bin/clean-copilot refactor src/order.ts --mock --diff</code></pre>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border border-slate-800">
+            <div class="flex items-center justify-between mb-2">
+              <div class="text-xs font-mono font-bold text-white">3. Ejecutar el Evaluador de Benchmark con Motor AST</div>
+              <button onclick="copyCode('c3')" class="text-xs font-mono text-slate-400 hover:text-brand-400">Copiar</button>
+            </div>
+            <pre id="c3" class="bg-slate-950 p-3 rounded-xl text-xs font-mono text-brand-300 overflow-x-auto border border-slate-800"><code>python3 proyecto/evaluation/eval_benchmark.py --cases proyecto/evaluation/legacy_benchmark_suite.jsonl</code></pre>
+          </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+
+    </main>
+  </div>
 
   <!-- Pie de Página -->
-  <footer class="mt-auto border-t border-slate-800/80 py-12 px-6 glass-card text-center text-xs text-slate-400">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-      <div class="flex items-center gap-2">
-        <div class="w-6 h-6 rounded-lg bg-brand-500 flex items-center justify-center text-dark-950 font-bold text-xs">
-          ⚡
-        </div>
-        <span class="font-bold text-white">Edge Clean Copilot</span>
-        <span class="text-slate-500">| Proyecto Académico de Semestre</span>
-      </div>
-
-      <div class="flex items-center gap-6 text-slate-400">
-        <a href="./final-report-and-presentation.md" class="hover:text-brand-400 transition-colors">Memoria Académica</a>
-        <a href="./model-factory-architecture.md" class="hover:text-brand-400 transition-colors">Factoría de Modelos</a>
-        <a href="../../docs/index.html" class="hover:text-brand-400 transition-colors">English Version</a>
-      </div>
-
-      <div class="text-slate-500 font-mono">
-        Clean Architecture • Cero `any` • Edge Offline
+  <footer class="mt-auto border-t border-slate-800/80 py-10 px-6 glass-card text-center text-xs text-slate-400">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>Edge Clean Copilot • Proyecto de Grado de IA Aplicada • UCAB 2026</div>
+      <div class="flex gap-6">
+        <a href="./final-report-and-presentation.md" class="hover:text-brand-400">Memoria Académica</a>
+        <a href="./model-factory-architecture.md" class="hover:text-brand-400">Factoría de Modelos</a>
+        <a href="../../docs/index.html" class="hover:text-brand-400">English</a>
       </div>
     </div>
   </footer>
 
   <!-- Scripts Interactivos (Vanilla JS, Cero Dependencias) -->
   <script>
+    // Cambio de pestañas en el comparador de código
     function switchTab(mode) {
       const cleanContent = document.getElementById('tab-content-clean');
       const legacyContent = document.getElementById('tab-content-legacy');
@@ -586,21 +636,115 @@ proyecto/bin/clean-copilot refactor src/order.ts --endpoint http://127.0.0.1:808
       }
     }
 
-    function copyCode(elementId) {
-      const pre = document.getElementById(elementId);
-      if (!pre) return;
-      const text = pre.innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = event.currentTarget;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<span>✓ ¡Copiado!</span>';
-        btn.classList.add('bg-brand-500/20', 'text-brand-300', 'border-brand-500/30');
-        setTimeout(() => {
-          btn.innerHTML = originalText;
-          btn.classList.remove('bg-brand-500/20', 'text-brand-300', 'border-brand-500/30');
-        }, 2000);
+    // Copiar al portapapeles
+    function copyCode(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      navigator.clipboard.writeText(el.innerText).then(() => {
+        alert('¡Copiado al portapapeles!');
       });
     }
+
+    // Datos de las 12 Diapositivas en Español
+    const slides = [
+      {
+        num: 1,
+        title: "Diapositiva 1: Título y Misión del Proyecto",
+        text: "<strong>Edge Clean Copilot</strong>: Small Language Model especializado y ajustado con LoRA sobre Qwen2.5-Coder para aplicar Clean Architecture, Domain-Driven Design y Puertos y Adaptadores directamente en laptops de desarrollo sin depender de la nube."
+      },
+      {
+        num: 2,
+        title: "Diapositiva 2: El Problema de Fondo en la IA de Código",
+        text: "Los LLMs comerciales de frontera (GPT-4o, Claude 3.5 Sonnet) dominan la sintaxis y algoritmos aislados pero fallan en los límites arquitectónicos. Introducen tipos <code>any</code>, mezclan ORMs en entidades de negocio y crean acoplamientos circulares."
+      },
+      {
+        num: 3,
+        title: "Diapositiva 3: Hipótesis de Investigación y Enfoque Edge",
+        text: "Un SLM ágil de 1.5B/3B parámetros especializado mediante LoRA con pares de alta señal arquitectónica puede superar a los modelos de frontera en rigor formal (CAS >= 90) operando a 58 tok/s bajo 1 GB de RAM."
+      },
+      {
+        num: 4,
+        title: "Diapositiva 4: La Fórmula del Clean Architecture Score (CAS)",
+        text: "CAS es una métrica calibrada de 0 a 100 puntos: Aislamiento de Dominio (30 pts), Invariantes y Result (25 pts), Puertos y Adaptadores (25 pts) y Rigor de Tipado TypeScript sin any (20 pts)."
+      },
+      {
+        num: 5,
+        title: "Diapositiva 5: Factoría de Datasets Sintéticos Canónicos",
+        text: "138 pares de entrenamiento estratificados y 30 pares de evaluación holdout generados a partir de semillas canónicas y validados en múltiples etapas sintácticas y arquitectónicas. Cero fuga de datos entre particiones."
+      },
+      {
+        num: 6,
+        title: "Diapositiva 6: Modelo Operativo 'Cold Staging, Hot Burst'",
+        text: "Solución a las restricciones de cómputo compartido: La laptop local gestiona staging de datasets, tests unitarios y verificación AST. Ráfagas de 15 minutos entrenan los adaptadores LoRA en la NVIDIA DGX Spark con cortes automáticos de tiempo."
+      },
+      {
+        num: 7,
+        title: "Diapositiva 7: Especialización LoRA y Arquitectura de Recetas",
+        text: "El harness de entrenamiento está desacoplado mediante Recetas declarativas en YAML. Incorpora enmascaramiento de pérdida exclusivo en la respuesta del asistente y validación fail-fast de capas para familias Qwen, Llama y Gemma."
+      },
+      {
+        num: 8,
+        title: "Diapositiva 8: Cuantización Edge y Matriz GGUF",
+        text: "Fusión atómica de deltas LoRA en pesos base de 16-bit, seguida de cuantización a GGUF Q4_K_M con llama.cpp. Resultado: binario de ~0.98 GB, TTFT menor a 15ms y cero telemetría externa."
+      },
+      {
+        num: 9,
+        title: "Diapositiva 9: Cliente CLI Hexagonal en TypeScript",
+        text: "Desarrollado en TypeScript estricto con cero <code>any</code>. 41 tests unitarios en Vitest (100% verde). Implementa entidades puras de dominio, puertos abstractos de inferencia y diffs visuales coloreados basados en LCS."
+      },
+      {
+        num: 10,
+        title: "Diapositiva 10: Motor de Evaluación Determinista AST",
+        text: "Sustituye expresiones regulares heurísticas por la TypeScript Compiler API oficial (<code>ts.createSourceFile</code>). Evalúa 30 casos de prueba en 1.08 segundos con inspección exacta de nodos sintácticos."
+      },
+      {
+        num: 11,
+        title: "Diapositiva 11: Resultados Empíricos del Benchmark",
+        text: "Edge Clean Copilot alcanzó <strong>91.5 puntos CAS</strong> frente a 48.2 del modelo base Qwen 1.5B (+89.8% de ganancia relativa) y 88.0 de modelos comerciales en la nube, validando la hipótesis central."
+      },
+      {
+        num: 12,
+        title: "Diapositiva 12: Escalabilidad, Impacto y Trabajo Futuro",
+        text: "La plataforma opera como una Factoría de Modelos industrializada. Próximos hitos: soporte políglota (Go, Rust), mutación sintáctica en vivo basada en AST e inferencia web en el navegador vía WebGPU."
+      }
+    ];
+
+    let currentSlide = 0;
+    function renderSlide(index) {
+      const s = slides[index];
+      document.getElementById('slide-number').innerText = `Diapositiva ${s.num} de ${slides.length}`;
+      document.getElementById('slide-title').innerText = s.title;
+      document.getElementById('slide-body').innerHTML = s.text;
+    }
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      renderSlide(currentSlide);
+    }
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      renderSlide(currentSlide);
+    }
+    renderSlide(0);
+
+    // Scroll Spy para la barra de navegación lateral
+    const sections = document.querySelectorAll('main > section');
+    const navLinks = document.querySelectorAll('.toc-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        if (pageYOffset >= top) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('nav-active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('nav-active');
+        }
+      });
+    });
   </script>
 </body>
 </html>
