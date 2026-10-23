@@ -11,6 +11,7 @@ Este directorio contiene la documentación técnica oficial, registros de teleme
 
 | Documento | Propósito | Contenido Clave |
 | :--- | :--- | :--- |
+| **[Memoria Técnica Final y Guion de Defensa](./final-report-and-presentation.md)** | Paper Académico y Guion de Exposición | Informe exhaustivo de ingeniería, hallazgos formales de CAS y guion de 12 diapositivas. |
 | **[Roadmap Detallado de Ejecución](./detailed-roadmap.md)** | Plan Maestro Operativo (Semanas 4–15) | Hiperparámetros, metas de cuantización, métricas de evaluación automatizadas y tareas semanales. |
 | **[Progreso e Hitos Verificados](./progress-and-milestones.md)** | Tablero de Estado en Vivo | Desglose empírico de avances en las Fases 1, 2, 3 y 4. |
 | **[Reporte de Sesión: 2026-10-22](./session-2026-10-22-burst-and-lessons.md)** | Informe Técnico y Análisis de Causa Raíz | Aislamiento multi-instancia en puertos (8085 vs 8080), burst de dataset a 160 muestras, setup del runtime en GB10. |

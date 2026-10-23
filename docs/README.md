@@ -11,6 +11,7 @@ This directory contains the authoritative technical documentation, session telem
 
 | Document | Purpose | Key Content |
 | :--- | :--- | :--- |
+| **[Final Technical Report & Presentation](./final-report-and-presentation.md)** | Academic Capstone Paper & Defense Guide | Comprehensive engineering report, formal Clean Architecture Score findings, and 12-slide presentation script. |
 | **[Detailed Execution Roadmap](./detailed-roadmap.md)** | Operational Master Plan (Weeks 4–15) | Hyperparameters, quantization targets, automated benchmark metrics, and weekly action items. |
 | **[Progress & Verified Milestones](./progress-and-milestones.md)** | Live Status Board | Empirical progress breakdown across Phases 1, 2, 3, and 4. |
 | **[Session Report: 2026-10-22](./session-2026-10-22-burst-and-lessons.md)** | Technical Log & Root Cause Analysis | Multi-tenant port isolation (8085 vs 8080), 160-sample dataset burst, GB10 ML runtime setup. |

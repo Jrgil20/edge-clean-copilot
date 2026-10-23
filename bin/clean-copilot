@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+/**
+ * Edge Clean Copilot — Global CLI Binary Launcher
+ * Allows executing clean-copilot directly from repository root or PATH.
+ */
+
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+import { existsSync } from 'node:fs';
+import { spawn } from 'node:child_process';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const repoRoot = resolve(__dirname, '..');
+const distEntry = resolve(repoRoot, 'cli', 'dist', 'infrastructure', 'cli', 'index.js');
+const srcEntry = resolve(repoRoot, 'cli', 'src', 'infrastructure', 'cli', 'index.ts');
+
+const args = process.argv.slice(2);
+
+if (existsSync(distEntry)) {
+  const child = spawn(process.execPath, [distEntry, ...args], {
+    stdio: 'inherit',
+    cwd: process.cwd()
+  });
+
+  child.on('exit', (code) => {
+    process.exit(code ?? 0);
+  });
+} else {
+  // Development fallback using tsx
+  const tsxBin = resolve(repoRoot, 'cli', 'node_modules', '.bin', 'tsx');
+  const child = spawn(tsxBin, [srcEntry, ...args], {
+    stdio: 'inherit',
+    cwd: process.cwd()
+  });
+
+  child.on('exit', (code) => {
+    process.exit(code ?? 0);
+  });
+}
