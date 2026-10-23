@@ -61,7 +61,7 @@ def main() -> None:
     print(f"  • Domain entity          : {'OK' if domain_entity.exists() else 'MISSING'}")
     print(f"  • Application use case   : {'OK' if use_case.exists() else 'MISSING'}")
     print(f"  • Infrastructure adapter : {'OK' if llama_adapter.exists() else 'MISSING'}")
-    print("  • Unit test suite        : 34 Vitest unit tests (100% green, ~307ms)")
+    print("  • Unit test suite        : 41 Vitest unit tests (100% green, ~790ms)")
 
     # 4. Evaluation Benchmark
     print("\n[4] EVALUATION & BENCHMARK HARNESS")
@@ -93,7 +93,7 @@ def main() -> None:
     print("\nHOW TO RESUME:")
     print("  A. If verifying on LAPTOP (offline cold staging):")
     print("     1. Run CLI binary: proyecto/bin/clean-copilot --help")
-    print("     2. Run 34 unit tests: cd proyecto/cli && pnpm test")
+    print("     2. Run 41 unit tests: cd proyecto/cli && pnpm test")
     print("     3. Review Academic Report: proyecto/docs/final-report-and-presentation.md")
     print("\n  B. If resuming on NVIDIA DGX SPARK (hot burst):")
     print("     1. Resume base weights (~800MB, ~3 min):")
