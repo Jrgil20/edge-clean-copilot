@@ -2,9 +2,9 @@
 
 > **Module:** Architectural Compliance & Evaluation Harness  
 > **Target Models:** Base SLM (`Qwen-2.5-Coder-1.5B/3B`), LoRA Specialized Model, and Commercial Frontier Baselines  
-> **Execution Engine:** Pure Python 3 (Zero external dependencies)  
+> **Execution Engine:** Dual-Engine (Deterministic TypeScript Compiler AST via [`ast_analyzer.ts`](./ast_analyzer.ts) with Pure Python Regex Fallback)  
 
-This directory contains the automated benchmark harness ([`eval_benchmark.py`](./eval_benchmark.py)) designed to empirically measure, score, and prove the core hypothesis of the **Edge Clean Copilot** project.
+This directory contains the automated benchmark harness ([`eval_benchmark.py`](./eval_benchmark.py)) and AST parser ([`ast_analyzer.ts`](./ast_analyzer.ts)) designed to empirically measure, score, and prove the core hypothesis of the **Edge Clean Copilot** project.
 
 ---
 
@@ -48,11 +48,14 @@ Where:
 Evaluate generated datasets or model completion files without needing an active inference server:
 
 ```bash
-# Evaluate the 30-case legacy benchmark suite
-python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl --output benchmark_report.json
+# Evaluate using the deterministic TypeScript Compiler AST Engine (default):
+python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl
+
+# Force heuristic regex fallback engine:
+python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl --no-ast
 
 # Evaluate the initial 10 control test cases
-python3 eval_benchmark.py --cases test_benchmark_cases.jsonl --output benchmark_report.json
+python3 eval_benchmark.py --cases test_benchmark_cases.jsonl
 ```
 
 ### 3.2 Live Evaluation (Real-Time Endpoint)

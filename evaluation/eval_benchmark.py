@@ -14,11 +14,13 @@ Supports dual execution modes:
 
 import argparse
 import json
+import os
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Tuple, Optional
 import urllib.request
 import urllib.error
 
@@ -175,6 +177,66 @@ def evaluate_code_sample(code: str) -> Dict[str, Any]:
         "all_notes": all_notes,
     }
 
+def evaluate_batch_ast(samples: List[Dict[str, Any]]) -> Optional[List[Dict[str, Any]]]:
+    """Runs batch evaluation through ast_analyzer.ts using tsx/node."""
+    analyzer_script = Path(__file__).resolve().parent / "ast_analyzer.ts"
+    cli_dir = Path(__file__).resolve().parent.parent / "cli"
+
+    if not analyzer_script.exists() or not cli_dir.exists():
+        return None
+
+    payload = [{"id": str(s["idx"]), "code": s["content"]} for s in samples]
+
+    env = os.environ.copy()
+    env["NODE_PATH"] = str(cli_dir / "node_modules")
+
+    cmd = ["pnpm", "exec", "tsx", str(analyzer_script)]
+    try:
+        proc = subprocess.run(
+            cmd,
+            cwd=str(cli_dir),
+            env=env,
+            input=json.dumps(payload),
+            capture_output=True,
+            text=True,
+            timeout=45,
+        )
+        if proc.returncode != 0:
+            return None
+
+        ast_output = json.loads(proc.stdout)
+        results = []
+        for s, item in zip(samples, ast_output):
+            m = item["metrics"]
+            total_score = m["compositeScore"]
+            grade = (
+                "A (Clean Architecture Certified)" if total_score >= 85
+                else "B (Partially Clean)" if total_score >= 70
+                else "C (Architectural Violations)" if total_score >= 50
+                else "F (Coupled / Anti-Pattern)"
+            )
+            notes_boundary = [f"Prohibited import: {p}" for p in m["prohibitedImports"]]
+            notes_invariant = [] if m["hasConstructorGuards"] else ["Missing constructor invariant guard."]
+            notes_ports = [f"Port: {p}" for p in m["declaredContracts"]]
+            notes_any = [f"Detected {m['anyOccurrences']} `any` keyword(s)"] if m["anyOccurrences"] > 0 else []
+
+            results.append({
+                "sample_index": s["idx"],
+                "label": s["label"],
+                "total_score": total_score,
+                "grade": grade,
+                "metrics": {
+                    "domain_boundary": {"score": m["domainBoundaryScore"], "max": 30.0, "violations": notes_boundary},
+                    "invariant_safety": {"score": m["invariantScore"], "max": 25.0, "violations": notes_invariant},
+                    "ports_decoupling": {"score": m["portsScore"], "max": 25.0, "violations": notes_ports},
+                    "any_penalty": {"score": m["typingScore"], "max": 20.0, "violations": notes_any},
+                },
+                "all_notes": notes_boundary + notes_invariant + notes_ports + notes_any + m["parseErrors"],
+            })
+        return results
+    except Exception:
+        return None
+
 def print_ascii_table(results: List[Dict[str, Any]], elapsed_seconds: float):
     """Renders formatted ASCII summary table to stdout."""
     total_samples = len(results)
@@ -212,6 +274,7 @@ def parse_args():
     parser.add_argument("--url", type=str, default=None, help="llama-server endpoint (e.g. http://127.0.0.1:8085/v1/chat/completions).")
     parser.add_argument("--prompts", type=str, default=None, help="Path to prompts JSONL file for live evaluation.")
     parser.add_argument("--output", type=str, default=str(Path(__file__).parent / "benchmark_report.json"), help="Path to export JSON report.")
+    parser.add_argument("--no-ast", action="store_true", help="Disable deterministic TypeScript AST engine and force heuristic regex fallback.")
     return parser.parse_args()
 
 def main():
@@ -222,7 +285,7 @@ def main():
         print("[ERROR] Please specify either --offline <jsonl_file> or --url <endpoint>", file=sys.stderr)
         sys.exit(1)
 
-    eval_results = []
+    raw_samples: List[Dict[str, Any]] = []
 
     if args.offline:
         offline_path = Path(args.offline)
@@ -252,10 +315,11 @@ def main():
                 else:
                     content = json.dumps(item)
 
-                eval_data = evaluate_code_sample(content)
-                eval_data["sample_index"] = idx
-                eval_data["label"] = item.get("label", f"Sample #{idx}")
-                eval_results.append(eval_data)
+                raw_samples.append({
+                    "idx": idx,
+                    "label": item.get("label", f"Sample #{idx}"),
+                    "content": content,
+                })
 
     elif args.url:
         if not args.prompts:
@@ -289,12 +353,33 @@ def main():
                     with urllib.request.urlopen(req, timeout=120) as resp:
                         res = json.loads(resp.read().decode("utf-8"))
                         assistant_response = res["choices"][0]["message"]["content"]
-                        eval_data = evaluate_code_sample(assistant_response)
-                        eval_data["sample_index"] = idx
-                        eval_data["label"] = item.get("label", f"Live Sample #{idx}")
-                        eval_results.append(eval_data)
+                        raw_samples.append({
+                            "idx": idx,
+                            "label": item.get("label", f"Live Sample #{idx}"),
+                            "content": assistant_response,
+                        })
                 except Exception as e:
                     print(f"  [ERROR] Prompt #{idx} failed: {e}", file=sys.stderr)
+
+    eval_results: List[Dict[str, Any]] = []
+    use_ast = not args.no_ast
+
+    if use_ast and raw_samples:
+        ast_results = evaluate_batch_ast(raw_samples)
+        if ast_results is not None:
+            print("[EVAL ENGINE] Deterministic TypeScript Compiler AST Engine (ts.createSourceFile v5.9) ✓")
+            eval_results = ast_results
+
+    if not eval_results and raw_samples:
+        if use_ast:
+            print("[EVAL ENGINE] AST worker unavailable. Falling back to Heuristic Regex Engine.")
+        else:
+            print("[EVAL ENGINE] Heuristic Regex Engine (Forced by --no-ast).")
+        for s in raw_samples:
+            eval_data = evaluate_code_sample(s["content"])
+            eval_data["sample_index"] = s["idx"]
+            eval_data["label"] = s["label"]
+            eval_results.append(eval_data)
 
     elapsed = time.time() - start_time
     print_ascii_table(eval_results, elapsed)

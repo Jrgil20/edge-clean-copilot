@@ -2,9 +2,9 @@
 
 > **Módulo:** Cumplimiento Arquitectónico y Arnés de Evaluación  
 > **Modelos Objetivo:** SLM Base (`Qwen-2.5-Coder-1.5B/3B`), Modelo Especializado LoRA y Modelos Comerciales de Referencia  
-> **Motor de Ejecución:** Python 3 Puro (Cero dependencias externas)  
+> **Motor de Ejecución:** Motor Dual (AST determinista del compilador TypeScript vía [`ast_analyzer.ts`](./ast_analyzer.ts) con fallback a expresiones regulares en Python)  
 
-Este directorio contiene el arnés de benchmarking automatizado ([`eval_benchmark.py`](../../../proyecto/evaluation/eval_benchmark.py)), diseñado para medir, calificar y demostrar empíricamente la hipótesis central del proyecto **Edge Clean Copilot**.
+Este directorio contiene el arnés de benchmarking automatizado ([`eval_benchmark.py`](./eval_benchmark.py)) y el analizador AST ([`ast_analyzer.ts`](./ast_analyzer.ts)), diseñados para medir, calificar y demostrar empíricamente la hipótesis central del proyecto **Edge Clean Copilot**.
 
 ---
 
@@ -48,11 +48,14 @@ Donde:
 Evaluar datasets generados o salidas de modelos sin necesidad de encender un servidor de inferencia:
 
 ```bash
-# Evaluar la suite completa de 30 casos de código legado
-python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl --output benchmark_report.json
+# Evaluar usando el motor determinista AST del compilador TypeScript (default):
+python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl
+
+# Forzar el motor heurístico de expresiones regulares (fallback):
+python3 eval_benchmark.py --cases legacy_benchmark_suite.jsonl --no-ast
 
 # Evaluar la suite de control inicial de 10 casos
-python3 eval_benchmark.py --cases test_benchmark_cases.jsonl --output benchmark_report.json
+python3 eval_benchmark.py --cases test_benchmark_cases.jsonl
 ```
 
 ### 3.2 Evaluación en Vivo (Endpoints HTTP)
