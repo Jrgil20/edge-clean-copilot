@@ -12,6 +12,7 @@ This directory contains the authoritative technical documentation, session telem
 | Document | Purpose | Key Content |
 | :--- | :--- | :--- |
 | **[Interactive Web Portal (docs/index.html)](./index.html)** | Visual Presentation & Interactive Showcase | Single-file responsive showcase with live Before/After diff comparator and CAS metrics. |
+| **[Model Usage & Sharing Guide](./model-usage-and-sharing-guide.md)** | Operational Guide & Distribution Blueprint | How to power on/off, use CLI, run in VS Code, share via Ollama/LM Studio/Hugging Face. |
 | **[Model Factory Architecture](./model-factory-architecture.md)** | Scalable SLM Specialization Architecture | Blueprint for ingesting new open-weight SLMs, decoupled factory stages, and reproducibility. |
 | **[Final Technical Report & Presentation](./final-report-and-presentation.md)** | Academic Capstone Paper & Defense Guide | Comprehensive engineering report, formal Clean Architecture Score findings, and 12-slide presentation script. |
 | **[Detailed Execution Roadmap](./detailed-roadmap.md)** | Operational Master Plan (Weeks 4–15) | Hyperparameters, quantization targets, automated benchmark metrics, and weekly action items. |
