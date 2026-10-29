@@ -1,15 +1,23 @@
 #!/usr/bin/env python3
 """
 Edge Clean Copilot — VS Code GitHub Copilot Local Toggle Tool
-Quickly switch GitHub Copilot in VS Code between local/Spark LLMs and GitHub Cloud.
+Quickly switch GitHub Copilot in VS Code between local/Spark LLMs and GitHub Cloud,
+and manage local offline inference servers on the laptop.
 """
 
 import sys
 import os
+import subprocess
 import json
+import signal
 from pathlib import Path
 
 SETTINGS_PATH = Path.home() / ".config" / "Code" / "User" / "settings.json"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+LOCAL_MODEL_PATH = REPO_ROOT / "models" / "clean-copilot-1.5b-q4_k_m.gguf"
+PID_FILE = Path.home() / ".local" / "share" / "clean-copilot-server.pid"
+LOG_FILE = Path.home() / ".local" / "share" / "clean-copilot-server.log"
+
 DEFAULT_SPARK_IP = "192.168.6.35"
 COPILOT_PORT = "8085"
 QWEN_PORT = "8080"
@@ -36,23 +44,90 @@ def get_current_proxy(settings: dict) -> str | None:
         return adv.get("debug.overrideProxyUrl")
     return None
 
+def is_local_server_running() -> int | None:
+    if not PID_FILE.exists():
+        return None
+    try:
+        pid = int(PID_FILE.read_text().strip())
+        os.kill(pid, 0)
+        return pid
+    except (ValueError, ProcessLookupError, PermissionError):
+        PID_FILE.unlink(missing_ok=True)
+        return None
+
+def cmd_start_server():
+    pid = is_local_server_running()
+    if pid:
+        print(f"[Edge Clean Copilot] Local server is already running (PID: {pid}) at http://127.0.0.1:{COPILOT_PORT}")
+        return
+
+    if not LOCAL_MODEL_PATH.exists():
+        print(f"[ERROR] Local model binary not found at: {LOCAL_MODEL_PATH}", file=sys.stderr)
+        sys.exit(1)
+
+    PID_FILE.parent.mkdir(parents=True, exist_ok=True)
+    llama_server_bin = Path.home() / ".local" / "bin" / "llama-server"
+
+    cmd = [
+        str(llama_server_bin),
+        "-m", str(LOCAL_MODEL_PATH),
+        "--port", COPILOT_PORT,
+        "--host", "127.0.0.1",
+        "--alias", "clean-copilot,edge-clean-copilot-q4_k_m",
+        "-c", "4096",
+        "--jinja"
+    ]
+
+    print(f"--> Starting local offline inference server on laptop CPU (Port {COPILOT_PORT})...")
+    with open(LOG_FILE, "w") as log:
+        proc = subprocess.Popen(cmd, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+
+    PID_FILE.write_text(str(proc.pid))
+    print(f"[OK] Local server started with PID {proc.pid}.")
+    print(f"     Endpoint: http://127.0.0.1:{COPILOT_PORT}")
+    print(f"     Log file: {LOG_FILE}")
+
+def cmd_stop_server():
+    pid = is_local_server_running()
+    if not pid:
+        print("[Edge Clean Copilot] No local server is currently running.")
+        return
+
+    try:
+        os.kill(pid, signal.SIGTERM)
+        print(f"[OK] Stopped local server (PID: {pid}).")
+    except Exception as e:
+        print(f"[WARN] Error terminating process {pid}: {e}")
+    PID_FILE.unlink(missing_ok=True)
+
 def cmd_status():
     settings = load_settings()
     proxy = get_current_proxy(settings)
+    local_pid = is_local_server_running()
+
     print("======================================================")
     print("  VS Code GitHub Copilot — Model Routing Status")
     print("======================================================")
     if proxy:
         target_name = "Edge Clean Copilot (Fine-tuned)" if COPILOT_PORT in proxy else ("Qwen3-Coder 30B" if QWEN_PORT in proxy else "Custom Local LLM")
-        print(f"  Status   : 🟢 ACTIVE (Routing to Private/Edge LLM)")
+        print(f"  Routing  : 🟢 ACTIVE (Routing to Private/Edge LLM)")
         print(f"  Endpoint : {proxy}")
         print(f"  Target   : {target_name}")
     else:
-        print(f"  Status   : ⚪ CLOUD DEFAULT (GitHub Copilot Official Cloud)")
+        print(f"  Routing  : ⚪ CLOUD DEFAULT (GitHub Copilot Official Cloud)")
         print(f"  Endpoint : https://api.githubcopilot.com")
+
+    print("------------------------------------------------------")
+    if local_pid:
+        print(f"  Local CPU Server : 🟢 RUNNING (PID: {local_pid}, Port: {COPILOT_PORT})")
+    else:
+        print(f"  Local CPU Server : ⚪ INACTIVE (Run 'copilot-local start-server' to launch)")
     print("======================================================")
 
 def cmd_on(target: str = "copilot", host: str = DEFAULT_SPARK_IP):
+    if target == "local":
+        host = "127.0.0.1"
+        target = "copilot"
     port = COPILOT_PORT if target == "copilot" else QWEN_PORT
     model_name = "Edge Clean Copilot 1.5B (Port 8085)" if target == "copilot" else "Qwen3-Coder 30B (Port 8080)"
     endpoint = f"http://{host}:{port}"
@@ -67,7 +142,7 @@ def cmd_on(target: str = "copilot", host: str = DEFAULT_SPARK_IP):
     print(f"\n[OK] GitHub Copilot in VS Code switched to: 🟢 LOCAL/SPARK")
     print(f"     Target Model: {model_name}")
     print(f"     Endpoint    : {endpoint}")
-    print(f"\n[TIP] Restart or reload VS Code window ('Developer: Reload Window') for immediate effect.")
+    print(f"\n[TIP] Reload VS Code window ('Developer: Reload Window') for immediate effect.")
 
 def cmd_off():
     settings = load_settings()
@@ -83,19 +158,23 @@ def cmd_off():
 def show_help():
     print("""Usage: copilot-local <command> [options]
 
-Fast toggle for VS Code GitHub Copilot between Local/Spark LLMs and GitHub Cloud.
+Fast toggle for VS Code GitHub Copilot and offline laptop inference.
 
-Commands:
-  on [copilot|qwen] [host]  Redirect Copilot to private LLM (default: copilot on 192.168.6.35:8085)
+VS Code Routing:
+  on [copilot|qwen|local]   Redirect Copilot (default: copilot on Spark 192.168.6.35:8085)
+  on local                  Redirect Copilot to 100% offline laptop CPU (127.0.0.1:8085)
   off                       Restore official GitHub Copilot Cloud
-  status                    Show current routing status in VS Code settings
+  status                    Show current routing & local server status
+
+Local Offline Engine (on Laptop CPU):
+  start-server              Launch background llama-server on laptop CPU with local GGUF
+  stop-server               Stop background local llama-server
 
 Examples:
-  copilot-local on          # Switch to Edge Clean Copilot on Spark (Port 8085)
-  copilot-local on qwen     # Switch to Qwen3-Coder 30B on Spark (Port 8080)
-  copilot-local on copilot 127.0.0.1  # Switch to local laptop endpoint
-  copilot-local off         # Revert back to GitHub Cloud
-  copilot-local status      # Check current active configuration
+  copilot-local on            # Route VS Code to Spark GPU
+  copilot-local start-server  # Launch local model on laptop
+  copilot-local on local      # Route VS Code to local offline laptop model
+  copilot-local off           # Return to GitHub Cloud
 """)
 
 def main():
@@ -106,10 +185,14 @@ def main():
     cmd = sys.argv[1].lower()
     if cmd == "status":
         cmd_status()
+    elif cmd in ("start-server", "start"):
+        cmd_start_server()
+    elif cmd in ("stop-server", "stop"):
+        cmd_stop_server()
     elif cmd == "on":
         target = sys.argv[2].lower() if len(sys.argv) > 2 else "copilot"
         host = sys.argv[3] if len(sys.argv) > 3 else DEFAULT_SPARK_IP
-        if target not in ("copilot", "qwen"):
+        if target not in ("copilot", "qwen", "local"):
             host = target
             target = "copilot"
         cmd_on(target, host)
