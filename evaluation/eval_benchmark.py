@@ -337,10 +337,14 @@ def main():
                 if not line:
                     continue
                 item = json.loads(line)
-                prompt_text = item.get("prompt") or item.get("user")
+                if "messages" in item:
+                    messages_payload = [m for m in item["messages"] if m.get("role") in ("system", "user")]
+                else:
+                    prompt_text = item.get("prompt") or item.get("user") or ""
+                    messages_payload = [{"role": "user", "content": prompt_text}]
 
                 payload = {
-                    "messages": [{"role": "user", "content": prompt_text}],
+                    "messages": messages_payload,
                     "temperature": 0.1,
                     "max_tokens": 1024,
                 }

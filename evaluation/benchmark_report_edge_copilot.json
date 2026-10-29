@@ -1,0 +1,1182 @@
+{
+  "timestamp": "2026-10-29T15:37:01Z",
+  "total_samples": 30,
+  "duration_seconds": 157.95,
+  "average_score": 76.33,
+  "results": [
+    {
+      "sample_index": 1,
+      "label": "Live Sample #1",
+      "total_score": 50,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Unterminated template literal."
+      ]
+    },
+    {
+      "sample_index": 2,
+      "label": "Live Sample #2",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 10,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: IPaymentGateway",
+            "Port: IPaymentDetails",
+            "Port: PaymentError",
+            "Port: IPaymentUseCase"
+          ]
+        },
+        "any_penalty": {
+          "score": 5,
+          "max": 20.0,
+          "violations": [
+            "Detected 3 `any` keyword(s)"
+          ]
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IPaymentGateway",
+        "Port: IPaymentDetails",
+        "Port: PaymentError",
+        "Port: IPaymentUseCase",
+        "Detected 3 `any` keyword(s)"
+      ]
+    },
+    {
+      "sample_index": 3,
+      "label": "Live Sample #3",
+      "total_score": 85,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 15,
+          "max": 25.0,
+          "violations": [
+            "Port: Money"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Money"
+      ]
+    },
+    {
+      "sample_index": 4,
+      "label": "Live Sample #4",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 10,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 15,
+          "max": 25.0,
+          "violations": [
+            "Port: Result"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Result"
+      ]
+    },
+    {
+      "sample_index": 5,
+      "label": "Live Sample #5",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: OrderItem",
+            "Port: Order",
+            "Port: OrderRepository",
+            "Port: TaxCalculator",
+            "Port: ProcessOrderRequest"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: OrderItem",
+        "Port: Order",
+        "Port: OrderRepository",
+        "Port: TaxCalculator",
+        "Port: ProcessOrderRequest"
+      ]
+    },
+    {
+      "sample_index": 6,
+      "label": "Live Sample #6",
+      "total_score": 90,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: CancelSubscriptionUseCase",
+            "Port: Result"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: CancelSubscriptionUseCase",
+        "Port: Result"
+      ]
+    },
+    {
+      "sample_index": 7,
+      "label": "Live Sample #7",
+      "total_score": 85,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 15,
+          "max": 25.0,
+          "violations": [
+            "Port: Money"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Money"
+      ]
+    },
+    {
+      "sample_index": 8,
+      "label": "Live Sample #8",
+      "total_score": 50,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard."
+      ]
+    },
+    {
+      "sample_index": 9,
+      "label": "Live Sample #9",
+      "total_score": 90,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: IDomainEvent",
+            "Port: IEventPublisher"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IDomainEvent",
+        "Port: IEventPublisher"
+      ]
+    },
+    {
+      "sample_index": 10,
+      "label": "Live Sample #10",
+      "total_score": 85,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: OrderItem",
+            "Port: Order",
+            "Port: IOrderRepository",
+            "Port: ITaxCalculator"
+          ]
+        },
+        "any_penalty": {
+          "score": 10,
+          "max": 20.0,
+          "violations": [
+            "Detected 2 `any` keyword(s)"
+          ]
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: OrderItem",
+        "Port: Order",
+        "Port: IOrderRepository",
+        "Port: ITaxCalculator",
+        "Detected 2 `any` keyword(s)"
+      ]
+    },
+    {
+      "sample_index": 11,
+      "label": "Live Sample #11",
+      "total_score": 85,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 15,
+          "max": 25.0,
+          "violations": [
+            "Port: Result"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Result"
+      ]
+    },
+    {
+      "sample_index": 12,
+      "label": "Live Sample #12",
+      "total_score": 50,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard."
+      ]
+    },
+    {
+      "sample_index": 13,
+      "label": "Live Sample #13",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: IUserRepository",
+            "Port: IPasswordHasher",
+            "Port: IRegisterAccount"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IUserRepository",
+        "Port: IPasswordHasher",
+        "Port: IRegisterAccount"
+      ]
+    },
+    {
+      "sample_index": 14,
+      "label": "Live Sample #14",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 10,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 15,
+          "max": 25.0,
+          "violations": [
+            "Port: Result"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Result"
+      ]
+    },
+    {
+      "sample_index": 15,
+      "label": "Live Sample #15",
+      "total_score": 45,
+      "grade": "F (Coupled / Anti-Pattern)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 15,
+          "max": 20.0,
+          "violations": [
+            "Detected 1 `any` keyword(s)"
+          ]
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Detected 1 `any` keyword(s)"
+      ]
+    },
+    {
+      "sample_index": 16,
+      "label": "Live Sample #16",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: OrderItem",
+            "Port: OrderValidationError",
+            "Port: OrderRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: OrderItem",
+        "Port: OrderValidationError",
+        "Port: OrderRepository",
+        "Invalid character.",
+        "Invalid character.",
+        "Unexpected keyword or identifier."
+      ]
+    },
+    {
+      "sample_index": 17,
+      "label": "Live Sample #17",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: User",
+            "Port: RegisterUserUseCase",
+            "Port: IUserRepository",
+            "Port: IEmailService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: User",
+        "Port: RegisterUserUseCase",
+        "Port: IUserRepository",
+        "Port: IEmailService"
+      ]
+    },
+    {
+      "sample_index": 18,
+      "label": "Live Sample #18",
+      "total_score": 50,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Module declaration names may only use ' or \" quoted strings.",
+        "Unexpected keyword or identifier.",
+        "Unexpected keyword or identifier."
+      ]
+    },
+    {
+      "sample_index": 19,
+      "label": "Live Sample #19",
+      "total_score": 90,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: IDomainEvent",
+            "Port: IEventPublisher"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IDomainEvent",
+        "Port: IEventPublisher"
+      ]
+    },
+    {
+      "sample_index": 20,
+      "label": "Live Sample #20",
+      "total_score": 90,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: IDomainEvent",
+            "Port: IEventPublisher"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IDomainEvent",
+        "Port: IEventPublisher"
+      ]
+    },
+    {
+      "sample_index": 21,
+      "label": "Live Sample #21",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: IOrderItem",
+            "Port: IOrder",
+            "Port: CreateOrderUseCase",
+            "Port: CreateOrderRequest",
+            "Port: OrderResponse",
+            "Port: IOrderRepository",
+            "Port: IItemService",
+            "Port: IEmailService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IOrderItem",
+        "Port: IOrder",
+        "Port: CreateOrderUseCase",
+        "Port: CreateOrderRequest",
+        "Port: OrderResponse",
+        "Port: IOrderRepository",
+        "Port: IItemService",
+        "Port: IEmailService"
+      ]
+    },
+    {
+      "sample_index": 22,
+      "label": "Live Sample #22",
+      "total_score": 50,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Unterminated template literal."
+      ]
+    },
+    {
+      "sample_index": 23,
+      "label": "Live Sample #23",
+      "total_score": 85,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 10,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: User",
+            "Port: RegisterUserUseCase",
+            "Port: IUserRepository",
+            "Port: IEmailService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: User",
+        "Port: RegisterUserUseCase",
+        "Port: IUserRepository",
+        "Port: IEmailService"
+      ]
+    },
+    {
+      "sample_index": 24,
+      "label": "Live Sample #24",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: User",
+            "Port: RegisterUserUseCase",
+            "Port: IUserRepository",
+            "Port: IEmailService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: User",
+        "Port: RegisterUserUseCase",
+        "Port: IUserRepository",
+        "Port: IEmailService"
+      ]
+    },
+    {
+      "sample_index": 25,
+      "label": "Live Sample #25",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: User",
+            "Port: RegisterUserUseCase",
+            "Port: IUserRepository",
+            "Port: IEmailService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: User",
+        "Port: RegisterUserUseCase",
+        "Port: IUserRepository",
+        "Port: IEmailService"
+      ]
+    },
+    {
+      "sample_index": 26,
+      "label": "Live Sample #26",
+      "total_score": 40,
+      "grade": "F (Coupled / Anti-Pattern)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 10,
+          "max": 20.0,
+          "violations": [
+            "Detected 2 `any` keyword(s)"
+          ]
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Detected 2 `any` keyword(s)"
+      ]
+    },
+    {
+      "sample_index": 27,
+      "label": "Live Sample #27",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: OrderItem",
+            "Port: Order",
+            "Port: OrderRepository",
+            "Port: OrderService",
+            "Port: ProcessOrderRequest"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: OrderItem",
+        "Port: Order",
+        "Port: OrderRepository",
+        "Port: OrderService",
+        "Port: ProcessOrderRequest"
+      ]
+    },
+    {
+      "sample_index": 28,
+      "label": "Live Sample #28",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: Subscription",
+            "Port: SubscriptionError",
+            "Port: CancelSubscriptionRequest",
+            "Port: SubscriptionRepository",
+            "Port: Result"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Subscription",
+        "Port: SubscriptionError",
+        "Port: CancelSubscriptionRequest",
+        "Port: SubscriptionRepository",
+        "Port: Result"
+      ]
+    },
+    {
+      "sample_index": 29,
+      "label": "Live Sample #29",
+      "total_score": 85,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 10,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: OrderItem",
+            "Port: Order",
+            "Port: OrderError",
+            "Port: OrderValidationService",
+            "Port: OrderProcessingService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: OrderItem",
+        "Port: Order",
+        "Port: OrderError",
+        "Port: OrderValidationService",
+        "Port: OrderProcessingService"
+      ]
+    },
+    {
+      "sample_index": 30,
+      "label": "Live Sample #30",
+      "total_score": 50,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 0,
+          "max": 25.0,
+          "violations": []
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard."
+      ]
+    }
+  ]
+}
