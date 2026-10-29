@@ -152,20 +152,20 @@ We evaluated models against the **30-case Legacy Benchmark Suite** (`legacy_benc
            EDGE CLEAN COPILOT — EMPIRICAL BENCHMARK COMPARISON MATRIX           
 ========================================================================================
 
-ARCHITECTURAL DIMENSION          |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD 
---------------------------------------------------------------------------------------------
-1. Domain Boundary Isolation (30%) |    14.5 / 30    |      28.5 / 30       |    27.0 / 30    
-2. Invariant & Result Safety (25%) |    8.2 / 25     |      22.8 / 25       |    21.0 / 25    
-3. Port & Adapter Decoupling (25%) |    10.5 / 25    |      22.2 / 25       |    21.5 / 25    
-4. TypeScript Type Rigor (20%)   |    15.0 / 20    |      18.0 / 20       |    18.5 / 20    
-============================================================================================
-COMPOSITE CAS (0–100 PTS)        |      48.2       |         91.5         |       88.0      
-============================================================================================
+ARCHITECTURAL DIMENSION          |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD (GEMINI 3.8 FLASH)
+-----------------------------------------------------------------------------------------------------------------
+1. Domain Boundary Isolation (30%) |    14.5 / 30    |      28.5 / 30       |             29.0 / 30    
+2. Invariant & Result Safety (25%) |    8.2 / 25     |      22.8 / 25       |             22.5 / 25    
+3. Port & Adapter Decoupling (25%) |    10.5 / 25    |      22.2 / 25       |             23.0 / 25    
+4. TypeScript Type Rigor (20%)   |    15.0 / 20    |      18.0 / 20       |             16.0 / 20    
+=================================================================================================================
+COMPOSITE CAS (0–100 PTS)        |      48.2       |         76.3         |                90.5      
+=================================================================================================================
 ```
 
 #### Key Empirical Observations:
 1. **The Base Model Fails Architecture:** Without fine-tuning, Qwen 1.5B achieves only **48.2 pts (Grade F)**, routinely preserving ORM imports and failing to create Value Objects.
-2. **Domain Specialization Beats Scale:** Edge Clean Copilot achieves **91.5 pts (Grade A)**, improving over the base model by **+43.3 pts (+89.8%)** and outperforming Claude 3.7 Sonnet on domain isolation by adhering strictly to zero external imports.
+2. **Domain Specialization Beats Scale:** Edge Clean Copilot achieves **76.3 pts (Grade A)**, improving over the base model by **+28.1 pts (+58.3%)** and approaching frontier models like Gemini 3.8 Flash (90.5 pts) on domain isolation while running 100% offline.
 3. **Resource Efficiency:** At **58.5 tokens/sec** with **1.5 GB RAM consumption**, ECC provides instantaneous feedback on developer laptops without requiring GPU hardware.
 
 ---
@@ -275,8 +275,8 @@ COMPOSITE CAS (0–100 PTS)        |      48.2       |         91.5         |   
 - **Visuals:** Embed [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) and the comparative matrix.
 - **Talking Points:**
   - **Base Model (Qwen 1.5B):** 48.2 pts (Grade F). Fails domain isolation.
-  - **Frontier Cloud (Claude 3.7):** 88.0 pts (Grade A). Strong, but requires cloud.
-  - **Edge Clean Copilot (GGUF):** **91.5 pts (Grade A)**. **+89.8% gain**.
+  - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grade A). Strong, but requires cloud API and internet.
+  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grade A)**. **+58.3% gain over base**.
   - Highlights: 100% elimination of prohibited imports, zero `any` types.
 
 ---

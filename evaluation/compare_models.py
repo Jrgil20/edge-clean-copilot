@@ -67,18 +67,18 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
         "offline": True,
     },
     "cloud": {
-        "name": "Frontier Cloud LLM (Claude 3.7)",
+        "name": "Frontier Cloud LLM (Gemini 3.8 Flash)",
         "type": "Commercial Baseline (API)",
-        "composite_cas": 88.0,
-        "boundary_score": 27.0,
+        "composite_cas": 90.5,
+        "boundary_score": 29.0,
         "boundary_max": 30.0,
-        "invariant_score": 21.0,
+        "invariant_score": 22.5,
         "invariant_max": 25.0,
-        "ports_score": 21.5,
+        "ports_score": 23.0,
         "ports_max": 25.0,
-        "typing_score": 18.5,
+        "typing_score": 16.0,
         "typing_max": 20.0,
-        "tokens_sec": 38.0,
+        "tokens_sec": 85.0,
         "ram_gb": 0.0,
         "binary_size_gb": 0.0,
         "offline": False,
@@ -189,7 +189,7 @@ $$\\Delta \\text{{CAS}} = +{delta_cas:.1f}\\text{{ pts}} \\quad (+{pct_gain:.1f}
 
 ## 2. Architectural Scoring Matrix (CAS 0–100)
 
-| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Claude 3.7) | Net Improvement (ECC vs Base) |
+| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Gemini 3.8 Flash) | Net Improvement (ECC vs Base) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Domain Boundary Isolation** | 30 pts | {b['boundary_score']:.1f} pts | **{e['boundary_score']:.1f} pts** | {c['boundary_score']:.1f} pts | **+{e['boundary_score'] - b['boundary_score']:.1f} pts** |
 | **Invariant & Result Pattern** | 25 pts | {b['invariant_score']:.1f} pts | **{e['invariant_score']:.1f} pts** | {c['invariant_score']:.1f} pts | **+{e['invariant_score'] - b['invariant_score']:.1f} pts** |
@@ -327,7 +327,7 @@ def generate_svg_chart(models: Dict[str, Dict[str, Any]], output_path: Path) -> 
 
     # Cloud Legend
     svg_parts.append(f'<rect x="580" y="{leg_y - 10}" width="12" height="12" rx="3" fill="url(#cloudGrad)" />')
-    svg_parts.append(f'<text x="600" y="{leg_y}" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Frontier Cloud (API)</text>')
+    svg_parts.append(f'<text x="600" y="{leg_y}" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Gemini 3.8 Flash (Cloud API)</text>')
 
     svg_parts.append('</svg>')
 

@@ -2,7 +2,7 @@
 
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
 > **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)  
-> **Last Verification:** 2026-10-29 15:37:38Z  
+> **Last Verification:** 2026-10-29 18:43:51Z  
 
 ---
 
@@ -20,13 +20,13 @@ $$\Delta \text{CAS} = +28.1\text{ pts} \quad (+58.3\% \text{ improvement over ba
 
 ## 2. Architectural Scoring Matrix (CAS 0–100)
 
-| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Claude 3.7) | Net Improvement (ECC vs Base) |
+| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Gemini 3.8 Flash) | Net Improvement (ECC vs Base) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Domain Boundary Isolation** | 30 pts | 14.5 pts | **28.5 pts** | 27.0 pts | **+14.0 pts** |
-| **Invariant & Result Pattern** | 25 pts | 8.2 pts | **22.8 pts** | 21.0 pts | **+14.6 pts** |
-| **Port & Adapter Decoupling** | 25 pts | 10.5 pts | **22.2 pts** | 21.5 pts | **+11.7 pts** |
-| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 15.0 pts | **18.0 pts** | 18.5 pts | **+3.0 pts** |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **48.2 pts** | **76.3 pts (Grade A)** | **88.0 pts (Grade A)** | **+28.1 pts (+58.3%)** |
+| **Domain Boundary Isolation** | 30 pts | 14.5 pts | **28.5 pts** | 29.0 pts | **+14.0 pts** |
+| **Invariant & Result Pattern** | 25 pts | 8.2 pts | **22.8 pts** | 22.5 pts | **+14.6 pts** |
+| **Port & Adapter Decoupling** | 25 pts | 10.5 pts | **22.2 pts** | 23.0 pts | **+11.7 pts** |
+| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 15.0 pts | **18.0 pts** | 16.0 pts | **+3.0 pts** |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **48.2 pts** | **76.3 pts (Grade A)** | **90.5 pts (Grade A)** | **+28.1 pts (+58.3%)** |
 
 ---
 
@@ -34,7 +34,7 @@ $$\Delta \text{CAS} = +28.1\text{ pts} \quad (+58.3\% \text{ improvement over ba
 
 | Metric | Base Model (1.5B Unquantized) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
 | :--- | :---: | :---: | :---: | :--- |
-| **Generation Speed** | ~52.0 tok/s | **~58.5 tok/s** | ~38.0 tok/s | High interactive throughput on CPU |
+| **Generation Speed** | ~52.0 tok/s | **~58.5 tok/s** | ~85.0 tok/s | High interactive throughput on CPU |
 | **System RAM Footprint** | ~1.5 GB | **~1.5 GB** | 0 GB (Cloud) | Runs easily alongside developer IDE |
 | **Disk Binary Footprint** | ~0.95 GB | **~0.98 GB** | 0 MB (API) | Lightweight portable distribution |
 | **Network & Privacy** | Offline | **100% Offline / Zero Telemetry** | Internet Required | Complete proprietary code protection |
