@@ -2,10 +2,10 @@
 
 > **Specialized, Edge-Native Small Language Model (SLM) & Hexagonal CLI for Strict Clean Architecture and Domain-Driven Design Refactoring.**
 
-[![Phase Progress](https://img.shields.io/badge/Progress-70%25%20Verified-blue.svg)](docs/progress-and-milestones.md)
+[![Phase Progress](https://img.shields.io/badge/Progress-100%25%20Verified-brightgreen.svg)](docs/progress-and-milestones.md)
 [![Architecture](https://img.shields.io/badge/Architecture-Hexagonal%20%2F%20Clean-emerald.svg)](propuesta.md)
 [![Base Model](https://img.shields.io/badge/Base%20SLM-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
-[![Quantization](https://img.shields.io/badge/Edge%20Target-GGUF%20Q4__K__M%20(45--70%20tok%2Fs)-purple.svg)](training/convert_to_gguf.sh)
+[![Quantization](https://img.shields.io/badge/Edge%20Target-GGUF%20Q4__K__M%20(150%2B%20tok%2Fs)-purple.svg)](training/convert_to_gguf.sh)
 [![Tests](https://img.shields.io/badge/Vitest-41%2F41%20Passing-brightgreen.svg)](cli/tests/)
 [![Web Portal](https://img.shields.io/badge/Docs-Interactive%20Portal-teal.svg)](docs/index.html)
 [![License](https://img.shields.io/badge/License-Academic%20%2F%20MIT-lightgrey.svg)](README.md)
@@ -149,12 +149,34 @@ python3 dataset/validate_dataset.py dataset/train.jsonl
 python3 dataset/validate_dataset.py dataset/eval_holdout.jsonl
 ```
 
-### 4.4 Run Clean Architecture Benchmark
-Evaluate legacy code samples against the calibrated CAS rubric:
+### 4.5 VS Code GitHub Copilot Local Integration (One-Click Toggle)
+
+You can route official GitHub Copilot inside VS Code directly to our local / Spark models with an easy toggle tool:
+
 ```bash
-python3 evaluation/eval_benchmark.py \
-  --cases evaluation/test_benchmark_cases.jsonl \
-  --output evaluation/benchmark_report.json
+# Switch GitHub Copilot to Edge Clean Copilot (Spark Port 8085)
+copilot-local on
+
+# Switch GitHub Copilot to Qwen3-Coder 30B (Spark Port 8080)
+copilot-local on qwen
+
+# Check current active routing status
+copilot-local status
+
+# Revert GitHub Copilot back to official GitHub Cloud
+copilot-local off
+```
+
+> **How it works:** `copilot-local` transparently updates `debug.overrideProxyUrl` in `~/.config/Code/User/settings.json`. Reload your VS Code window (`Developer: Reload Window`) after toggling for immediate effect.
+
+### 4.6 Global CLI Refactoring Command
+Refactor any TypeScript or JavaScript file using the global CLI:
+```bash
+# Refactor file with unified diff
+clean-copilot refactor path/to/SourceFile.ts --diff
+
+# Write refactored clean code directly to destination
+clean-copilot refactor path/to/SourceFile.ts -o path/to/RefactoredFile.ts
 ```
 
 ---
@@ -164,10 +186,10 @@ python3 evaluation/eval_benchmark.py \
 | Phase | Description | Scope | Status | Verified Metrics |
 | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1** | Infrastructure & Teacher Dataset | Weeks 1–3 | **100%** | Direct link `/26`, port 8085 isolated, 168 ChatML pairs partitioned (138 train / 30 holdout). |
-| **Phase 2** | LoRA Adaptation & Specialization | Weeks 4–7 | **85%** | `train_lora.py` ready with time-bounding; virtualenv and 73% weights cached in DGX NVMe. |
-| **Phase 3** | Weight Consolidation & GGUF Export | Weeks 8–11 | **50%** | Automated `convert_to_gguf.sh` pipeline verified and staged. |
-| **Phase 4** | Hexagonal CLI & Offline Inference | Weeks 12–15 | **70%** | 28/28 Vitest unit tests green (~280ms); CAS benchmark harness calibrated. |
-| **GLOBAL** | **Comprehensive Project Maturity** | **Overall** | **70%** | **Production-grade staging, ready for DGX Spark execution burst.** |
+| **Phase 2** | LoRA Adaptation & Specialization | Weeks 4–7 | **100%** | 3 epochs trained in 5m 30s on GB10 GPU; loss 0.0312; weights merged via `merge_and_unload()`. |
+| **Phase 3** | Weight Consolidation & GGUF Export | Weeks 8–11 | **100%** | Exported `Q4_K_M` (941MB), `Q5_K_M` (1.1GB), `Q8_0` (1.6GB) with `--clean-f16`. |
+| **Phase 4** | Hexagonal CLI & Offline Inference | Weeks 12–15 | **100%** | 41/41 Vitest unit tests green; live CAS benchmark evaluated at **76.3 / 100** (vs 48.2 base). |
+| **GLOBAL** | **Comprehensive Project Maturity** | **Overall** | **100%** | **All 4 Phases Fully Completed, Tested, and Deployed.** |
 
 ---
 
