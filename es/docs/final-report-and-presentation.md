@@ -15,9 +15,9 @@
 
 Los Modelos de Lenguaje Grandes (LLMs) comerciales de propósito general utilizados para la generación automatizada de código (como GitHub Copilot o ChatGPT) destacan en la compleción sintáctica localizada, pero degradan sistemáticamente la arquitectura de software. Al enfrentarse a refactorizaciones empresariales, estos modelos sufren de **deriva arquitectónica**: inyectan tipos `any` explícitos, acoplan entidades de negocio directamente a ORMs de base de datos (Prisma, TypeORM), introducen clientes de red HTTP crudos (Axios, Fetch) dentro de modelos de dominio y lanzan excepciones genéricas no tipadas.
 
-Este proyecto diseña, entrena, evalúa y empaqueta **Edge Clean Copilot (ECC)**: un Small Language Model especializado (**Qwen2.5-Coder-1.5B-Instruct**) adaptado mediante Low-Rank Adaptation (LoRA) sobre pares curados de refactorización arquitectónica, cuantizado a formato **GGUF Q4_K_M** y servido de forma 100% offline a **45–70 tokens/segundo** en hardware estándar de desarrollo.
+Este proyecto diseña, entrena, evalúa y empaqueta **Edge Clean Copilot (ECC)**: un Small Language Model especializado (**Qwen2.5-Coder-1.5B-Instruct**) adaptado mediante Low-Rank Adaptation (LoRA) sobre pares curados de refactorización arquitectónica, cuantizado a formato **GGUF Q4_K_M** y servido de forma 100% offline a **~12 tokens/segundo** medidos en una laptop solo CPU (Intel i5-10310U).
 
-Demostramos que un modelo ligero de 1.5B parámetros, aislado de la red y entrenado bajo guardas arquitectónicas estrictas, alcanza un **Clean Architecture Score (CAS) de 91.5 / 100**, superando ampliamente a su modelo base sin fine-tuning (**48.2 / 100**, una **mejora relativa del +89.8%**) y sobrepasando a modelos comerciales de frontera en la nube (**88.0 / 100**) en aislamiento de capas y rigor de tipos, eliminando la dependencia de APIs externas, fugas de telemetría y costos recurrentes de inferencia.
+Demostramos que un modelo ligero de 1.5B parámetros, aislado de la red y entrenado bajo guardas arquitectónicas estrictas, alcanza un **Clean Architecture Score (CAS) de 76.3 / 100** (una corrida de reproducción dio 73.8), superando a su modelo base sin fine-tuning (**48.2 / 100**, una **mejora relativa del +58.3%**). No alcanza al modelo de frontera en la nube (**90.5 / 100**): iguala el aislamiento de dominio (30.0 / 30), pero queda por debajo en invariantes y puertos. Su ventaja es operativa: sin dependencia de APIs externas, sin fugas de telemetría y sin costos recurrentes de inferencia.
 
 ---
 
@@ -78,7 +78,7 @@ Operar en una infraestructura de cómputo compartida (como clusters GPU instituc
                │
                ▼ (Exportación de Artefactos)
 [ Fase 3: Despliegue en el Borde (Estación Local) ]
-  └── Cuantización GGUF (Q4_K_M) servida vía llama.cpp (45-70 tok/s, 1.5 GB RAM)
+  └── Cuantización GGUF (Q4_K_M) servida vía llama.cpp (~12 tok/s en CPU, 1.5 GB RAM)
 ```
 
 Este modelo garantiza que el tiempo de GPU se reserve exclusivamente para ráfagas intensivas de entrenamiento, mientras que la preparación del dataset, las pruebas unitarias y el empaquetado se realizan con total autonomía en hardware local.
@@ -139,7 +139,7 @@ Para especializar el modelo, construimos un dataset de alta señal en formato Ch
 
 #### 7.2 Cuantización Post-Entrenamiento (PTQ) a GGUF
 - El adaptador LoRA se fusiona con el modelo base mediante `model.merge_and_unload()`, produciendo un checkpoint unificado FP16.
-- Se cuantiza mediante `llama-quantize` a **`Q4_K_M`** (K-Quants medios de 4 bits), reduciendo el peso de **3.1 GB a 0.98 GB** (una **reducción del 68.4% en memoria**) con pérdida despreciable de perplejidad.
+- Se cuantiza mediante `llama-quantize` a **`Q4_K_M`** (K-Quants medios de 4 bits), reduciendo el peso de **3.1 GB a 0.94 GB** (una **reducción del 69.7%**) con pérdida despreciable de perplejidad.
 
 ---
 
@@ -154,19 +154,19 @@ Evaluamos los modelos contra la **Suite de Benchmark Legacy de 30 casos** (`lega
 
 DIMENSIÓN ARQUITECTÓNICA         |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD 
 --------------------------------------------------------------------------------------------
-1. Aislamiento de Dominio (30%)  |    14.5 / 30    |      28.5 / 30       |    27.0 / 30    
-2. Invariantes y Result (25%)    |    8.2 / 25     |      22.8 / 25       |    21.0 / 25    
-3. Puertos y Adaptadores (25%)   |    10.5 / 25    |      22.2 / 25       |    21.5 / 25    
-4. Rigor de Tipos (20%)          |    15.0 / 20    |      18.0 / 20       |    18.5 / 20    
+1. Aislamiento de Dominio (30%)  |    14.5 / 30    |      30.0 / 30       |    29.0 / 30    
+2. Invariantes y Result (25%)    |    8.2 / 25     |      11.7 / 25       |    22.5 / 25    
+3. Puertos y Adaptadores (25%)   |    10.5 / 25    |      16.0 / 25       |    23.0 / 25    
+4. Rigor de Tipos (20%)          |    15.0 / 20    |      18.7 / 20       |    16.0 / 20    
 ============================================================================================
-PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         91.5         |       88.0      
+PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         76.3         |       90.5      
 ============================================================================================
 ```
 
 #### Hallazgos Clave:
 1. **El Modelo Base Falla en Arquitectura:** Sin fine-tuning, Qwen 1.5B solo alcanza **48.2 pts (Grado F)**, manteniendo imports de ORMs y omitiendo Value Objects.
-2. **La Especialización Supera a la Escala:** Edge Clean Copilot alcanza **91.5 pts (Grado A)**, mejorando al modelo base en **+43.3 pts (+89.8%)** y superando a Claude 3.7 Sonnet en aislamiento de dominio al erradicar por completo los imports externos.
-3. **Eficiencia en el Borde:** Con **58.5 tokens/segundo** y **1.5 GB de RAM**, ECC brinda retroalimentación instantánea en la laptop del desarrollador sin requerir tarjeta gráfica dedicada.
+2. **La Especialización Supera a la Escala:** Edge Clean Copilot alcanza **76.3 pts (Grado B)**, mejorando al modelo base en **+28.1 pts (+58.3%)**. Iguala el máximo en aislamiento de dominio (30.0 / 30), pero queda por debajo de la frontera en invariantes y puertos.
+3. **Eficiencia en el Borde:** Con **~12 tokens/segundo** medidos en CPU (i5-10310U) y **1.5 GB de RAM**, ECC funciona sin tarjeta gráfica dedicada, pero es lento con entradas largas; la latencia es una limitación, no una ventaja.
 
 ---
 
@@ -253,10 +253,10 @@ PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         91.5         |   
 ---
 
 ### Diapositiva 8: Cuantización Post-Entrenamiento a GGUF (1 min)
-- **Visual:** Comparación de peso en memoria (3.1 GB FP16 $\to$ 0.98 GB Q4_K_M).
+- **Visual:** Comparación de peso en memoria (3.1 GB FP16 $\to$ 0.94 GB Q4_K_M).
 - **Puntos a Exponer:**
   - Fusión de pesos con `merge_and_unload()` y cuantización automática con `llama-quantize`.
-  - Reducción del 68% de memoria, corriendo a ~58 tokens/s en CPU común con ~1.5 GB de RAM.
+  - Reducción del 70% de tamaño, corriendo a ~12 tokens/s medidos en CPU (i5-10310U) con ~1.5 GB de RAM.
 
 ---
 
@@ -272,9 +272,9 @@ PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         91.5         |   
 - **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
 - **Puntos a Exponer:**
   - **Modelo Base (1.5B):** 48.2 pts (Grado F). No respeta aislamiento de capas.
-  - **Frontier Cloud (Claude 3.7):** 88.0 pts (Grado A). Excelente, pero requiere nube.
-  - **Edge Clean Copilot (GGUF):** **91.5 pts (Grado A)**. **+89.8% de ganancia**.
-  - Erradicación del 100% de imports prohibidos y eliminación total de `any`.
+  - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grado A). Excelente, pero requiere nube.
+  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grado B)**. **+58.3% de ganancia** sobre la base.
+  - Aislamiento de dominio al máximo (30.0 / 30); invariantes (11.7 / 25) y puertos (16.0 / 25) siguen por debajo del frontier.
 
 ---
 

@@ -18,7 +18,7 @@
 
 **Edge Clean Copilot (ECC)** is an offline, specialized AI coding assistant designed to enforce **Clean Architecture**, **Ports & Adapters (Hexagonal Architecture)**, and **Domain-Driven Design (DDD)** principles on edge developer workstations without requiring cloud API connections.
 
-Mainstream commercial code LLMs frequently fail architectural boundaries: they inject `any` types, introduce circular layer dependencies, mix database SDKs directly into business entities, and hallucinate external framework couplings. ECC solves this by fine-tuning an agile Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) on high-signal architectural refactoring pairs, deploying it locally via **GGUF Q4_K_M** quantization served through `llama.cpp` at **45–70 tokens/second** on standard commodity hardware.
+Mainstream commercial code LLMs frequently fail architectural boundaries: they inject `any` types, introduce circular layer dependencies, mix database SDKs directly into business entities, and hallucinate external framework couplings. ECC solves this by fine-tuning an agile Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) on high-signal architectural refactoring pairs, deploying it locally via **GGUF Q4_K_M** quantization served through `llama.cpp` at **~12 tokens/second** measured on a CPU-only laptop (Intel i5-10310U). It is slow on long inputs; review every output.
 
 > **Key Architectural Value:** Beyond a single model checkpoint, ECC is designed as a reproducible **[Model Factory](docs/model-factory-architecture.md)**. The pipeline decoupled from specific model weights, allowing new open-weight SLMs (Llama-3.2, Gemma-2, DeepSeek) to be ingested, specialized, and edge-quantized through an automated, repeatable workflow.
 
@@ -43,7 +43,7 @@ To reconcile shared multi-tenant AI infrastructure (such as university clusters)
                │
                ▼ (Artifact Consolidation)
 [ Edge Deployment (100% Offline Local Machine) ]
-  └── GGUF quantization (Q4_K_M) served via llama-server (sub-15ms TTFT, zero cloud dependencies)
+  └── GGUF quantization (Q4_K_M) served via llama-server (zero cloud dependencies)
 ```
 
 ---

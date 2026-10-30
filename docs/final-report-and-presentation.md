@@ -15,9 +15,9 @@
 
 General-purpose commercial Large Language Models (LLMs) used in automated code generation (e.g., GitHub Copilot, ChatGPT) excel at localized syntax completion but systematically degrade high-level software architecture. When prompted to generate or refactor enterprise logic, commercial models exhibit **architectural drift**: injecting explicit `any` types, coupling business entities directly to external database ORMs (Prisma, TypeORM), leaking raw HTTP network clients (Axios, Fetch) into core domain models, and throwing unhandled generic exceptions.
 
-This project designs, trains, evaluates, and packages **Edge Clean Copilot (ECC)**: a specialized Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) fine-tuned via Low-Rank Adaptation (LoRA) on curated architectural refactoring pairs, quantized to **GGUF Q4_K_M**, and served 100% offline at **45–70 tokens/second** on commodity edge hardware.
+This project designs, trains, evaluates, and packages **Edge Clean Copilot (ECC)**: a specialized Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) fine-tuned via Low-Rank Adaptation (LoRA) on curated architectural refactoring pairs, quantized to **GGUF Q4_K_M**, and served 100% offline at **~12 tokens/second** measured on a CPU-only laptop (Intel i5-10310U).
 
-We demonstrate that a lightweight, air-gapped 1.5B parameter model trained under strict architectural guardrails achieves a **Clean Architecture Score (CAS) of 91.5 / 100**, dramatically outperforming its un-fine-tuned base foundation model (**48.2 / 100**, a **+89.8% relative improvement**) and surpassing commercial frontier cloud models (**88.0 / 100**) on domain layer isolation and type discipline—all while eliminating cloud API dependencies, telemetry egress, and latency overhead.
+We demonstrate that a lightweight, air-gapped 1.5B parameter model trained under strict architectural guardrails achieves a **Clean Architecture Score (CAS) of 76.3 / 100** (a reproduction run measured 73.8), clearly outperforming its un-fine-tuned base foundation model (**48.2 / 100**, a **+58.3% relative improvement**). It does not reach the commercial frontier cloud baseline (**90.5 / 100**): it matches domain layer isolation (30.0 / 30) but trails on invariants and port decoupling. Its advantage is operational: no cloud API dependency, no telemetry egress, and no recurring inference cost.
 
 ---
 
@@ -78,7 +78,7 @@ Operating within a shared institutional computing infrastructure (such as univer
                │
                ▼ (Artifact Export)
 [ Phase 3: Edge Deployment (Local Workstation) ]
-  └── GGUF quantization (Q4_K_M) served via llama.cpp (45-70 tok/s, 1.5 GB RAM)
+  └── GGUF quantization (Q4_K_M) served via llama.cpp (~12 tok/s on CPU, 1.5 GB RAM)
 ```
 
 This model guarantees that expensive GPU cluster time is reserved exclusively for compute-heavy training bursts, while all dataset curation, testing, static analysis, and packaging remain 100% autonomous on local hardware.
@@ -139,7 +139,7 @@ To specialize the model, we constructed a high-signal dataset structured in the 
 
 #### 7.2 Post-Training Quantization (PTQ) to GGUF
 - The trained LoRA adapter is consolidated into the base model via `model.merge_and_unload()`, producing an unquantized FP16 model.
-- Quantized using `llama-quantize` into **`Q4_K_M`** (4-bit Medium K-Quants), reducing model size from **3.1 GB to 0.98 GB** (a **68.4% reduction in memory footprint**) with negligible perplexity loss.
+- Quantized using `llama-quantize` into **`Q4_K_M`** (4-bit Medium K-Quants), reducing model size from **3.1 GB to 0.94 GB** (a **69.7% reduction in memory footprint**) with negligible perplexity loss.
 
 ---
 
@@ -154,19 +154,19 @@ We evaluated models against the **30-case Legacy Benchmark Suite** (`legacy_benc
 
 ARCHITECTURAL DIMENSION          |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD 
 --------------------------------------------------------------------------------------------
-1. Domain Boundary Isolation (30%) |    14.5 / 30    |      28.5 / 30       |    27.0 / 30    
-2. Invariant & Result Safety (25%) |    8.2 / 25     |      22.8 / 25       |    21.0 / 25    
-3. Port & Adapter Decoupling (25%) |    10.5 / 25    |      22.2 / 25       |    21.5 / 25    
-4. TypeScript Type Rigor (20%)   |    15.0 / 20    |      18.0 / 20       |    18.5 / 20    
+1. Domain Boundary Isolation (30%) |    14.5 / 30    |      30.0 / 30       |    29.0 / 30    
+2. Invariant & Result Safety (25%) |    8.2 / 25     |      11.7 / 25       |    22.5 / 25    
+3. Port & Adapter Decoupling (25%) |    10.5 / 25    |      16.0 / 25       |    23.0 / 25    
+4. TypeScript Type Rigor (20%)   |    15.0 / 20    |      18.7 / 20       |    16.0 / 20    
 ============================================================================================
-COMPOSITE CAS (0–100 PTS)        |      48.2       |         91.5         |       88.0      
+COMPOSITE CAS (0–100 PTS)        |      48.2       |         76.3         |       90.5      
 ============================================================================================
 ```
 
 #### Key Empirical Observations:
 1. **The Base Model Fails Architecture:** Without fine-tuning, Qwen 1.5B achieves only **48.2 pts (Grade F)**, routinely preserving ORM imports and failing to create Value Objects.
-2. **Domain Specialization Beats Scale:** Edge Clean Copilot achieves **91.5 pts (Grade A)**, improving over the base model by **+43.3 pts (+89.8%)** and outperforming Claude 3.7 Sonnet on domain isolation by adhering strictly to zero external imports.
-3. **Resource Efficiency:** At **58.5 tokens/sec** with **1.5 GB RAM consumption**, ECC provides instantaneous feedback on developer laptops without requiring GPU hardware.
+2. **Domain Specialization Beats Scale:** Edge Clean Copilot achieves **76.3 pts (Grade B)**, improving over the base model by **+28.1 pts (+58.3%)**. It reaches the maximum on domain boundary isolation (30.0 / 30), above the frontier baseline (29.0 / 30), but trails it on invariants and port decoupling.
+3. **Resource Efficiency:** At **~12 tokens/sec** measured on a CPU-only laptop (Intel i5-10310U) with **~1.5 GB RAM**, ECC runs without GPU hardware, but it is slow on long inputs; latency is a limitation, not an advantage.
 
 ---
 
@@ -256,10 +256,10 @@ COMPOSITE CAS (0–100 PTS)        |      48.2       |         91.5         |   
 ---
 
 ### Slide 8: Post-Training Quantization to GGUF (1 min)
-- **Visuals:** Model footprint comparison table (3.1 GB FP16 $\to$ 0.98 GB Q4_K_M).
+- **Visuals:** Model footprint comparison table (3.1 GB FP16 $\to$ 0.94 GB Q4_K_M).
 - **Talking Points:**
   - Automated merge with `merge_and_unload()` followed by `llama-quantize`.
-  - Result: 68% RAM reduction, running at ~58 tokens/s on standard CPU with ~1.5 GB RAM.
+  - Result: ~70% size reduction, ~12 tokens/s measured on CPU (i5-10310U) with ~1.5 GB RAM.
 
 ---
 
@@ -275,9 +275,9 @@ COMPOSITE CAS (0–100 PTS)        |      48.2       |         91.5         |   
 - **Visuals:** Embed [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) and the comparative matrix.
 - **Talking Points:**
   - **Base Model (Qwen 1.5B):** 48.2 pts (Grade F). Fails domain isolation.
-  - **Frontier Cloud (Claude 3.7):** 88.0 pts (Grade A). Strong, but requires cloud.
-  - **Edge Clean Copilot (GGUF):** **91.5 pts (Grade A)**. **+89.8% gain**.
-  - Highlights: 100% elimination of prohibited imports, zero `any` types.
+  - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grade A). Strong, but requires cloud.
+  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grade B)**. **+58.3% gain** over the base model.
+  - Highlights: full score on domain boundary isolation (30.0 / 30); invariant (11.7 / 25) and port (16.0 / 25) scores remain below the frontier baseline.
 
 ---
 
