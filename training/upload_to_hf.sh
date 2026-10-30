@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GGUF_DIR="${SCRIPT_DIR}/output/gguf"
 GGUF_FILE="${GGUF_DIR}/clean-copilot-1.5b-q4_k_m.gguf"
-MODEL_CARD="${GGUF_DIR}/README.md"
+MODEL_CARD="${SCRIPT_DIR}/../MODEL_CARD.md"
 
 if [ $# -lt 1 ]; then
   echo "Usage: $0 <hf-username>/<repo-name>"

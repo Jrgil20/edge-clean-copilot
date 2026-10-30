@@ -5,7 +5,7 @@
 [![Progreso de Fase](https://img.shields.io/badge/Progreso-70%25%20Verificado-blue.svg)](docs/progress-and-milestones.md)
 [![Arquitectura](https://img.shields.io/badge/Arquitectura-Hexagonal%20%2F%20Clean-emerald.svg)](propuesta.md)
 [![Modelo Base](https://img.shields.io/badge/SLM%20Base-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
-[![Cuantización](https://img.shields.io/badge/Borde%20Offline-GGUF%20Q4__K__M%20(45--70%20tok%2Fs)-purple.svg)](training/convert_to_gguf.sh)
+[![Cuantización](https://img.shields.io/badge/Borde%20Offline-GGUF%20Q4__K__M%20(~12%20tok%2Fs%20CPU)-purple.svg)](training/convert_to_gguf.sh)
 [![Tests](https://img.shields.io/badge/Vitest-41%2F41%20en%20Verde-brightgreen.svg)](cli/tests/)
 [![Portal Web](https://img.shields.io/badge/Docs-Portal%20Interactivo-teal.svg)](docs/index.html)
 [![Licencia](https://img.shields.io/badge/Licencia-Académica%20%2F%20MIT-lightgrey.svg)](README.md)
@@ -18,7 +18,7 @@
 
 **Edge Clean Copilot (ECC)** es un asistente de código offline y especializado, diseñado para aplicar principios de **Clean Architecture**, **Puertos y Adaptadores (Arquitectura Hexagonal)** y **Domain-Driven Design (DDD)** directamente en la estación de trabajo del desarrollador, sin depender de conexiones a APIs en la nube.
 
-Los modelos comerciales de código suelen fallar en los límites arquitectónicos: introducen tipos `any`, generan acoplamientos circulares entre capas, mezclan SDKs de bases de datos dentro de entidades de dominio y crean dependencias innecesarias de frameworks. ECC resuelve esto entrenando un Small Language Model ágil (**Qwen2.5-Coder-1.5B-Instruct**) con pares curados de refactorización arquitectónica de alta señal, desplegándolo localmente mediante cuantización **GGUF Q4_K_M** servido con `llama.cpp` a **45–70 tokens/segundo** en hardware estándar.
+Los modelos comerciales de código suelen fallar en los límites arquitectónicos: introducen tipos `any`, generan acoplamientos circulares entre capas, mezclan SDKs de bases de datos dentro de entidades de dominio y crean dependencias innecesarias de frameworks. ECC resuelve esto entrenando un Small Language Model ágil (**Qwen2.5-Coder-1.5B-Instruct**) con pares curados de refactorización arquitectónica de alta señal, desplegándolo localmente mediante cuantización **GGUF Q4_K_M** servido con `llama.cpp`. Medido en **~12 tokens/segundo** en CPU (Intel Core i5-10310U); no está optimizado para velocidad.
 
 > **Valor Arquitectónico Clave:** Más allá de un checkpoint único, ECC está concebido como una **[Factoría de Modelos](docs/model-factory-architecture.md)** reproducible. El pipeline está desacoplado de pesos específicos, permitiendo incorporar, especializar y cuantizar nuevos SLMs de pesos abiertos (Llama-3.2, Gemma-2, DeepSeek) a través de un flujo automatizado y estandarizado.
 
