@@ -30,7 +30,9 @@ CYAN = "\033[36m"
 RED = "\033[31m"
 GRAY = "\033[90m"
 
-# Default Calibrated Demo Metrics
+# Published figures from the model card (huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf).
+# Edge CAS and speed were measured on an Intel i5-10310U (CPU-only). Base and frontier
+# speeds are marked unverified by the card; base RAM/disk describe the 1.5B F16 model.
 DEMO_DATA: Dict[str, Dict[str, Any]] = {
     "base": {
         "name": "Qwen2.5-Coder-1.5B (Base)",
@@ -45,40 +47,40 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
         "typing_score": 15.0,
         "typing_max": 20.0,
         "tokens_sec": 52.0,
-        "ram_gb": 1.5,
-        "binary_size_gb": 0.95,
+        "ram_gb": 3.1,
+        "binary_size_gb": 3.10,
         "offline": True,
     },
     "ecc": {
         "name": "Edge Clean Copilot (LoRA GGUF)",
         "type": "Specialized Edge SLM",
-        "composite_cas": 91.5,
-        "boundary_score": 28.5,
+        "composite_cas": 76.3,
+        "boundary_score": 30.0,
         "boundary_max": 30.0,
-        "invariant_score": 22.8,
+        "invariant_score": 11.7,
         "invariant_max": 25.0,
-        "ports_score": 22.2,
+        "ports_score": 16.0,
         "ports_max": 25.0,
-        "typing_score": 18.0,
+        "typing_score": 18.7,
         "typing_max": 20.0,
-        "tokens_sec": 58.5,
+        "tokens_sec": 12.0,
         "ram_gb": 1.5,
-        "binary_size_gb": 0.98,
+        "binary_size_gb": 0.94,
         "offline": True,
     },
     "cloud": {
-        "name": "Frontier Cloud LLM (Claude 3.7)",
+        "name": "Frontier Cloud LLM (Gemini 3.8 Flash)",
         "type": "Commercial Baseline (API)",
-        "composite_cas": 88.0,
-        "boundary_score": 27.0,
+        "composite_cas": 90.5,
+        "boundary_score": 29.0,
         "boundary_max": 30.0,
-        "invariant_score": 21.0,
+        "invariant_score": 22.5,
         "invariant_max": 25.0,
-        "ports_score": 21.5,
+        "ports_score": 23.0,
         "ports_max": 25.0,
-        "typing_score": 18.5,
+        "typing_score": 16.0,
         "typing_max": 20.0,
-        "tokens_sec": 38.0,
+        "tokens_sec": 85.0,
         "ram_gb": 0.0,
         "binary_size_gb": 0.0,
         "offline": False,
@@ -170,40 +172,45 @@ def generate_markdown_report(models: Dict[str, Dict[str, Any]], output_path: Pat
     content = f"""# Edge Clean Copilot — Comparative Benchmark Evaluation Matrix
 
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
-> **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)  
-> **Last Verification:** {time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime())}  
+> **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)
+>
+> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier speeds are unverified.
+>
+> **Last Verification:** {time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime())}
 
 ---
 
-## 1. Executive Findings & Core Hypothesis Validation
+## 1. Executive Findings
 
-The empirical evaluation mathematically confirms the central research hypothesis of **Edge Clean Copilot**:
+Measured on the 30-case legacy suite, the fine-tuned **Edge Clean Copilot** improves on its base model by {delta_cas:.1f} CAS points (+{pct_gain:.1f}%) but does not reach the frontier baseline:
 
 $$\\Delta \\text{{CAS}} = +{delta_cas:.1f}\\text{{ pts}} \\quad (+{pct_gain:.1f}\\% \\text{{ improvement over base foundation model}})$$
 
-1. **Clean Architecture Purity:** The specialized LoRA fine-tuning eliminates **100% of prohibited framework and ORM imports** from the domain layer.
-2. **Deterministic Typing:** Explicit TypeScript `any` usage drops to 0 across all refactoring prompts.
-3. **Edge Efficiency:** At **~58 tokens/sec** with **~1.5 GB RAM consumption**, the quantized `Q4_K_M` binary matches or exceeds the architectural quality of commercial frontier cloud models while running **100% offline and air-gapped**.
+1. **Domain Boundaries:** ECC scores {e['boundary_score']:.1f} / {e['boundary_max']:.0f}, at the maximum and above the frontier baseline ({c['boundary_score']:.1f}).
+2. **Invariants and Ports:** ECC trails the frontier baseline on invariant safety ({e['invariant_score']:.1f} vs {c['invariant_score']:.1f}) and port decoupling ({e['ports_score']:.1f} vs {c['ports_score']:.1f}).
+3. **Edge Efficiency:** ~{e['tokens_sec']:.0f} tokens/sec measured on CPU (Intel i5-10310U) with ~{e['ram_gb']:.1f} GB RAM. Slow on long inputs; every output should be reviewed before use.
+
+_Single-run variance: a 2026-10-29 rerun measured 73.8 CAS (invariant 2.0), so the composite can move by several points between runs._
 
 ---
 
 ## 2. Architectural Scoring Matrix (CAS 0–100)
 
-| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Claude 3.7) | Net Improvement (ECC vs Base) |
+| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Gemini 3.8 Flash) | Net Improvement (ECC vs Base) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Domain Boundary Isolation** | 30 pts | {b['boundary_score']:.1f} pts | **{e['boundary_score']:.1f} pts** | {c['boundary_score']:.1f} pts | **+{e['boundary_score'] - b['boundary_score']:.1f} pts** |
 | **Invariant & Result Pattern** | 25 pts | {b['invariant_score']:.1f} pts | **{e['invariant_score']:.1f} pts** | {c['invariant_score']:.1f} pts | **+{e['invariant_score'] - b['invariant_score']:.1f} pts** |
 | **Port & Adapter Decoupling** | 25 pts | {b['ports_score']:.1f} pts | **{e['ports_score']:.1f} pts** | {c['ports_score']:.1f} pts | **+{e['ports_score'] - b['ports_score']:.1f} pts** |
 | **TypeScript Type Rigor (Zero `any`)** | 20 pts | {b['typing_score']:.1f} pts | **{e['typing_score']:.1f} pts** | {c['typing_score']:.1f} pts | **+{e['typing_score'] - b['typing_score']:.1f} pts** |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **{b['composite_cas']:.1f} pts** | **{e['composite_cas']:.1f} pts (Grade A)** | **{c['composite_cas']:.1f} pts (Grade A)** | **+{delta_cas:.1f} pts (+{pct_gain:.1f}%)** |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **{b['composite_cas']:.1f} pts** | **{e['composite_cas']:.1f} pts (Grade B)** | **{c['composite_cas']:.1f} pts (Grade A)** | **+{delta_cas:.1f} pts (+{pct_gain:.1f}%)** |
 
 ---
 
 ## 3. Operational Edge Infrastructure Metrics
 
-| Metric | Base Model (1.5B Unquantized) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
+| Metric | Base Model (1.5B F16) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
 | :--- | :---: | :---: | :---: | :--- |
-| **Generation Speed** | ~{b['tokens_sec']:.1f} tok/s | **~{e['tokens_sec']:.1f} tok/s** | ~{c['tokens_sec']:.1f} tok/s | High interactive throughput on CPU |
+| **Generation Speed** | ~{b['tokens_sec']:.1f} tok/s (unverified) | **~{e['tokens_sec']:.1f} tok/s (measured, CPU)** | ~{c['tokens_sec']:.1f} tok/s (unverified) | Usable on CPU; slow on long inputs |
 | **System RAM Footprint** | ~{b['ram_gb']:.1f} GB | **~{e['ram_gb']:.1f} GB** | 0 GB (Cloud) | Runs easily alongside developer IDE |
 | **Disk Binary Footprint** | ~{b['binary_size_gb']:.2f} GB | **~{e['binary_size_gb']:.2f} GB** | 0 MB (API) | Lightweight portable distribution |
 | **Network & Privacy** | Offline | **100% Offline / Zero Telemetry** | Internet Required | Complete proprietary code protection |
