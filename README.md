@@ -43,7 +43,7 @@ To reconcile shared multi-tenant AI infrastructure (such as university clusters)
                │
                ▼ (Artifact Consolidation)
 [ Edge Deployment (100% Offline Local Machine) ]
-  └── GGUF quantization (Q4_K_M) served via llama-server (sub-15ms TTFT, zero cloud dependencies)
+  └── GGUF quantization (Q4_K_M) served via llama-server (zero cloud dependencies)
 ```
 
 ---

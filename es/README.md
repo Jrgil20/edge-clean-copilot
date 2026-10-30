@@ -43,7 +43,7 @@ Para compatibilizar la infraestructura de cómputo compartida (como clusters uni
                │
                ▼ (Consolidación de Artefactos)
 [ Despliegue en el Borde (Máquina Local 100% Offline) ]
-  └── Cuantización GGUF (Q4_K_M) servida vía llama-server (sub-15ms TTFT, cero nube)
+  └── Cuantización GGUF (Q4_K_M) servida vía llama-server (cero nube)
 ```
 
 ---
