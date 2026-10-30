@@ -93,7 +93,7 @@ def main() -> None:
     print("\nVERIFIED DEPLOYMENT & EVALUATION:")
     print("  1. Quantized Models: proyecto/training/output/gguf/clean-copilot-1.5b-q4_k_m.gguf (941MB)")
     print("  2. In-Service Endpoint: http://192.168.6.35:8085/v1 (150+ tokens/s on Grace Blackwell GB10)")
-    print("  3. Benchmark Score: Clean Architecture Score (CAS) = 76.3/100 (vs 48.2 base model)")
+    print("  3. Benchmark Score: Clean Architecture Score (CAS) = 76.3/100, Grade B (vs 48.2 base model)")
     print("  4. CLI Unit Tests: 41 Vitest unit tests (100% green, ~790ms)")
     print("=" * 70)
 

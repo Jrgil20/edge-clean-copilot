@@ -14,7 +14,7 @@ $$\Delta \text{CAS} = +28.1\text{ pts} \quad (+58.3\% \text{ improvement over ba
 
 1. **Clean Architecture Purity:** The specialized LoRA fine-tuning eliminates **100% of prohibited framework and ORM imports** from the domain layer.
 2. **Deterministic Typing:** Explicit TypeScript `any` usage drops to 0 across all refactoring prompts.
-3. **Edge Efficiency:** At **~58 tokens/sec** with **~1.5 GB RAM consumption**, the quantized `Q4_K_M` binary matches or exceeds the architectural quality of commercial frontier cloud models while running **100% offline and air-gapped**.
+3. **Edge Efficiency:** At **~12 tokens/sec** measured on a CPU-only laptop, with **~1.5 GB RAM consumption**, the quantized `Q4_K_M` binary runs **100% offline and air-gapped**. It is not optimized for speed and does not match frontier-model quality (76.3 vs 90.5).
 
 ---
 
@@ -26,7 +26,7 @@ $$\Delta \text{CAS} = +28.1\text{ pts} \quad (+58.3\% \text{ improvement over ba
 | **Invariant & Result Pattern** | 25 pts | 8.2 pts | **22.8 pts** | 22.5 pts | **+14.6 pts** |
 | **Port & Adapter Decoupling** | 25 pts | 10.5 pts | **22.2 pts** | 23.0 pts | **+11.7 pts** |
 | **TypeScript Type Rigor (Zero `any`)** | 20 pts | 15.0 pts | **18.0 pts** | 16.0 pts | **+3.0 pts** |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **48.2 pts** | **76.3 pts (Grade A)** | **90.5 pts (Grade A)** | **+28.1 pts (+58.3%)** |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **48.2 pts** | **76.3 pts (Grade B)** | **90.5 pts (Grade A)** | **+28.1 pts (+58.3%)** |
 
 ---
 
@@ -34,7 +34,7 @@ $$\Delta \text{CAS} = +28.1\text{ pts} \quad (+58.3\% \text{ improvement over ba
 
 | Metric | Base Model (1.5B Unquantized) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
 | :--- | :---: | :---: | :---: | :--- |
-| **Generation Speed** | ~52.0 tok/s | **~58.5 tok/s** | ~85.0 tok/s | High interactive throughput on CPU |
+| **Generation Speed** | ~52.0 tok/s (unverified) | **~12 tok/s measured** | ~85.0 tok/s (unverified) | Measured on CPU-only Intel i5-10310U; not optimized for speed |
 | **System RAM Footprint** | ~1.5 GB | **~1.5 GB** | 0 GB (Cloud) | Runs easily alongside developer IDE |
 | **Disk Binary Footprint** | ~0.95 GB | **~0.98 GB** | 0 MB (API) | Lightweight portable distribution |
 | **Network & Privacy** | Offline | **100% Offline / Zero Telemetry** | Internet Required | Complete proprietary code protection |

@@ -52,16 +52,16 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
     "ecc": {
         "name": "Edge Clean Copilot (LoRA GGUF)",
         "type": "Specialized Edge SLM",
-        "composite_cas": 91.5,
-        "boundary_score": 28.5,
+        "composite_cas": 76.3,
+        "boundary_score": 30.0,
         "boundary_max": 30.0,
-        "invariant_score": 22.8,
+        "invariant_score": 11.7,
         "invariant_max": 25.0,
-        "ports_score": 22.2,
+        "ports_score": 16.0,
         "ports_max": 25.0,
-        "typing_score": 18.0,
+        "typing_score": 18.7,
         "typing_max": 20.0,
-        "tokens_sec": 58.5,
+        "tokens_sec": 12.0,
         "ram_gb": 1.5,
         "binary_size_gb": 0.98,
         "offline": True,
@@ -183,7 +183,7 @@ $$\\Delta \\text{{CAS}} = +{delta_cas:.1f}\\text{{ pts}} \\quad (+{pct_gain:.1f}
 
 1. **Clean Architecture Purity:** The specialized LoRA fine-tuning eliminates **100% of prohibited framework and ORM imports** from the domain layer.
 2. **Deterministic Typing:** Explicit TypeScript `any` usage drops to 0 across all refactoring prompts.
-3. **Edge Efficiency:** At **~58 tokens/sec** with **~1.5 GB RAM consumption**, the quantized `Q4_K_M` binary matches or exceeds the architectural quality of commercial frontier cloud models while running **100% offline and air-gapped**.
+3. **Edge Efficiency:** At **~12 tokens/sec** measured on a CPU-only laptop, with **~1.5 GB RAM consumption**, the quantized `Q4_K_M` binary runs **100% offline and air-gapped**. It is not optimized for speed and does not match frontier-model quality (76.3 vs 90.5).
 
 ---
 
@@ -195,7 +195,7 @@ $$\\Delta \\text{{CAS}} = +{delta_cas:.1f}\\text{{ pts}} \\quad (+{pct_gain:.1f}
 | **Invariant & Result Pattern** | 25 pts | {b['invariant_score']:.1f} pts | **{e['invariant_score']:.1f} pts** | {c['invariant_score']:.1f} pts | **+{e['invariant_score'] - b['invariant_score']:.1f} pts** |
 | **Port & Adapter Decoupling** | 25 pts | {b['ports_score']:.1f} pts | **{e['ports_score']:.1f} pts** | {c['ports_score']:.1f} pts | **+{e['ports_score'] - b['ports_score']:.1f} pts** |
 | **TypeScript Type Rigor (Zero `any`)** | 20 pts | {b['typing_score']:.1f} pts | **{e['typing_score']:.1f} pts** | {c['typing_score']:.1f} pts | **+{e['typing_score'] - b['typing_score']:.1f} pts** |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **{b['composite_cas']:.1f} pts** | **{e['composite_cas']:.1f} pts (Grade A)** | **{c['composite_cas']:.1f} pts (Grade A)** | **+{delta_cas:.1f} pts (+{pct_gain:.1f}%)** |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **{b['composite_cas']:.1f} pts** | **{e['composite_cas']:.1f} pts (Grade B)** | **{c['composite_cas']:.1f} pts (Grade A)** | **+{delta_cas:.1f} pts (+{pct_gain:.1f}%)** |
 
 ---
 
@@ -203,7 +203,7 @@ $$\\Delta \\text{{CAS}} = +{delta_cas:.1f}\\text{{ pts}} \\quad (+{pct_gain:.1f}
 
 | Metric | Base Model (1.5B Unquantized) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
 | :--- | :---: | :---: | :---: | :--- |
-| **Generation Speed** | ~{b['tokens_sec']:.1f} tok/s | **~{e['tokens_sec']:.1f} tok/s** | ~{c['tokens_sec']:.1f} tok/s | High interactive throughput on CPU |
+| **Generation Speed** | ~{b['tokens_sec']:.1f} tok/s | **~{e['tokens_sec']:.1f} tok/s** | ~{c['tokens_sec']:.1f} tok/s | Measured on CPU-only laptop; not optimized for speed |
 | **System RAM Footprint** | ~{b['ram_gb']:.1f} GB | **~{e['ram_gb']:.1f} GB** | 0 GB (Cloud) | Runs easily alongside developer IDE |
 | **Disk Binary Footprint** | ~{b['binary_size_gb']:.2f} GB | **~{e['binary_size_gb']:.2f} GB** | 0 MB (API) | Lightweight portable distribution |
 | **Network & Privacy** | Offline | **100% Offline / Zero Telemetry** | Internet Required | Complete proprietary code protection |

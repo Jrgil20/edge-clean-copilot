@@ -15,7 +15,7 @@
 | **Phase 1** | Infrastructure, Networking & Teacher Dataset Generation | Weeks 1–3 | **100%** | **COMPLETED & VERIFIED** |
 | **Phase 2** | LoRA Adaptation & Small Language Model Specialization | Weeks 4–7 | **100%** (3 epochs trained, loss: 0.0312, merged) | **COMPLETED & VERIFIED ON SPARK** |
 | **Phase 3** | Weight Consolidation, Quantization & GGUF Export | Weeks 8–11 | **100%** (Q4_K_M, Q5_K_M, Q8_0 exported) | **COMPLETED & VERIFIED ON SPARK** |
-| **Phase 4** | Hexagonal CLI, Unit Tests & Automated Benchmark | Weeks 12–15 | **100%** (41/41 tests green, live CAS benchmark: 76.3/100) | **COMPLETED & VERIFIED** |
+| **Phase 4** | Hexagonal CLI, Unit Tests & Automated Benchmark | Weeks 12–15 | **100%** (41/41 tests green, live CAS benchmark: 76.3/100, Grade B) | **COMPLETED & VERIFIED** |
 
 ---
 
@@ -81,7 +81,7 @@
     - `clean-copilot-1.5b-q4_k_m.gguf` (941 MB)
     - `clean-copilot-1.5b-q5_k_m.gguf` (1.1 GB)
     - `clean-copilot-1.5b-q8_0.gguf` (1.6 GB)
-  - Deployed in live service on port `8085` at **~155 tokens/second**.
+  - Deployed as a local service on port `8085`. Throughput: ~12 tokens/second measured on a CPU-only laptop; the earlier ~155 tokens/second figure is not reproduced there.
 
 ---
 

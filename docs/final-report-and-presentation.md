@@ -15,7 +15,7 @@
 
 General-purpose commercial Large Language Models (LLMs) used in automated code generation (e.g., GitHub Copilot, ChatGPT) excel at localized syntax completion but systematically degrade high-level software architecture. When prompted to generate or refactor enterprise logic, commercial models exhibit **architectural drift**: injecting explicit `any` types, coupling business entities directly to external database ORMs (Prisma, TypeORM), leaking raw HTTP network clients (Axios, Fetch) into core domain models, and throwing unhandled generic exceptions.
 
-This project designs, trains, evaluates, and packages **Edge Clean Copilot (ECC)**: a specialized Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) fine-tuned via Low-Rank Adaptation (LoRA) on curated architectural refactoring pairs, quantized to **GGUF Q4_K_M**, and served 100% offline at **45–70 tokens/second** on commodity edge hardware.
+This project designs, trains, evaluates, and packages **Edge Clean Copilot (ECC)**: a specialized Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) fine-tuned via Low-Rank Adaptation (LoRA) on curated architectural refactoring pairs, quantized to **GGUF Q4_K_M**, and served 100% offline. It is **not optimized for speed**: measured at ~12 tokens/second on a CPU-only laptop (Intel Core i5-10310U). It is an extremely light refactoring model for small, private, bounded artifacts.
 
 We demonstrate that a lightweight, air-gapped 1.5B parameter model trained under strict architectural guardrails achieves a **Clean Architecture Score (CAS) of 91.5 / 100**, dramatically outperforming its un-fine-tuned base foundation model (**48.2 / 100**, a **+89.8% relative improvement**) and surpassing commercial frontier cloud models (**88.0 / 100**) on domain layer isolation and type discipline—all while eliminating cloud API dependencies, telemetry egress, and latency overhead.
 
@@ -78,7 +78,7 @@ Operating within a shared institutional computing infrastructure (such as univer
                │
                ▼ (Artifact Export)
 [ Phase 3: Edge Deployment (Local Workstation) ]
-  └── GGUF quantization (Q4_K_M) served via llama.cpp (45-70 tok/s, 1.5 GB RAM)
+  └── GGUF quantization (Q4_K_M) served via llama.cpp (~12 tok/s measured on CPU-only i5-10310U, 1.5 GB RAM)
 ```
 
 This model guarantees that expensive GPU cluster time is reserved exclusively for compute-heavy training bursts, while all dataset curation, testing, static analysis, and packaging remain 100% autonomous on local hardware.
@@ -165,8 +165,8 @@ COMPOSITE CAS (0–100 PTS)        |      48.2       |         76.3         |   
 
 #### Key Empirical Observations:
 1. **The Base Model Fails Architecture:** Without fine-tuning, Qwen 1.5B achieves only **48.2 pts (Grade F)**, routinely preserving ORM imports and failing to create Value Objects.
-2. **Domain Specialization Beats Scale:** Edge Clean Copilot achieves **76.3 pts (Grade A)**, improving over the base model by **+28.1 pts (+58.3%)** and approaching frontier models like Gemini 3.8 Flash (90.5 pts) on domain isolation while running 100% offline.
-3. **Resource Efficiency:** At **58.5 tokens/sec** with **1.5 GB RAM consumption**, ECC provides instantaneous feedback on developer laptops without requiring GPU hardware.
+2. **Domain Specialization Beats Scale:** Edge Clean Copilot achieves **76.3 pts (Grade B)**, improving over the base model by **+28.1 pts (+58.3%)** and approaching frontier models like Gemini 3.8 Flash (90.5 pts) on domain isolation while running 100% offline.
+3. **Resource Efficiency:** At ~12 tokens/sec measured on a CPU-only laptop, with **1.5 GB RAM consumption**, ECC is slow but private: it runs offline on developer laptops without GPU hardware, for small refactoring tasks.
 
 ---
 
@@ -259,7 +259,7 @@ COMPOSITE CAS (0–100 PTS)        |      48.2       |         76.3         |   
 - **Visuals:** Model footprint comparison table (3.1 GB FP16 $\to$ 0.98 GB Q4_K_M).
 - **Talking Points:**
   - Automated merge with `merge_and_unload()` followed by `llama-quantize`.
-  - Result: 68% RAM reduction, running at ~58 tokens/s on standard CPU with ~1.5 GB RAM.
+  - Result: 68% RAM reduction, ~1.5 GB RAM. Throughput measured at ~12 tokens/s on CPU-only i5-10310U (earlier ~58 tokens/s figure not reproduced).
 
 ---
 
@@ -276,7 +276,7 @@ COMPOSITE CAS (0–100 PTS)        |      48.2       |         76.3         |   
 - **Talking Points:**
   - **Base Model (Qwen 1.5B):** 48.2 pts (Grade F). Fails domain isolation.
   - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grade A). Strong, but requires cloud API and internet.
-  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grade A)**. **+58.3% gain over base**.
+  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grade B)**. **+58.3% gain over base**.
   - Highlights: 100% elimination of prohibited imports, zero `any` types.
 
 ---

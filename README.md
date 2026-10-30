@@ -18,7 +18,7 @@
 
 **Edge Clean Copilot (ECC)** is an offline, specialized AI coding assistant designed to enforce **Clean Architecture**, **Ports & Adapters (Hexagonal Architecture)**, and **Domain-Driven Design (DDD)** principles on edge developer workstations without requiring cloud API connections.
 
-Mainstream commercial code LLMs frequently fail architectural boundaries: they inject `any` types, introduce circular layer dependencies, mix database SDKs directly into business entities, and hallucinate external framework couplings. ECC solves this by fine-tuning an agile Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) on high-signal architectural refactoring pairs, deploying it locally via **GGUF Q4_K_M** quantization served through `llama.cpp` at **45–70 tokens/second** on standard commodity hardware.
+Mainstream commercial code LLMs frequently fail architectural boundaries: they inject `any` types, introduce circular layer dependencies, mix database SDKs directly into business entities, and hallucinate external framework couplings. ECC solves this by fine-tuning an agile Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) on high-signal architectural refactoring pairs, deploying it locally via **GGUF Q4_K_M** quantization served through `llama.cpp`. It is deliberately light and **not optimized for speed**: measured at ~12 tokens/second on a CPU-only laptop (Intel Core i5-10310U). Its purpose is private, offline refactoring of small, bounded code artifacts.
 
 > **Key Architectural Value:** Beyond a single model checkpoint, ECC is designed as a reproducible **[Model Factory](docs/model-factory-architecture.md)**. The pipeline decoupled from specific model weights, allowing new open-weight SLMs (Llama-3.2, Gemma-2, DeepSeek) to be ingested, specialized, and edge-quantized through an automated, repeatable workflow.
 
@@ -188,7 +188,7 @@ clean-copilot refactor path/to/SourceFile.ts -o path/to/RefactoredFile.ts
 | **Phase 1** | Infrastructure & Teacher Dataset | Weeks 1–3 | **100%** | Direct link `/26`, port 8085 isolated, 168 ChatML pairs partitioned (138 train / 30 holdout). |
 | **Phase 2** | LoRA Adaptation & Specialization | Weeks 4–7 | **100%** | 3 epochs trained in 5m 30s on GB10 GPU; loss 0.0312; weights merged via `merge_and_unload()`. |
 | **Phase 3** | Weight Consolidation & GGUF Export | Weeks 8–11 | **100%** | Exported `Q4_K_M` (941MB), `Q5_K_M` (1.1GB), `Q8_0` (1.6GB) with `--clean-f16`. |
-| **Phase 4** | Hexagonal CLI & Offline Inference | Weeks 12–15 | **100%** | 41/41 Vitest unit tests green; live CAS benchmark evaluated at **76.3 / 100** (vs 48.2 base). |
+| **Phase 4** | Hexagonal CLI & Offline Inference | Weeks 12–15 | **100%** | 41/41 Vitest unit tests green; live CAS benchmark evaluated at **76.3 / 100 (Grade B)** (vs 48.2 base). |
 | **GLOBAL** | **Comprehensive Project Maturity** | **Overall** | **100%** | **All 4 Phases Fully Completed, Tested, and Deployed.** |
 
 ---

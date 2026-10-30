@@ -188,7 +188,7 @@ clean-copilot refactor ruta/a/SourceFile.ts -o ruta/a/RefactoredFile.ts
 | **Fase 1** | Infraestructura y Dataset del Teacher | Semanas 1–3 | **100%** | Enlace directo `/26`, puerto 8085 aislado, 168 pares ChatML particionados (138 train / 30 holdout). |
 | **Fase 2** | Adaptación LoRA y Especialización | Semanas 4–7 | **100%** | 3 épocas entrenadas en 5m 30s en GPU GB10; loss 0.0312; pesos consolidados en 16-bit. |
 | **Fase 3** | Consolidación de Pesos y Exportación GGUF | Semanas 8–11 | **100%** | Exportados `Q4_K_M` (941MB), `Q5_K_M` (1.1GB), `Q8_0` (1.6GB) con `--clean-f16`. |
-| **Fase 4** | CLI Hexagonal e Inferencia Offline | Semanas 12–15 | **100%** | 41/41 tests Vitest en verde; benchmark live CAS evaluado en **76.3 / 100** (vs 48.2 base). |
+| **Fase 4** | CLI Hexagonal e Inferencia Offline | Semanas 12–15 | **100%** | 41/41 tests Vitest en verde; benchmark live CAS evaluado en **76.3 / 100 (Grado B)** (vs 48.2 base). |
 | **GLOBAL** | **Madurez Integral del Proyecto** | **General** | **100%** | **Las 4 fases 100% completadas, verificadas y operativas.** |
 
 ---
