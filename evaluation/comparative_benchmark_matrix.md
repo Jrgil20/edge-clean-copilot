@@ -5,7 +5,7 @@
 >
 > **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier speeds are unverified.
 >
-> **Last Verification:** 2026-10-30 01:42:02Z
+> **Last Verification:** 2026-10-30 02:05:04Z
 
 ---
 

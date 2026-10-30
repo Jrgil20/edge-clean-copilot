@@ -114,6 +114,12 @@ def parse_args() -> argparse.Namespace:
         help="Maximum training time in minutes before stopping gracefully (e.g. 5.0)."
     )
     parser.add_argument(
+        "--memory-fraction",
+        type=float,
+        default=0.70,
+        help="Defensive CUDA memory fraction limit (0.0 to 1.0, default: 0.70 to preserve 30 percent for lab workloads)."
+    )
+    parser.add_argument(
         "--merge",
         action="store_true",
         help="Merge LoRA adapters into base model weights after training."
@@ -358,6 +364,15 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Compute Device: {device}")
+
+    # Defensive hardware limits: preserve headroom for concurrent lab workloads
+    if torch.cuda.is_available() and args.memory_fraction:
+        fraction = max(0.1, min(1.0, float(args.memory_fraction)))
+        torch.cuda.set_per_process_memory_fraction(fraction, device=0)
+        print(f"Defensive hardware guard: CUDA memory fraction capped at {fraction*100:.0f}% (preserving {100-fraction*100:.0f}% for lab).")
+
+    # Bound CPU threads so Grace CPU cores aren't saturated
+    torch.set_num_threads(min(8, os.cpu_count() or 4))
 
     # Precision resolution
     if recipe.torch_dtype == "bfloat16" and torch.cuda.is_available() and torch.cuda.is_bf16_supported():

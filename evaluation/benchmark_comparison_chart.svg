@@ -75,5 +75,5 @@
 <rect x="380" y="430" width="12" height="12" rx="3" fill="url(#eccGrad)" />
 <text x="400" y="440" fill="#10b981" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">Edge Clean Copilot (GGUF)</text>
 <rect x="580" y="430" width="12" height="12" rx="3" fill="url(#cloudGrad)" />
-<text x="600" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Frontier Cloud (API)</text>
+<text x="600" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Gemini 3.8 Flash (Cloud API)</text>
 </svg>

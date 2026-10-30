@@ -334,7 +334,7 @@ def generate_svg_chart(models: Dict[str, Dict[str, Any]], output_path: Path) -> 
 
     # Cloud Legend
     svg_parts.append(f'<rect x="580" y="{leg_y - 10}" width="12" height="12" rx="3" fill="url(#cloudGrad)" />')
-    svg_parts.append(f'<text x="600" y="{leg_y}" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Frontier Cloud (API)</text>')
+    svg_parts.append(f'<text x="600" y="{leg_y}" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Gemini 3.8 Flash (Cloud API)</text>')
 
     svg_parts.append('</svg>')
 

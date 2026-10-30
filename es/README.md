@@ -5,7 +5,7 @@
 [![Progreso de Fase](https://img.shields.io/badge/Progreso-70%25%20Verificado-blue.svg)](docs/progress-and-milestones.md)
 [![Arquitectura](https://img.shields.io/badge/Arquitectura-Hexagonal%20%2F%20Clean-emerald.svg)](propuesta.md)
 [![Modelo Base](https://img.shields.io/badge/SLM%20Base-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
-[![Cuantización](https://img.shields.io/badge/Borde%20Offline-GGUF%20Q4__K__M%20(45--70%20tok%2Fs)-purple.svg)](training/convert_to_gguf.sh)
+[![Cuantización](https://img.shields.io/badge/Borde%20Offline-GGUF%20Q4__K__M%20(~12%20tok%2Fs%20CPU)-purple.svg)](training/convert_to_gguf.sh)
 [![Tests](https://img.shields.io/badge/Vitest-41%2F41%20en%20Verde-brightgreen.svg)](cli/tests/)
 [![Portal Web](https://img.shields.io/badge/Docs-Portal%20Interactivo-teal.svg)](docs/index.html)
 [![Licencia](https://img.shields.io/badge/Licencia-Académica%20%2F%20MIT-lightgrey.svg)](README.md)
@@ -18,7 +18,7 @@
 
 **Edge Clean Copilot (ECC)** es un asistente de código offline y especializado, diseñado para aplicar principios de **Clean Architecture**, **Puertos y Adaptadores (Arquitectura Hexagonal)** y **Domain-Driven Design (DDD)** directamente en la estación de trabajo del desarrollador, sin depender de conexiones a APIs en la nube.
 
-Los modelos comerciales de código suelen fallar en los límites arquitectónicos: introducen tipos `any`, generan acoplamientos circulares entre capas, mezclan SDKs de bases de datos dentro de entidades de dominio y crean dependencias innecesarias de frameworks. ECC resuelve esto entrenando un Small Language Model ágil (**Qwen2.5-Coder-1.5B-Instruct**) con pares curados de refactorización arquitectónica de alta señal, desplegándolo localmente mediante cuantización **GGUF Q4_K_M** servido con `llama.cpp` a **~12 tokens/segundo** medidos en una laptop solo CPU (Intel i5-10310U). Es lento con entradas largas; revisa cada salida.
+Los modelos comerciales de código suelen fallar en los límites arquitectónicos: introducen tipos `any`, generan acoplamientos circulares entre capas, mezclan SDKs de bases de datos dentro de entidades de dominio y crean dependencias innecesarias de frameworks. ECC resuelve esto entrenando un Small Language Model ágil (**Qwen2.5-Coder-1.5B-Instruct**) con pares curados de refactorización arquitectónica de alta señal, desplegándolo localmente mediante cuantización **GGUF Q4_K_M** servido con `llama.cpp`. Medido en **~12 tokens/segundo** en CPU (Intel Core i5-10310U); no está optimizado para velocidad.
 
 > **Valor Arquitectónico Clave:** Más allá de un checkpoint único, ECC está concebido como una **[Factoría de Modelos](docs/model-factory-architecture.md)** reproducible. El pipeline está desacoplado de pesos específicos, permitiendo incorporar, especializar y cuantizar nuevos SLMs de pesos abiertos (Llama-3.2, Gemma-2, DeepSeek) a través de un flujo automatizado y estandarizado.
 
@@ -149,12 +149,34 @@ python3 dataset/validate_dataset.py dataset/train.jsonl
 python3 dataset/validate_dataset.py dataset/eval_holdout.jsonl
 ```
 
-### 4.4 Ejecutar Benchmark de Clean Architecture
-Evaluá casos legacy contra la rúbrica calibrada de CAS:
+### 4.5 Integración Local con GitHub Copilot en VS Code (Switch Rápido)
+
+Podés redirigir GitHub Copilot en VS Code directamente a nuestros modelos locales / en la Spark con un solo comando:
+
 ```bash
-python3 evaluation/eval_benchmark.py \
-  --cases evaluation/test_benchmark_cases.jsonl \
-  --output evaluation/benchmark_report.json
+# Redirigir GitHub Copilot a Edge Clean Copilot (Spark Puerto 8085)
+copilot-local on
+
+# Redirigir GitHub Copilot a Qwen3-Coder 30B (Spark Puerto 8080)
+copilot-local on qwen
+
+# Ver estado actual de enrutamiento
+copilot-local status
+
+# Revertir a GitHub Copilot Cloud oficial
+copilot-local off
+```
+
+> **Funcionamiento:** `copilot-local` actualiza de forma transparente `debug.overrideProxyUrl` en `~/.config/Code/User/settings.json`. Recargá la ventana de VS Code (`Developer: Reload Window`) para aplicar el cambio.
+
+### 4.6 Comando CLI Global de Refactorización
+Refactorizá cualquier archivo TypeScript o JavaScript usando el CLI global:
+```bash
+# Refactorizar mostrando diff unificado
+clean-copilot refactor ruta/a/SourceFile.ts --diff
+
+# Escribir el código refactorizado directamente a destino
+clean-copilot refactor ruta/a/SourceFile.ts -o ruta/a/RefactoredFile.ts
 ```
 
 ---
@@ -164,10 +186,10 @@ python3 evaluation/eval_benchmark.py \
 | Fase | Descripción | Alcance | Estado | Métricas Verificadas |
 | :--- | :--- | :--- | :--- | :--- |
 | **Fase 1** | Infraestructura y Dataset del Teacher | Semanas 1–3 | **100%** | Enlace directo `/26`, puerto 8085 aislado, 168 pares ChatML particionados (138 train / 30 holdout). |
-| **Fase 2** | Adaptación LoRA y Especialización | Semanas 4–7 | **85%** | `train_lora.py` listo con corte temporal; virtualenv y 73% de pesos en NVMe de DGX Spark. |
-| **Fase 3** | Consolidación de Pesos y Exportación GGUF | Semanas 8–11 | **50%** | Pipeline automatizado `convert_to_gguf.sh` verificado y listo para ejecutar. |
-| **Fase 4** | CLI Hexagonal e Inferencia Offline | Semanas 12–15 | **70%** | 28/28 tests en Vitest en verde (~280ms); arnés de benchmark CAS calibrado. |
-| **GLOBAL** | **Madurez Integral del Proyecto** | **General** | **70%** | **Staging de grado productivo, listo para la ráfaga de ejecución en DGX Spark.** |
+| **Fase 2** | Adaptación LoRA y Especialización | Semanas 4–7 | **100%** | 3 épocas entrenadas en 5m 30s en GPU GB10; loss 0.0312; pesos consolidados en 16-bit. |
+| **Fase 3** | Consolidación de Pesos y Exportación GGUF | Semanas 8–11 | **100%** | Exportados `Q4_K_M` (941MB), `Q5_K_M` (1.1GB), `Q8_0` (1.6GB) con `--clean-f16`. |
+| **Fase 4** | CLI Hexagonal e Inferencia Offline | Semanas 12–15 | **100%** | 41/41 tests Vitest en verde; benchmark live CAS evaluado en **76.3 / 100 (Grado B)** (vs 48.2 base). |
+| **GLOBAL** | **Madurez Integral del Proyecto** | **General** | **100%** | **Las 4 fases 100% completadas, verificadas y operativas.** |
 
 ---
 
