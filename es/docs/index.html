@@ -112,11 +112,11 @@
         <!-- Tarjetas de Métricas -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
           <div class="glass-card p-4 rounded-xl">
-            <div class="text-2xl sm:text-3xl font-black text-brand-400 font-mono">91.5 / 100</div>
+            <div class="text-2xl sm:text-3xl font-black text-brand-400 font-mono">76.3 / 100</div>
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Clean Arch Score (CAS)</div>
           </div>
           <div class="glass-card p-4 rounded-xl">
-            <div class="text-2xl sm:text-3xl font-black text-sky-400 font-mono">58.5 tok/s</div>
+            <div class="text-2xl sm:text-3xl font-black text-sky-400 font-mono">~12 tok/s</div>
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Velocidad de Inferencia</div>
           </div>
           <div class="glass-card p-4 rounded-xl">
@@ -660,7 +660,7 @@ app.post(<span class="text-amber-200">'/api/orders'</span>, <span class="text-sk
       {
         num: 3,
         title: "Diapositiva 3: Hipótesis de Investigación y Enfoque Edge",
-        text: "Un SLM ágil de 1.5B/3B parámetros especializado mediante LoRA con pares de alta señal arquitectónica puede superar a los modelos de frontera en rigor formal (CAS >= 90) operando a 58 tok/s bajo 1 GB de RAM."
+        text: "Un SLM ligero de 1.5B parámetros especializado mediante LoRA con pares de alta señal arquitectónica obtiene 76.3/100 (Grado B) en nuestro benchmark, frente a 90.5 del baseline de frontera. No está optimizado para velocidad: ~12 tok/s en una laptop solo con CPU, ~1.5 GB de RAM."
       },
       {
         num: 4,

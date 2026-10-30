@@ -78,7 +78,7 @@ Operar en una infraestructura de cómputo compartida (como clusters GPU instituc
                │
                ▼ (Exportación de Artefactos)
 [ Fase 3: Despliegue en el Borde (Estación Local) ]
-  └── Cuantización GGUF (Q4_K_M) servida vía llama.cpp (45-70 tok/s, 1.5 GB RAM)
+  └── Cuantización GGUF (Q4_K_M) servida vía llama.cpp (~12 tok/s medidos en CPU i5-10310U sin GPU, 1.5 GB RAM)
 ```
 
 Este modelo garantiza que el tiempo de GPU se reserve exclusivamente para ráfagas intensivas de entrenamiento, mientras que la preparación del dataset, las pruebas unitarias y el empaquetado se realizan con total autonomía en hardware local.
@@ -165,7 +165,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         76.3         |   
 
 #### Hallazgos Clave:
 1. **El Modelo Base Falla en Arquitectura:** Sin fine-tuning, Qwen 1.5B solo alcanza **48.2 pts (Grado F)**, manteniendo imports de ORMs y omitiendo Value Objects.
-2. **La Especialización Supera a la Escala:** Edge Clean Copilot alcanza **76.3 pts (Grado A)**, mejorando al modelo base en **+28.1 pts (+58.3%)** y acercándose al rendimiento de frontera de Gemini 3.8 Flash (90.5 pts) mientras corre 100% offline.
+2. **La Especialización Supera a la Escala:** Edge Clean Copilot alcanza **76.3 pts (Grado B)**, mejorando al modelo base en **+28.1 pts (+58.3%)** y acercándose al rendimiento de frontera de Gemini 3.8 Flash (90.5 pts) mientras corre 100% offline.
 3. **Eficiencia en el Borde:** Con **58.5 tokens/segundo** y **1.5 GB de RAM**, ECC brinda retroalimentación instantánea en la laptop del desarrollador sin requerir tarjeta gráfica dedicada.
 
 ---
@@ -256,7 +256,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         76.3         |   
 - **Visual:** Comparación de peso en memoria (3.1 GB FP16 $\to$ 0.98 GB Q4_K_M).
 - **Puntos a Exponer:**
   - Fusión de pesos con `merge_and_unload()` y cuantización automática con `llama-quantize`.
-  - Reducción del 68% de memoria, corriendo a ~58 tokens/s en CPU común con ~1.5 GB de RAM.
+  - Reducción del 68% de memoria, con ~1.5 GB de RAM. Velocidad medida: ~12 tokens/s en CPU i5-10310U (la cifra previa de ~58 tokens/s no se reprodujo).
 
 ---
 
@@ -273,7 +273,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         76.3         |   
 - **Puntos a Exponer:**
   - **Modelo Base (1.5B):** 48.2 pts (Grado F). No respeta aislamiento de capas.
   - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grado A). Excelente, pero requiere API y conexión.
-  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grado A)**. **+58.3% de ganancia**.
+  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grado B)**. **+58.3% de ganancia**.
   - Erradicación del 100% de imports prohibidos y eliminación total de `any`.
 
 ---
