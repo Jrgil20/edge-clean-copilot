@@ -69,7 +69,7 @@ La factoría se descompone en cinco capas autónomas siguiendo los principios de
 ### 2.3 Subsistema C: Motor de Compresión y Cuantización
 - **Responsabilidad:** Transformar pesos densos FP16 en binarios GGUF optimizados y alineados para ejecución en el borde.
 - **Matriz de Cuantización:**
-  - `Q4_K_M`: Predeterminado óptimo para borde (~0.98 GB, cabe en 1.5 GB de RAM, velocidad de ~58 t/s).
+  - `Q4_K_M`: Predeterminado óptimo para borde (~0.94 GB, cabe en 1.5 GB de RAM, ~12 t/s medidos en CPU).
   - `Q8_0`: Referencia de alta fidelidad para servidores o estaciones de trabajo de desarrollo.
 - **Canalización:** Automatizada a través de `training/convert_to_gguf.sh`.
 
@@ -132,7 +132,7 @@ python3 proyecto/evaluation/compare_models.py \
 | Dimensión | Estado Inicial (v0.1) | Estado de la Factoría Escalada (v1.0+) |
 |---|---|---|
 | **Escala del Modelo Base** | Qwen 2.5 Coder 1.5B | SLMs de 1B, 3B, 7B y arquitecturas MoE (Qwen, Llama, DeepSeek) |
-| **Consumo en el Borde** | ~0.98 GB RAM / 58 t/s | Múltiples niveles: Ultra-Edge (0.5 GB) hasta Workstations (4 GB) |
+| **Consumo en el Borde** | ~0.94 GB disco / ~1.5 GB RAM / ~12 t/s (CPU) | Múltiples niveles: Ultra-Edge (0.5 GB) hasta Workstations (4 GB) |
 | **Alcance de Lenguajes** | TypeScript / JavaScript | Políglota (Go Clean Arch, Rust Hexagonal, Python DDD) |
 | **Entornos de Cómputo** | NVIDIA DGX Spark individual (A100) | Clústeres distribuidos multi-GPU, Apple Silicon MLX |
 | **Runtime de Inferencia** | llama.cpp (`llama-server`) | llama.cpp, vLLM, ONNX Runtime, WebGPU en navegador |

@@ -30,7 +30,9 @@ CYAN = "\033[36m"
 RED = "\033[31m"
 GRAY = "\033[90m"
 
-# Default Calibrated Demo Metrics
+# Published figures from the model card (huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf).
+# Edge CAS and speed were measured on an Intel i5-10310U (CPU-only). Base and frontier
+# speeds are marked unverified by the card; base RAM/disk describe the 1.5B F16 model.
 DEMO_DATA: Dict[str, Dict[str, Any]] = {
     "base": {
         "name": "Qwen2.5-Coder-1.5B (Base)",
@@ -45,8 +47,8 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
         "typing_score": 15.0,
         "typing_max": 20.0,
         "tokens_sec": 52.0,
-        "ram_gb": 1.5,
-        "binary_size_gb": 0.95,
+        "ram_gb": 3.1,
+        "binary_size_gb": 3.10,
         "offline": True,
     },
     "ecc": {
@@ -63,7 +65,7 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
         "typing_max": 20.0,
         "tokens_sec": 12.0,
         "ram_gb": 1.5,
-        "binary_size_gb": 0.98,
+        "binary_size_gb": 0.94,
         "offline": True,
     },
     "cloud": {
@@ -170,20 +172,25 @@ def generate_markdown_report(models: Dict[str, Dict[str, Any]], output_path: Pat
     content = f"""# Edge Clean Copilot — Comparative Benchmark Evaluation Matrix
 
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
-> **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)  
-> **Last Verification:** {time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime())}  
+> **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)
+>
+> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier speeds are unverified.
+>
+> **Last Verification:** {time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime())}
 
 ---
 
-## 1. Executive Findings & Core Hypothesis Validation
+## 1. Executive Findings
 
-The empirical evaluation mathematically confirms the central research hypothesis of **Edge Clean Copilot**:
+Measured on the 30-case legacy suite, the fine-tuned **Edge Clean Copilot** improves on its base model by {delta_cas:.1f} CAS points (+{pct_gain:.1f}%) but does not reach the frontier baseline:
 
 $$\\Delta \\text{{CAS}} = +{delta_cas:.1f}\\text{{ pts}} \\quad (+{pct_gain:.1f}\\% \\text{{ improvement over base foundation model}})$$
 
-1. **Clean Architecture Purity:** The specialized LoRA fine-tuning eliminates **100% of prohibited framework and ORM imports** from the domain layer.
-2. **Deterministic Typing:** Explicit TypeScript `any` usage drops to 0 across all refactoring prompts.
-3. **Edge Efficiency:** At **~12 tokens/sec** measured on a CPU-only laptop, with **~1.5 GB RAM consumption**, the quantized `Q4_K_M` binary runs **100% offline and air-gapped**. It is not optimized for speed and does not match frontier-model quality (76.3 vs 90.5).
+1. **Domain Boundaries:** ECC scores {e['boundary_score']:.1f} / {e['boundary_max']:.0f}, at the maximum and above the frontier baseline ({c['boundary_score']:.1f}).
+2. **Invariants and Ports:** ECC trails the frontier baseline on invariant safety ({e['invariant_score']:.1f} vs {c['invariant_score']:.1f}) and port decoupling ({e['ports_score']:.1f} vs {c['ports_score']:.1f}).
+3. **Edge Efficiency:** ~{e['tokens_sec']:.0f} tokens/sec measured on CPU (Intel i5-10310U) with ~{e['ram_gb']:.1f} GB RAM. Slow on long inputs; every output should be reviewed before use.
+
+_Single-run variance: a 2026-10-29 rerun measured 73.8 CAS (invariant 2.0), so the composite can move by several points between runs._
 
 ---
 
@@ -201,9 +208,9 @@ $$\\Delta \\text{{CAS}} = +{delta_cas:.1f}\\text{{ pts}} \\quad (+{pct_gain:.1f}
 
 ## 3. Operational Edge Infrastructure Metrics
 
-| Metric | Base Model (1.5B Unquantized) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
+| Metric | Base Model (1.5B F16) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
 | :--- | :---: | :---: | :---: | :--- |
-| **Generation Speed** | ~{b['tokens_sec']:.1f} tok/s | **~{e['tokens_sec']:.1f} tok/s** | ~{c['tokens_sec']:.1f} tok/s | Measured on CPU-only laptop; not optimized for speed |
+| **Generation Speed** | ~{b['tokens_sec']:.1f} tok/s (unverified) | **~{e['tokens_sec']:.1f} tok/s (measured, CPU)** | ~{c['tokens_sec']:.1f} tok/s (unverified) | Usable on CPU; slow on long inputs |
 | **System RAM Footprint** | ~{b['ram_gb']:.1f} GB | **~{e['ram_gb']:.1f} GB** | 0 GB (Cloud) | Runs easily alongside developer IDE |
 | **Disk Binary Footprint** | ~{b['binary_size_gb']:.2f} GB | **~{e['binary_size_gb']:.2f} GB** | 0 MB (API) | Lightweight portable distribution |
 | **Network & Privacy** | Offline | **100% Offline / Zero Telemetry** | Internet Required | Complete proprietary code protection |

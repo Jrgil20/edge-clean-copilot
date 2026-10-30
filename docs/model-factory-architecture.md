@@ -69,7 +69,7 @@ The factory is decomposed into five autonomous layers following Clean Architectu
 ### 2.3 Subsystem C: Quantization & Compression Engine
 - **Responsibility:** Transform dense FP16 weights into edge-executable, cache-aligned GGUF binaries.
 - **Quantization Matrix:**
-  - `Q4_K_M`: Optimal edge default (~0.98 GB, fits in 1.5 GB RAM, high inference velocity ~58 t/s).
+  - `Q4_K_M`: Optimal edge default (~0.94 GB, fits in 1.5 GB RAM, ~12 t/s measured on CPU).
   - `Q8_0`: High-fidelity reference for server and developer workstation deployment.
 - **Pipeline:** Automated via `training/convert_to_gguf.sh`.
 
@@ -132,7 +132,7 @@ python3 proyecto/evaluation/compare_models.py \
 | Dimension | Initial Baseline (v0.1) | Scaled Factory State (v1.0+) |
 |---|---|---|
 | **Base Model Scale** | Qwen 2.5 Coder 1.5B | 1B, 3B, 7B, MoE SLMs (e.g. Qwen, Llama, DeepSeek) |
-| **Edge Footprint** | ~0.98 GB RAM / 58 t/s | Multi-tier: Ultra-Edge (0.5 GB) to Workstation (4 GB) |
+| **Edge Footprint** | ~0.94 GB disk / ~1.5 GB RAM / ~12 t/s (CPU) | Multi-tier: Ultra-Edge (0.5 GB) to Workstation (4 GB) |
 | **Language Scope** | TypeScript / JavaScript | Polyglot (Go Clean Arch, Rust Hexagonal, Python DDD) |
 | **Compute Targets** | Single NVIDIA DGX Spark (A100) | Distributed multi-GPU clusters, Apple Silicon MLX |
 | **Inference Runtime** | llama.cpp (`llama-server`) | llama.cpp, vLLM, ONNX Runtime, WebGPU (in-browser) |

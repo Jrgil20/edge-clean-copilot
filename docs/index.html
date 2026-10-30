@@ -120,7 +120,7 @@
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">Edge Inference Velocity</div>
           </div>
           <div class="glass-card p-4 rounded-xl">
-            <div class="text-2xl sm:text-3xl font-black text-emerald-300 font-mono">0.98 GB</div>
+            <div class="text-2xl sm:text-3xl font-black text-emerald-300 font-mono">1.5 GB</div>
             <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold mt-1">GGUF RAM Footprint</div>
           </div>
           <div class="glass-card p-4 rounded-xl">
@@ -247,7 +247,7 @@
             <div class="text-xs font-mono text-purple-400 font-bold mb-1">STAGE 3: EDGE GGUF</div>
             <h4 class="text-sm font-bold text-white mb-2">Atomic Quantization</h4>
             <p class="text-xs text-slate-400 leading-relaxed">
-              Merges LoRA deltas into base FP16 weights and converts to Q4_K_M GGUF binaries for sub-15ms local inference.
+              Merges LoRA deltas into base FP16 weights and converts to Q4_K_M GGUF binaries for fully local inference.
             </p>
           </div>
         </div>
@@ -401,83 +401,83 @@ app.post(<span class="text-amber-200">'/api/orders'</span>, <span class="text-sk
         <!-- Embedded SVG Vector Chart -->
         <div class="glass-card rounded-2xl p-4 sm:p-6 overflow-hidden mb-8 border border-slate-800">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 460" width="100%" height="100%">
-            <defs>
-              <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#0f172a" />
-                <stop offset="100%" stop-color="#1e293b" />
-              </linearGradient>
-              <linearGradient id="eccGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#10b981" />
-                <stop offset="100%" stop-color="#059669" />
-              </linearGradient>
-              <linearGradient id="baseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#f59e0b" />
-                <stop offset="100%" stop-color="#d97706" />
-              </linearGradient>
-              <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#38bdf8" />
-                <stop offset="100%" stop-color="#0284c7" />
-              </linearGradient>
-            </defs>
-            <rect width="840" height="460" rx="12" fill="url(#bgGrad)" />
-            <text x="80" y="38" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold">Edge Clean Copilot — Clean Architecture Score (CAS) Comparison</text>
-            <text x="80" y="56" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="12">Empirical evaluation on 30 legacy code refactoring benchmark pairs</text>
-            <line x1="80" y1="370.0" x2="780" y2="370.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
-            <text x="68" y="374.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">0%</text>
-            <line x1="80" y1="295.0" x2="780" y2="295.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
-            <text x="68" y="299.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">25%</text>
-            <line x1="80" y1="220.0" x2="780" y2="220.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
-            <text x="68" y="224.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">50%</text>
-            <line x1="80" y1="145.0" x2="780" y2="145.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
-            <text x="68" y="149.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">75%</text>
-            <line x1="80" y1="70.0" x2="780" y2="70.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
-            <text x="68" y="74.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">100%</text>
-            <rect x="102.0" y="225.0" width="28" height="145.0" rx="4" fill="url(#baseGrad)" />
-            <text x="116.0" y="219.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">48%</text>
-            <rect x="136.0" y="85.0" width="28" height="285.0" rx="4" fill="url(#eccGrad)" />
-            <text x="150.0" y="79.0" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">95%</text>
-            <rect x="170.0" y="100.0" width="28" height="270.0" rx="4" fill="url(#cloudGrad)" />
-            <text x="184.0" y="94.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">90%</text>
-            <text x="150.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Domain Boundary</text>
-            <text x="150.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(30)</text>
-            <rect x="242.0" y="271.6" width="28" height="98.4" rx="4" fill="url(#baseGrad)" />
-            <text x="256.0" y="265.6" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">33%</text>
-            <rect x="276.0" y="96.4" width="28" height="273.6" rx="4" fill="url(#eccGrad)" />
-            <text x="290.0" y="90.4" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">91%</text>
-            <rect x="310.0" y="118.0" width="28" height="252.0" rx="4" fill="url(#cloudGrad)" />
-            <text x="324.0" y="112.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">84%</text>
-            <text x="290.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Invariants &amp; Result</text>
-            <text x="290.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(25)</text>
-            <rect x="382.0" y="244.0" width="28" height="126.0" rx="4" fill="url(#baseGrad)" />
-            <text x="396.0" y="238.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">42%</text>
-            <rect x="416.0" y="103.6" width="28" height="266.4" rx="4" fill="url(#eccGrad)" />
-            <text x="430.0" y="97.6" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">89%</text>
-            <rect x="450.0" y="112.0" width="28" height="258.0" rx="4" fill="url(#cloudGrad)" />
-            <text x="464.0" y="106.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">86%</text>
-            <text x="430.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Ports &amp; Adapters</text>
-            <text x="430.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(25)</text>
-            <rect x="522.0" y="145.0" width="28" height="225.0" rx="4" fill="url(#baseGrad)" />
-            <text x="536.0" y="139.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">75%</text>
-            <rect x="556.0" y="100.0" width="28" height="270.0" rx="4" fill="url(#eccGrad)" />
-            <text x="570.0" y="94.0" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">90%</text>
-            <rect x="590.0" y="92.5" width="28" height="277.5" rx="4" fill="url(#cloudGrad)" />
-            <text x="604.0" y="86.5" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">92%</text>
-            <text x="570.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Type Rigor</text>
-            <text x="570.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(20)</text>
-            <rect x="662.0" y="225.4" width="28" height="144.6" rx="4" fill="url(#baseGrad)" />
-            <text x="676.0" y="219.4" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">48%</text>
-            <rect x="696.0" y="95.5" width="28" height="274.5" rx="4" fill="url(#eccGrad)" />
-            <text x="710.0" y="89.5" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">92%</text>
-            <rect x="730.0" y="106.0" width="28" height="264.0" rx="4" fill="url(#cloudGrad)" />
-            <text x="744.0" y="100.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">88%</text>
-            <text x="710.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Composite CAS</text>
-            <text x="710.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(100)</text>
-            <rect x="220" y="430" width="12" height="12" rx="3" fill="url(#baseGrad)" />
-            <text x="240" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Qwen 1.5B (Base)</text>
-            <rect x="380" y="430" width="12" height="12" rx="3" fill="url(#eccGrad)" />
-            <text x="400" y="440" fill="#10b981" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">Edge Clean Copilot (GGUF)</text>
-            <rect x="580" y="430" width="12" height="12" rx="3" fill="url(#cloudGrad)" />
-            <text x="600" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Frontier Cloud (API)</text>
+          <defs>
+            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0f172a" />
+              <stop offset="100%" stop-color="#1e293b" />
+            </linearGradient>
+            <linearGradient id="eccGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#10b981" />
+              <stop offset="100%" stop-color="#059669" />
+            </linearGradient>
+            <linearGradient id="baseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#f59e0b" />
+              <stop offset="100%" stop-color="#d97706" />
+            </linearGradient>
+            <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#38bdf8" />
+              <stop offset="100%" stop-color="#0284c7" />
+            </linearGradient>
+          </defs>
+          <rect width="840" height="460" rx="12" fill="url(#bgGrad)" />
+          <text x="80" y="38" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="bold">Edge Clean Copilot — Clean Architecture Score (CAS) Comparison</text>
+          <text x="80" y="56" fill="#94a3b8" font-family="system-ui, -apple-system, sans-serif" font-size="12">Empirical evaluation on 30 legacy code refactoring benchmark pairs</text>
+          <line x1="80" y1="370.0" x2="780" y2="370.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+          <text x="68" y="374.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">0%</text>
+          <line x1="80" y1="295.0" x2="780" y2="295.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+          <text x="68" y="299.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">25%</text>
+          <line x1="80" y1="220.0" x2="780" y2="220.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+          <text x="68" y="224.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">50%</text>
+          <line x1="80" y1="145.0" x2="780" y2="145.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+          <text x="68" y="149.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">75%</text>
+          <line x1="80" y1="70.0" x2="780" y2="70.0" stroke="#334155" stroke-dasharray="4,4" stroke-width="1" />
+          <text x="68" y="74.0" fill="#64748b" font-family="monospace" font-size="11" text-anchor="end">100%</text>
+          <rect x="102.0" y="225.0" width="28" height="145.0" rx="4" fill="url(#baseGrad)" />
+          <text x="116.0" y="219.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">48%</text>
+          <rect x="136.0" y="70.0" width="28" height="300.0" rx="4" fill="url(#eccGrad)" />
+          <text x="150.0" y="64.0" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">100%</text>
+          <rect x="170.0" y="80.0" width="28" height="290.0" rx="4" fill="url(#cloudGrad)" />
+          <text x="184.0" y="74.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">97%</text>
+          <text x="150.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Domain Boundary</text>
+          <text x="150.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(30)</text>
+          <rect x="242.0" y="271.6" width="28" height="98.4" rx="4" fill="url(#baseGrad)" />
+          <text x="256.0" y="265.6" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">33%</text>
+          <rect x="276.0" y="229.6" width="28" height="140.4" rx="4" fill="url(#eccGrad)" />
+          <text x="290.0" y="223.6" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">47%</text>
+          <rect x="310.0" y="100.0" width="28" height="270.0" rx="4" fill="url(#cloudGrad)" />
+          <text x="324.0" y="94.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">90%</text>
+          <text x="290.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Invariants &amp; Result</text>
+          <text x="290.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(25)</text>
+          <rect x="382.0" y="244.0" width="28" height="126.0" rx="4" fill="url(#baseGrad)" />
+          <text x="396.0" y="238.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">42%</text>
+          <rect x="416.0" y="178.0" width="28" height="192.0" rx="4" fill="url(#eccGrad)" />
+          <text x="430.0" y="172.0" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">64%</text>
+          <rect x="450.0" y="94.0" width="28" height="276.0" rx="4" fill="url(#cloudGrad)" />
+          <text x="464.0" y="88.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">92%</text>
+          <text x="430.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Ports &amp; Adapters</text>
+          <text x="430.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(25)</text>
+          <rect x="522.0" y="145.0" width="28" height="225.0" rx="4" fill="url(#baseGrad)" />
+          <text x="536.0" y="139.0" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">75%</text>
+          <rect x="556.0" y="89.5" width="28" height="280.5" rx="4" fill="url(#eccGrad)" />
+          <text x="570.0" y="83.5" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">94%</text>
+          <rect x="590.0" y="130.0" width="28" height="240.0" rx="4" fill="url(#cloudGrad)" />
+          <text x="604.0" y="124.0" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">80%</text>
+          <text x="570.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Type Rigor</text>
+          <text x="570.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(20)</text>
+          <rect x="662.0" y="225.4" width="28" height="144.6" rx="4" fill="url(#baseGrad)" />
+          <text x="676.0" y="219.4" fill="#f59e0b" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">48%</text>
+          <rect x="696.0" y="141.1" width="28" height="228.9" rx="4" fill="url(#eccGrad)" />
+          <text x="710.0" y="135.1" fill="#10b981" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">76%</text>
+          <rect x="730.0" y="98.5" width="28" height="271.5" rx="4" fill="url(#cloudGrad)" />
+          <text x="744.0" y="92.5" fill="#38bdf8" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle">90%</text>
+          <text x="710.0" y="390" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="11" font-weight="500" text-anchor="middle">Composite CAS</text>
+          <text x="710.0" y="404" fill="#64748b" font-family="monospace" font-size="10" text-anchor="middle">(100)</text>
+          <rect x="220" y="430" width="12" height="12" rx="3" fill="url(#baseGrad)" />
+          <text x="240" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Qwen 1.5B (Base)</text>
+          <rect x="380" y="430" width="12" height="12" rx="3" fill="url(#eccGrad)" />
+          <text x="400" y="440" fill="#10b981" font-family="system-ui, sans-serif" font-size="12" font-weight="bold">Edge Clean Copilot (GGUF)</text>
+          <rect x="580" y="430" width="12" height="12" rx="3" fill="url(#cloudGrad)" />
+          <text x="600" y="440" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="12">Frontier Cloud (API)</text>
           </svg>
         </div>
 
@@ -496,32 +496,32 @@ app.post(<span class="text-amber-200">'/api/orders'</span>, <span class="text-sk
               <tr>
                 <td class="px-6 py-3 font-sans text-slate-200">1. Domain Boundary (30%)</td>
                 <td class="px-6 py-3 text-amber-300">14.5 / 30</td>
-                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">28.5 / 30</td>
-                <td class="px-6 py-3 text-sky-300">27.0 / 30</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">30.0 / 30</td>
+                <td class="px-6 py-3 text-sky-300">29.0 / 30</td>
               </tr>
               <tr>
                 <td class="px-6 py-3 font-sans text-slate-200">2. Invariants &amp; Result (25%)</td>
                 <td class="px-6 py-3 text-amber-300">8.2 / 25</td>
-                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">22.8 / 25</td>
-                <td class="px-6 py-3 text-sky-300">21.0 / 25</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">11.7 / 25</td>
+                <td class="px-6 py-3 text-sky-300">22.5 / 25</td>
               </tr>
               <tr>
                 <td class="px-6 py-3 font-sans text-slate-200">3. Ports &amp; Adapters (25%)</td>
                 <td class="px-6 py-3 text-amber-300">10.5 / 25</td>
-                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">22.2 / 25</td>
-                <td class="px-6 py-3 text-sky-300">21.5 / 25</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">16.0 / 25</td>
+                <td class="px-6 py-3 text-sky-300">23.0 / 25</td>
               </tr>
               <tr>
                 <td class="px-6 py-3 font-sans text-slate-200">4. Type Rigor (20%)</td>
                 <td class="px-6 py-3 text-amber-300">15.0 / 20</td>
-                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">18.0 / 20</td>
-                <td class="px-6 py-3 text-sky-300">18.5 / 20</td>
+                <td class="px-6 py-3 text-brand-300 font-bold bg-brand-500/5">18.7 / 20</td>
+                <td class="px-6 py-3 text-sky-300">16.0 / 20</td>
               </tr>
               <tr class="bg-slate-900/90 font-bold text-sm">
                 <td class="px-6 py-4 font-sans text-white">COMPOSITE CAS (0–100)</td>
                 <td class="px-6 py-4 text-amber-400">48.2</td>
-                <td class="px-6 py-4 text-brand-400 bg-brand-500/10 text-base">91.5</td>
-                <td class="px-6 py-4 text-sky-400">88.0</td>
+                <td class="px-6 py-4 text-brand-400 bg-brand-500/10 text-base">76.3</td>
+                <td class="px-6 py-4 text-sky-400">90.5</td>
               </tr>
             </tbody>
           </table>
@@ -660,7 +660,7 @@ app.post(<span class="text-amber-200">'/api/orders'</span>, <span class="text-sk
       {
         num: 3,
         title: "Slide 3: Project Hypothesis & The Edge Approach",
-        text: "A light 1.5B parameter SLM specialized via LoRA on high-signal architectural refactorings scores 76.3/100 (Grade B) on our benchmark, vs 90.5 for the frontier baseline. It is not optimized for speed: ~12 tok/s on a CPU-only laptop, ~1.5 GB RAM."
+        text: "An agile 1.5B/3B parameter SLM specialized via LoRA on high-signal architectural refactorings can close much of the gap to frontier models in architectural discipline (76.3 vs 90.5 CAS on our benchmark) while running offline at ~12 tok/s within ~1.5 GB of RAM."
       },
       {
         num: 4,
@@ -685,7 +685,7 @@ app.post(<span class="text-amber-200">'/api/orders'</span>, <span class="text-sk
       {
         num: 8,
         title: "Slide 8: Edge Quantization & GGUF Matrix",
-        text: "Atomic weight merge consolidating LoRA deltas into base weights followed by llama.cpp Q4_K_M quantization. Result: ~0.98 GB binary, sub-15ms TTFT, zero external telemetry."
+        text: "Atomic weight merge consolidating LoRA deltas into base weights followed by llama.cpp Q4_K_M quantization. Result: ~0.94 GB binary, zero external telemetry."
       },
       {
         num: 9,
@@ -700,7 +700,7 @@ app.post(<span class="text-amber-200">'/api/orders'</span>, <span class="text-sk
       {
         num: 11,
         title: "Slide 11: Empirical Benchmark Results",
-        text: "Edge Clean Copilot achieved <strong>91.5 CAS</strong> vs 48.2 for Base Qwen 1.5B (+89.8% relative gain) and 88.0 for Frontier Cloud models, confirming our core academic hypothesis."
+        text: "Edge Clean Copilot achieved <strong>76.3 CAS</strong> vs 48.2 for Base Qwen 1.5B (+58.3% relative gain) and 90.5 for the Frontier Cloud baseline. It improves strongly on its base model but does not match the frontier on invariants and ports."
       },
       {
         num: 12,

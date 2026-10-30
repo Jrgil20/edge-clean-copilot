@@ -80,7 +80,7 @@ After training with `--merge`, execute the automated quantization script:
 
 | Quant Format | Output File Size (1.5B) | Target RAM | Speed on Standard CPU | Quality Retention |
 | :--- | :--- | :--- | :--- | :--- |
-| **Q4_K_M (Default)** | **~0.9 GB** | **~1.5 GB** | **45–70 tokens/s** | **>96.5%** |
+| **Q4_K_M (Default)** | **~0.94 GB** | **~1.5 GB** | **~12 tokens/s (measured, i5-10310U)** | **>96.5%** |
 | **Q5_K_M** | ~1.1 GB | ~1.8 GB | 35–55 tokens/s | >98.0% |
 | **Q8_0** | ~1.6 GB | ~2.5 GB | 25–40 tokens/s | >99.5% |
 | **F16 (Unquantized)** | ~3.1 GB | ~4.5 GB | 10–18 tokens/s | 100% (Baseline) |
