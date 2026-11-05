@@ -121,7 +121,7 @@ Para especializar el modelo, construimos un dataset de alta señal en formato Ch
 3. **Partición Estratificada (Cero Fuga de Datos):**
    - Script de particionamiento (`dataset/split_dataset.py`) determinista (`seed=42`).
    - **`dataset/train.jsonl`:** 138 pares (~156k tokens, 82.1%).
-   - **`dataset/eval_holdout.jsonl`:** 30 pares (~35k tokens, 17.9%) estrictamente aislados del entrenamiento.
+   - **`dataset/eval_holdout.jsonl`:** 30 pares (~35k tokens, 17.9%) NO aislados del entrenamiento (28/30 prompts también están en `train.jsonl`, ver [auditoría](./evaluation-audit-2026-11-05.md)); la suite legacy de 30 casos es el conjunto de evaluación disjunto.
    - Validación sintáctica y de contratos con `dataset/validate_dataset.py`.
 
 ---

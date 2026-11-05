@@ -30,12 +30,13 @@ CYAN = "\033[36m"
 RED = "\033[31m"
 GRAY = "\033[90m"
 
-# Published figures from the model card (huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf).
-# Edge CAS and speed were measured on an Intel i5-10310U (CPU-only). Base and frontier
-# speeds are marked unverified by the card; base RAM/disk describe the 1.5B F16 model.
+# Figures copied from the model card (huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf).
+# ECC CAS matches benchmark_report_edge_copilot.json (run without model attribution).
+# Base (48.2) and frontier (90.5) CAS have NO raw report: they are unmeasured placeholders.
+# See docs/evaluation-audit-2026-11-05.md. Replace them with outputs of spark_day.sh.
 DEMO_DATA: Dict[str, Dict[str, Any]] = {
     "base": {
-        "name": "Qwen2.5-Coder-1.5B (Base)",
+        "name": "Qwen2.5-Coder-1.5B (Base, unmeasured)",
         "type": "Un-fine-tuned SLM",
         "composite_cas": 48.2,
         "boundary_score": 14.5,
@@ -69,7 +70,7 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
         "offline": True,
     },
     "cloud": {
-        "name": "Frontier Cloud LLM (Gemini 3.8 Flash)",
+        "name": "Frontier Cloud LLM (unmeasured)",
         "type": "Commercial Baseline (API)",
         "composite_cas": 90.5,
         "boundary_score": 29.0,
@@ -174,7 +175,7 @@ def generate_markdown_report(models: Dict[str, Dict[str, Any]], output_path: Pat
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
 > **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)
 >
-> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier speeds are unverified.
+> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier CAS and speeds are unmeasured placeholders; the ECC CAS comes from a run without model attribution. See [audit](../docs/evaluation-audit-2026-11-05.md).
 >
 > **Last Verification:** {time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime())}
 

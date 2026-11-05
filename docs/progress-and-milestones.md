@@ -42,7 +42,7 @@
 - [x] **Stratified Dataset Partitioning (Zero Data Leakage):**
   - Implemented [`dataset/split_dataset.py`](../dataset/split_dataset.py) with deterministic seed (`seed=42`).
   - Created [`dataset/train.jsonl`](../dataset/train.jsonl) (**138 samples**, ~156k tokens, 82.1%).
-  - Created [`dataset/eval_holdout.jsonl`](../dataset/eval_holdout.jsonl) (**30 samples**, ~35k tokens, 17.9%) strictly isolated for evaluation.
+  - Created [`dataset/eval_holdout.jsonl`](../dataset/eval_holdout.jsonl) (**30 samples**, ~35k tokens, 17.9%) intended for evaluation, but 28/30 of its prompts also appear in `train.jsonl` ([audit](./evaluation-audit-2026-11-05.md)).
   - Syntax validated via [`dataset/validate_dataset.py`](../dataset/validate_dataset.py).
 
 ---

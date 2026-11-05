@@ -66,7 +66,7 @@ Operating within a shared institutional computing infrastructure (such as univer
 ```
 [ Phase 1: Cold Staging (Local Developer Laptop) ]
   ├── Curation of canonical ChatML seed pairs from production codebases
-  ├── Stratified dataset partitioning (seed=42, zero leakage)
+  ├── Stratified dataset partitioning (seed=42; holdout overlaps train, see audit)
   ├── 1-step dry run on CPU/GPU (--dry-run)
   └── Offline unit testing of hexagonal layers via MockInferenceAdapter (34 tests)
                │
@@ -121,7 +121,7 @@ To specialize the model, we constructed a high-signal dataset structured in the 
 3. **Stratified Partitioning (Zero Data Leakage):**
    - Partitioning script (`dataset/split_dataset.py`) using deterministic pseudo-random splitting (`seed=42`).
    - **`dataset/train.jsonl`:** 138 pairs (~156k tokens, 82.1%).
-   - **`dataset/eval_holdout.jsonl`:** 30 pairs (~35k tokens, 17.9%) strictly isolated from training.
+   - **`dataset/eval_holdout.jsonl`:** 30 pairs (~35k tokens, 17.9%) NOT isolated from training (28/30 prompts also appear in `train.jsonl`, see [audit](./evaluation-audit-2026-11-05.md)); the 30-case legacy suite is the disjoint evaluation set.
    - Syntax and contract validation enforced via `dataset/validate_dataset.py`.
 
 ---

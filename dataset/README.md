@@ -69,4 +69,4 @@ To uphold strict scientific and academic validity, the cumulative dataset of 168
 | **TOTAL** | **168** | **138** | **30** |
 
 > [!IMPORTANT]
-> The evaluation holdout set (`eval_holdout.jsonl`) is strictly isolated and never shown to the model during LoRA fine-tuning. It serves exclusively for the post-training benchmark evaluation in [`proyecto/evaluation/`](../evaluation/).
+> The evaluation holdout set (`eval_holdout.jsonl`) is NOT isolated from training (28/30 of its prompts also appear in `train.jsonl`; run `python3 audit_dataset.py`). The disjoint legacy suite in `evaluation/` is the real evaluation set. It was not used as a validation set during fine-tuning. It serves exclusively for the post-training benchmark evaluation in [`proyecto/evaluation/`](../evaluation/).

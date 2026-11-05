@@ -69,4 +69,4 @@ Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`
 | **TOTAL** | **168** | **138** | **30** |
 
 > [!IMPORTANT]
-> El conjunto de evaluación ciega (`eval_holdout.jsonl`) está estrictamente aislado y nunca es expuesto al modelo durante el fine-tuning con LoRA. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`proyecto/evaluation/`](../../../proyecto/evaluation/).
+> El conjunto de evaluación ciega (`eval_holdout.jsonl`) NO está aislado del entrenamiento (28/30 de sus prompts también están en `train.jsonl`; ejecutar `python3 audit_dataset.py`). La suite legacy disjunta de `evaluation/` es el conjunto de evaluación real. No se usó como validación durante el fine-tuning. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`proyecto/evaluation/`](../../../proyecto/evaluation/).
