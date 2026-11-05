@@ -174,6 +174,7 @@ checks = [
     ("Same suite", fm["cases_file"] == bm["cases_file"]),
     ("AST engine for both", fm["engine"] == "ast" and bm["engine"] == "ast"),
     ("Models differ (SHA-256)", fm["model_sha256"] and fm["model_sha256"] != bm["model_sha256"]),
+    ("No empty/refusal outputs (each scores 50 for free)", not fm["degenerate_samples"] and not bm["degenerate_samples"]),
     ("Full sample count", ft["total_samples"] == bs["total_samples"] == 30),
 ]
 ok = all(c for _, c in checks)

@@ -48,6 +48,18 @@ PROHIBITED_IMPORTS = [
     r"redis",
 ]
 
+_DECLARATION = re.compile(r"\b(class|interface|function|type|enum|const|export)\b")
+
+
+def is_degenerate_output(content: str) -> bool:
+    """True when a completion contains no TypeScript declaration at all.
+
+    CAS gives 50/100 for free to empty or refusal text (30 pts for no forbidden
+    imports + 20 pts for no `any`), so such outputs must be counted separately.
+    """
+    return len(content.strip()) < 30 or _DECLARATION.search(content) is None
+
+
 def strip_comments_and_strings(code: str) -> str:
     """Removes single-line comments, block comments, and string literals to prevent false positives."""
     # Remove block comments /* ... */
@@ -425,6 +437,7 @@ def main():
             "max_tokens": 1024 if args.url else None,
             "prompts_attempted": attempted_prompts if args.url else None,
             "prompts_failed": failed_prompts if args.url else None,
+            "degenerate_samples": [x["idx"] for x in raw_samples if is_degenerate_output(x["content"])],
         },
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "total_samples": len(eval_results),
