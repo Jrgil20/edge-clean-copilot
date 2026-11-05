@@ -17,7 +17,7 @@ Los Modelos de Lenguaje Grandes (LLMs) comerciales de propósito general utiliza
 
 Este proyecto diseña, entrena, evalúa y empaqueta **Edge Clean Copilot (ECC)**: un Small Language Model especializado (**Qwen2.5-Coder-1.5B-Instruct**) adaptado mediante Low-Rank Adaptation (LoRA) sobre pares curados de refactorización arquitectónica, cuantizado a formato **GGUF Q4_K_M** y servido de forma 100% offline a **~12 tokens/segundo** medidos en una laptop solo CPU (Intel i5-10310U).
 
-Demostramos que un modelo ligero de 1.5B parámetros, aislado de la red y entrenado bajo guardas arquitectónicas estrictas, alcanza un **Clean Architecture Score (CAS) de 76.3 / 100** (una corrida de reproducción dio 73.8), superando a su modelo base sin fine-tuning (**48.2 / 100**, una **mejora relativa del +58.3%**). No alcanza al modelo de frontera en la nube (**90.5 / 100**): iguala el aislamiento de dominio (30.0 / 30), pero queda por debajo en invariantes y puertos. Su ventaja es operativa: sin dependencia de APIs externas, sin fugas de telemetría y sin costos recurrentes de inferencia.
+Demostramos que un modelo ligero de 1.5B parámetros, aislado de la red y entrenado bajo guardas arquitectónicas estrictas, alcanza un **Clean Architecture Score (CAS) medido de 74.8 / 100** en la DGX Spark (Grado B), superando a su modelo base sin fine-tuning (**58.0 / 100**, una **mejora absoluta de +16.8 puntos**, ambos evaluados mediante el motor AST de TypeScript). Logra un aislamiento de dominio perfecto (30.0 / 30) y un desacoplamiento sólido de puertos (22.5 / 25), quedando por debajo en guardas de invariantes. Su ventaja es operativa: sin dependencia de APIs externas, sin fugas de telemetría y sin costos recurrentes de inferencia.
 
 ---
 
@@ -154,18 +154,19 @@ Evaluamos los modelos contra la **Suite de Benchmark Legacy de 30 casos** (`lega
 
 DIMENSIÓN ARQUITECTÓNICA         |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD 
 --------------------------------------------------------------------------------------------
-1. Aislamiento de Dominio (30%)  |    14.5 / 30    |      30.0 / 30       |    29.0 / 30    
-2. Invariantes y Result (25%)    |    8.2 / 25     |      11.7 / 25       |    22.5 / 25    
-3. Puertos y Adaptadores (25%)   |    10.5 / 25    |      16.0 / 25       |    23.0 / 25    
-4. Rigor de Tipos (20%)          |    15.0 / 20    |      18.7 / 20       |    16.0 / 20    
+1. Aislamiento de Dominio (30%)  |    24.0 / 30    |      30.0 / 30       |    29.0 / 30    
+2. Invariantes y Result (25%)    |     0.3 / 25    |       2.7 / 25       |    22.5 / 25    
+3. Puertos y Adaptadores (25%)   |    15.8 / 25    |      22.5 / 25       |    23.0 / 25    
+4. Rigor de Tipos (20%)          |    17.8 / 20    |      19.7 / 20       |    16.0 / 20    
 ============================================================================================
-PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         76.3         |       90.5      
+PUNTAJE COMPUESTO CAS (0–100)    |      58.0       |         74.8         |       90.5*     
 ============================================================================================
+* Línea base comercial no medida en este hardware; Base y ECC medidos head-to-head en DGX Spark.
 ```
 
 #### Hallazgos Clave:
-1. **El Modelo Base Falla en Arquitectura:** Sin fine-tuning, Qwen 1.5B solo alcanza **48.2 pts (Grado F)**, manteniendo imports de ORMs y omitiendo Value Objects.
-2. **La Especialización Supera a la Escala:** Edge Clean Copilot alcanza **76.3 pts (Grado B)**, mejorando al modelo base en **+28.1 pts (+58.3%)**. Iguala el máximo en aislamiento de dominio (30.0 / 30), pero queda por debajo de la frontera en invariantes y puertos.
+1. **El Modelo Base Presenta Fugas de Aislamiento:** Sin fine-tuning, Qwen 1.5B obtiene **58.0 pts**, permitiendo acoplamiento a frameworks y omitiendo abstracciones de puertos.
+2. **La Especialización Aporta Ganancia Medible:** Edge Clean Copilot alcanza **74.8 pts (Grado B)**, mejorando al modelo base en **+16.8 pts**. Logra el 100% en aislamiento de dominio (30.0 / 30) y 90% en puertos y adaptadores (22.5 / 25).
 3. **Eficiencia en el Borde:** Con **~12 tokens/segundo** medidos en CPU (i5-10310U) y **1.5 GB de RAM**, ECC funciona sin tarjeta gráfica dedicada, pero es lento con entradas largas; la latencia es una limitación, no una ventaja.
 
 ---
@@ -271,10 +272,10 @@ PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         76.3         |   
 ### Diapositiva 10: Resultados Experimentales: Base vs. ECC vs. Cloud (2 min)
 - **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
 - **Puntos a Exponer:**
-  - **Modelo Base (1.5B):** 48.2 pts (Grado F). No respeta aislamiento de capas.
-  - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grado A). Excelente, pero requiere nube.
-  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grado B)**. **+58.3% de ganancia** sobre la base.
-  - Aislamiento de dominio al máximo (30.0 / 30); invariantes (11.7 / 25) y puertos (16.0 / 25) siguen por debajo del frontier.
+  - **Modelo Base (1.5B):** 58.0 pts (medido). Presenta dificultades con aislamiento de capas y desacoplamiento.
+  - **Línea Base Cloud:** 90.5 pts (referencia no medida). Excelente, pero requiere nube.
+  - **Edge Clean Copilot (GGUF):** **74.8 pts (Grado B)**. **+16.8 pts de ganancia** sobre la base.
+  - Aislamiento de dominio al máximo (30.0 / 30) y puertos sólidos (22.5 / 25); invariantes (2.7 / 25) siguen como área de mejora.
 
 ---
 

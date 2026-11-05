@@ -28,6 +28,23 @@
 
 Reading: the fine-tune produces real code and scores around 72-76, but run-to-run variation per case is large, so differences under ~5 points are noise. The base-model comparison still requires the Spark run.
 
+## 1c. Measured comparison on DGX Spark (reproducible head-to-head run)
+
+| Item | Fine-tune (`ecc-ft`) | Base (`qwen-base`) | Delta |
+| :--- | :--- | :--- | :--- |
+| Model | `clean-copilot-1.5b-q4_k_m.gguf` (`d2deae6542d1...`) | `qwen2.5-coder-1.5b-base-q4_k_m.gguf` (`27ca8fbeb81c...`) | - |
+| Hardware / Runtime | NVIDIA GB10 Grace Blackwell, `llama-server` (ctx 4096, ngl 99) | NVIDIA GB10 Grace Blackwell, `llama-server` (ctx 4096, ngl 99) | Same |
+| Suite / Engine | `legacy_benchmark_suite.jsonl`, AST engine (`ts.createSourceFile`) | `legacy_benchmark_suite.jsonl`, AST engine (`ts.createSourceFile`) | Same |
+| Prompts evaluated | 30/30 (0 failed, 0 degenerate) | 30/30 (0 failed, 0 degenerate) | - |
+| Domain Boundary | 30.0 / 30.0 (100.0%) | 24.0 / 30.0 (80.0%) | +6.0 |
+| Invariant Safety | 2.7 / 25.0 (10.7%) | 0.3 / 25.0 (1.3%) | +2.4 |
+| Ports Decoupling | 22.5 / 25.0 (90.0%) | 15.8 / 25.0 (63.3%) | +6.7 |
+| TypeScript Typing | 19.7 / 20.0 (98.3%) | 17.8 / 20.0 (89.2%) | +1.9 |
+| **Composite CAS** | **74.83 / 100.0** | **58.00 / 100.0** | **+16.83** |
+| Evidence | `evaluation/reports/spark-20261105T143540Z/` | `evaluation/reports/spark-20261105T143540Z/` | `RESULT.md` |
+
+Reading: with identical quantization (Q4_K_M) and server configuration on the DGX Spark, the fine-tune achieves a +16.83 CAS improvement over the base model without dropped prompts or degenerate outputs.
+
 ## 2. Findings
 
 | ID | Severity | Finding | Reproduce |

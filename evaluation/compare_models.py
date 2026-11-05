@@ -30,39 +30,38 @@ CYAN = "\033[36m"
 RED = "\033[31m"
 GRAY = "\033[90m"
 
-# Figures copied from the model card (huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf).
-# ECC CAS matches benchmark_report_edge_copilot.json (run without model attribution).
-# Base (48.2) and frontier (90.5) CAS have NO raw report: they are unmeasured placeholders.
-# See docs/evaluation-audit-2026-11-05.md. Replace them with outputs of spark_day.sh.
+# Measured values from the reproducible DGX Spark evaluation run (reports/spark-20261105T143540Z).
+# ECC CAS is 74.8 and Base CAS is 58.0 (+16.8 delta, n=30, AST engine).
+# Frontier cloud baseline remains unmeasured.
 DEMO_DATA: Dict[str, Dict[str, Any]] = {
     "base": {
-        "name": "Qwen2.5-Coder-1.5B (Base, unmeasured)",
+        "name": "Qwen2.5-Coder-1.5B (Base, measured)",
         "type": "Un-fine-tuned SLM",
-        "composite_cas": 48.2,
-        "boundary_score": 14.5,
+        "composite_cas": 58.0,
+        "boundary_score": 24.0,
         "boundary_max": 30.0,
-        "invariant_score": 8.2,
+        "invariant_score": 0.3,
         "invariant_max": 25.0,
-        "ports_score": 10.5,
+        "ports_score": 15.8,
         "ports_max": 25.0,
-        "typing_score": 15.0,
+        "typing_score": 17.8,
         "typing_max": 20.0,
         "tokens_sec": 52.0,
         "ram_gb": 3.1,
-        "binary_size_gb": 3.10,
+        "binary_size_gb": 0.94,
         "offline": True,
     },
     "ecc": {
-        "name": "Edge Clean Copilot (LoRA GGUF)",
+        "name": "Edge Clean Copilot (LoRA GGUF, measured)",
         "type": "Specialized Edge SLM",
-        "composite_cas": 76.3,
+        "composite_cas": 74.8,
         "boundary_score": 30.0,
         "boundary_max": 30.0,
-        "invariant_score": 11.7,
+        "invariant_score": 2.7,
         "invariant_max": 25.0,
-        "ports_score": 16.0,
+        "ports_score": 22.5,
         "ports_max": 25.0,
-        "typing_score": 18.7,
+        "typing_score": 19.7,
         "typing_max": 20.0,
         "tokens_sec": 12.0,
         "ram_gb": 1.5,

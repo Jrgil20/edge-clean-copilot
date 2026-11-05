@@ -1,0 +1,11 @@
+train rows            : 138
+train unique prompts  : 18
+train duplicate rows  : 120
+eval rows             : 30
+eval prompts in train : 28/30
+eval code in train    : 28/30
+most repeated train prompts:
+  13x 'Write a pure Domain Entity `Subscription` and a Use Case `CancelSubscriptionUseCase` in Ty'
+  13x 'Refactor this coupled FastAPI route with direct SQLAlchemy queries into Clean Architecture'
+  12x 'Write an isolated AAA (Arrange-Act-Assert) unit test in TypeScript for `RegisterUserUseCas'
+RESULT: LEAKAGE

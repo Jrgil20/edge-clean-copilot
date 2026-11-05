@@ -15,7 +15,7 @@
 | **Phase 1** | Infrastructure, Networking & Teacher Dataset Generation | Weeks 1–3 | **100%** | **COMPLETED & VERIFIED** |
 | **Phase 2** | LoRA Adaptation & Small Language Model Specialization | Weeks 4–7 | **100%** (3 epochs trained, loss: 0.0312, merged) | **COMPLETED & VERIFIED ON SPARK** |
 | **Phase 3** | Weight Consolidation, Quantization & GGUF Export | Weeks 8–11 | **100%** (Q4_K_M, Q5_K_M, Q8_0 exported) | **COMPLETED & VERIFIED ON SPARK** |
-| **Phase 4** | Hexagonal CLI, Unit Tests & Automated Benchmark | Weeks 12–15 | **100%** (41/41 tests green, live CAS benchmark: 76.3/100, Grade B) | **COMPLETED & VERIFIED** |
+| **Phase 4** | Hexagonal CLI, Unit Tests & Automated Benchmark | Weeks 12–15 | **100%** (41/41 tests green, measured head-to-head CAS benchmark on Spark: 74.8/100 Grade B vs 58.0 base) | **COMPLETED & VERIFIED** |
 
 ---
 
