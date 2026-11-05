@@ -375,10 +375,12 @@ def main():
 
     eval_results: List[Dict[str, Any]] = []
     use_ast = not args.no_ast
+    engine_used = "regex"
 
     if use_ast and raw_samples:
         ast_results = evaluate_batch_ast(raw_samples)
         if ast_results is not None:
+            engine_used = "ast"
             print("[EVAL ENGINE] Deterministic TypeScript Compiler AST Engine (ts.createSourceFile v5.9) ✓")
             eval_results = ast_results
 
@@ -418,7 +420,7 @@ def main():
             "mode": "live" if args.url else "offline",
             "endpoint": args.url,
             "cases_file": args.prompts or args.offline,
-            "engine": "regex" if (args.no_ast or not use_ast) else "ast-or-regex-fallback",
+            "engine": engine_used,
             "temperature": 0.1 if args.url else None,
             "max_tokens": 1024 if args.url else None,
             "prompts_attempted": attempted_prompts if args.url else None,

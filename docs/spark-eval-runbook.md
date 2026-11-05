@@ -1,6 +1,7 @@
 # Spark Evaluation Runbook
 
 > **Goal:** replace hard-coded and unattributed benchmark numbers with reproducible, model-attributed reports.
+> **Fast path:** [spark-day-plan.md](./spark-day-plan.md) (`evaluation/spark_day.sh` automates sections 1–4 below; this file is the manual fallback).
 > **Prerequisite reading:** [evaluation-audit-2026-11-05.md](./evaluation-audit-2026-11-05.md).
 > **Constraints:** ports `8080` and `8084` belong to other lab services; use `8085` (ECC) and `8086` (base). Do not stop processes you did not start.
 
@@ -26,7 +27,9 @@ llama-server -m proyecto/training/output/gguf/clean-copilot-1.5b-q4_k_m.gguf \
 
 # Base: Qwen2.5-Coder-1.5B-Instruct at Q4_K_M.
 # Option A: download a ready GGUF (verify the repo exists first).
-# Option B: convert with the project script (check ./convert_to_gguf.sh --help for flags).
+# Option B: convert with the project script, same pipeline as the fine-tune:
+#   training/convert_to_gguf.sh --input-dir <HF snapshot> --output-dir training/output/gguf-base \
+#     --model-name qwen2.5-coder-1.5b-base --clean-f16
 llama-server -m /path/to/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf \
   --port 8086 -c 4096
 ```
