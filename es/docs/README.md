@@ -18,6 +18,8 @@ Este directorio contiene la documentación técnica oficial, registros de teleme
 | **[Roadmap Detallado de Ejecución](./detailed-roadmap.md)** | Plan Maestro Operativo (Semanas 4–15) | Hiperparámetros, metas de cuantización, métricas de evaluación automatizadas y tareas semanales. |
 | **[Progreso e Hitos Verificados](./progress-and-milestones.md)** | Tablero de Estado en Vivo | Desglose empírico de avances en las Fases 1, 2, 3 y 4. |
 | **[Reporte de Sesión: 2026-10-22](./session-2026-10-22-burst-and-lessons.md)** | Informe Técnico y Análisis de Causa Raíz | Aislamiento multi-instancia en puertos (8085 vs 8080), burst de dataset a 160 muestras, setup del runtime en GB10. |
+| **[Auditoría de Evaluación: 2026-11-05](./evaluation-audit-2026-11-05.md)** | Auditoría de solo lectura de tests, benchmark y dataset | Afirmaciones verificadas, hallazgos F1–F8 (fuga en holdout, puntajes sin atribución), higiene de afirmaciones. |
+| **[Runbook de Evaluación en Spark](./spark-eval-runbook.md)** | Plan paso a paso para la próxima sesión en la Spark | Servir base y fine-tune, ejecutar `run_comparison.sh`, chequeos de aceptación, actualización de afirmaciones. |
 
 ---
 

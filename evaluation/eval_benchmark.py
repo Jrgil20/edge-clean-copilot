@@ -13,6 +13,7 @@ Supports dual execution modes:
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -275,6 +276,9 @@ def parse_args():
     parser.add_argument("--prompts", type=str, default=None, help="Path to prompts JSONL file for live evaluation.")
     parser.add_argument("--output", type=str, default=str(Path(__file__).parent / "benchmark_report.json"), help="Path to export JSON report.")
     parser.add_argument("--no-ast", action="store_true", help="Disable deterministic TypeScript AST engine and force heuristic regex fallback.")
+    parser.add_argument("--model-name", type=str, default=None, help="Identifier of the model under test (recorded in the report meta block).")
+    parser.add_argument("--model-file", type=str, default=None, help="Path to the model file served (its SHA-256 is recorded in the report meta block).")
+    parser.add_argument("--save-completions", type=str, default=None, help="Path to a JSONL file where raw model completions are saved for auditing.")
     return parser.parse_args()
 
 def main():
@@ -286,6 +290,8 @@ def main():
         sys.exit(1)
 
     raw_samples: List[Dict[str, Any]] = []
+    failed_prompts: List[int] = []
+    attempted_prompts = 0
 
     if args.offline:
         offline_path = Path(args.offline)
@@ -337,6 +343,7 @@ def main():
                 if not line:
                     continue
                 item = json.loads(line)
+                attempted_prompts += 1
                 if "messages" in item:
                     messages_payload = [m for m in item["messages"] if m.get("role") in ("system", "user")]
                 else:
@@ -363,6 +370,7 @@ def main():
                             "content": assistant_response,
                         })
                 except Exception as e:
+                    failed_prompts.append(idx)
                     print(f"  [ERROR] Prompt #{idx} failed: {e}", file=sys.stderr)
 
     eval_results: List[Dict[str, Any]] = []
@@ -388,8 +396,34 @@ def main():
     elapsed = time.time() - start_time
     print_ascii_table(eval_results, elapsed)
 
+    if args.save_completions:
+        with open(args.save_completions, "w", encoding="utf-8") as cf:
+            for sample in raw_samples:
+                cf.write(json.dumps(sample, ensure_ascii=False) + "\n")
+
+    model_sha256 = None
+    if args.model_file and Path(args.model_file).is_file():
+        digest = hashlib.sha256()
+        with open(args.model_file, "rb") as mf:
+            for chunk in iter(lambda: mf.read(1 << 20), b""):
+                digest.update(chunk)
+        model_sha256 = digest.hexdigest()
+
     output_path = Path(args.output)
     report_data = {
+        "meta": {
+            "model_name": args.model_name,
+            "model_file": args.model_file,
+            "model_sha256": model_sha256,
+            "mode": "live" if args.url else "offline",
+            "endpoint": args.url,
+            "cases_file": args.prompts or args.offline,
+            "engine": "regex" if (args.no_ast or not use_ast) else "ast-or-regex-fallback",
+            "temperature": 0.1 if args.url else None,
+            "max_tokens": 1024 if args.url else None,
+            "prompts_attempted": attempted_prompts if args.url else None,
+            "prompts_failed": failed_prompts if args.url else None,
+        },
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "total_samples": len(eval_results),
         "duration_seconds": round(elapsed, 2),
