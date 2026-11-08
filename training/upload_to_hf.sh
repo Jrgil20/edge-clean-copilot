@@ -17,6 +17,17 @@ fi
 
 REPO_ID="$1"
 
+if ! [[ "${REPO_ID}" =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]]; then
+  echo "Error: repo id must look like <user>/<repo> (letters, digits, '.', '_', '-')."
+  exit 1
+fi
+for required in "${GGUF_FILE}" "${MODEL_CARD}"; do
+  if [ ! -f "${required}" ]; then
+    echo "Error: required file not found: ${required}"
+    exit 1
+  fi
+done
+
 echo "======================================================"
 echo "  Uploading Edge Clean Copilot to Hugging Face Hub"
 echo "======================================================"
@@ -44,22 +55,23 @@ fi
 
 # Upload repository folder
 echo "[3/3] Uploading GGUF binary and Model Card to https://huggingface.co/${REPO_ID}..."
-python3 - <<EOF
+python3 - "${REPO_ID}" "${MODEL_CARD}" "${GGUF_FILE}" <<'EOF'
 import sys
 from huggingface_hub import HfApi, create_repo
 
-repo_id = "${REPO_ID}"
+repo_id, model_card, gguf_file = sys.argv[1], sys.argv[2], sys.argv[3]
 api = HfApi()
 
 try:
     create_repo(repo_id=repo_id, repo_type="model", exist_ok=True)
     print(f"--> [OK] Repository verified: {repo_id}")
 except Exception as e:
-    print(f"--> Note on repo creation: {e}")
+    print(f"--> [ERROR] Repository creation failed: {e}", file=sys.stderr)
+    sys.exit(1)
 
 # Upload README (Model Card)
 api.upload_file(
-    path_or_fileobj="${MODEL_CARD}",
+    path_or_fileobj=model_card,
     path_in_repo="README.md",
     repo_id=repo_id,
     repo_type="model",
@@ -68,7 +80,7 @@ print("--> [OK] Uploaded README.md (Model Card)")
 
 # Upload GGUF Binary
 api.upload_file(
-    path_or_fileobj="${GGUF_FILE}",
+    path_or_fileobj=gguf_file,
     path_in_repo="clean-copilot-1.5b-q4_k_m.gguf",
     repo_id=repo_id,
     repo_type="model",

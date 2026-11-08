@@ -3,7 +3,7 @@
 
 Unifies seed_examples.jsonl and generated_examples.jsonl and splits them
 into train.jsonl and eval_holdout.jsonl with reproducible stratification (seed=42).
-Guarantees zero data leakage between training and evaluation sets.
+Splits by normalized user prompt so no prompt appears in both train and holdout.
 """
 
 import argparse
@@ -67,6 +67,16 @@ def main():
                     if m.get("role") == "user":
                         user_text = m.get("content", "").strip()
                         break
+                # Deduplicate exact repeats of (prompt, answer)
+                assistant_text = ""
+                for m in item.get("messages", []):
+                    if m.get("role") == "assistant":
+                        assistant_text = m.get("content", "").strip()
+                        break
+                key = (user_text, assistant_text)
+                if key in seen_prompts:
+                    continue
+                seen_prompts.add(key)
                 all_samples.append(item)
 
     total_samples = len(all_samples)
@@ -78,37 +88,47 @@ def main():
     print(f"Random Seed:            {args.seed}")
     print("-" * 70)
 
-    # 2. Group by architectural category
-    categorized: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    # 2. Group samples by normalized user prompt so a prompt never lands on both sides
+    groups: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
     for sample in all_samples:
-        cat = classify_sample(sample)
-        categorized[cat].append(sample)
+        prompt_key = " ".join(
+            next((m.get("content", "") for m in sample.get("messages", []) if m.get("role") == "user"), "").split()
+        ).lower()
+        groups[prompt_key].append(sample)
+
+    # 3. Assign whole groups to holdout (round-robin across categories) until the target is reached
+    by_category: Dict[str, List[List[Dict[str, Any]]]] = defaultdict(list)
+    for key in sorted(groups):
+        group = groups[key]
+        by_category[classify_sample(group[0])].append(group)
+    for cat_groups in by_category.values():
+        rng.shuffle(cat_groups)
 
     train_set: List[Dict[str, Any]] = []
     eval_set: List[Dict[str, Any]] = []
+    pending = {cat: list(g) for cat, g in sorted(by_category.items())}
+    while pending and len(eval_set) < args.eval_target_count:
+        for cat in list(pending):
+            # Keep at least one group per category in train when possible
+            if len(pending[cat]) <= 1:
+                pending.pop(cat)
+                continue
+            if len(eval_set) >= args.eval_target_count:
+                break
+            eval_set.extend(pending[cat].pop(0))
+            if not pending[cat]:
+                pending.pop(cat)
+    held = {id(x) for x in eval_set}
+    train_set = [x for x in all_samples if id(x) not in held]
 
-    # 3. Stratified allocation proportionally across categories
-    target_ratio = args.eval_target_count / total_samples
-
-    print("CATEGORY DISTRIBUTION & STRATIFICATION:")
-    for cat, items in sorted(categorized.items()):
-        rng.shuffle(items)
-        eval_count = max(1, round(len(items) * target_ratio))
-        cat_eval = items[:eval_count]
-        cat_train = items[eval_count:]
-
-        eval_set.extend(cat_eval)
-        train_set.extend(cat_train)
-
-        print(f"  - {cat:<22}: Total={len(items):3d} | Train={len(cat_train):3d} | Holdout={len(cat_eval):2d}")
-
-    # If rounding caused slight deviation from target count, adjust deterministically
-    while len(eval_set) > args.eval_target_count:
-        item = eval_set.pop()
-        train_set.append(item)
-    while len(eval_set) < args.eval_target_count and train_set:
-        item = train_set.pop()
-        eval_set.append(item)
+    print("CATEGORY DISTRIBUTION:")
+    for cat, cat_groups in sorted(by_category.items()):
+        total = sum(len(g) for g in cat_groups)
+        n_eval = sum(1 for g in cat_groups for x in g if id(x) in held)
+        print(f"  - {cat:<22}: Total={total:3d} | Train={total - n_eval:3d} | Holdout={n_eval:2d}")
+    print(f"Distinct prompts: {len(groups)} (a prompt is never shared between train and holdout)")
+    if len(groups) < 30:
+        print("[WARNING] Fewer than 30 distinct prompts: generate more diverse data for a meaningful holdout.", file=sys.stderr)
 
     # 4. Shuffle final sets
     rng.shuffle(train_set)
