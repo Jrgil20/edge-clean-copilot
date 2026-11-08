@@ -39,6 +39,7 @@ def main():
     parser = argparse.ArgumentParser(description="Stratified dataset splitter for Edge Clean Copilot.")
     parser.add_argument("--seed-file", type=str, default=str(Path(__file__).parent / "seed_examples.jsonl"))
     parser.add_argument("--generated-file", type=str, default=str(Path(__file__).parent / "generated_examples.jsonl"))
+    parser.add_argument("--authored-file", type=str, default=str(Path(__file__).parent / "authored_examples.jsonl"))
     parser.add_argument("--train-output", type=str, default=str(Path(__file__).parent / "train.jsonl"))
     parser.add_argument("--eval-output", type=str, default=str(Path(__file__).parent / "eval_holdout.jsonl"))
     parser.add_argument("--eval-target-count", type=int, default=30, help="Target count for holdout evaluation set.")
@@ -52,7 +53,7 @@ def main():
     seen_prompts = set()
     dropped_truncated = 0
 
-    for file_path in [Path(args.seed_file), Path(args.generated_file)]:
+    for file_path in [Path(args.seed_file), Path(args.generated_file), Path(args.authored_file)]:
         if not file_path.exists():
             print(f"[WARNING] File not found: {file_path}", file=sys.stderr)
             continue
