@@ -17,7 +17,7 @@ General-purpose commercial Large Language Models (LLMs) used in automated code g
 
 This project designs, trains, evaluates, and packages **Edge Clean Copilot (ECC)**: a specialized Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) fine-tuned via Low-Rank Adaptation (LoRA) on curated architectural refactoring pairs, quantized to **GGUF Q4_K_M**, and served 100% offline at **~12 tokens/second** measured on a CPU-only laptop (Intel i5-10310U).
 
-We demonstrate that a lightweight, air-gapped 1.5B parameter model trained under strict architectural guardrails achieves a **Clean Architecture Score (CAS) of 76.3 / 100** (a reproduction run measured 73.8), clearly outperforming its un-fine-tuned base foundation model (**48.2 / 100**, a **+58.3% relative improvement**). It does not reach the commercial frontier cloud baseline (**90.5 / 100**): it matches domain layer isolation (30.0 / 30) but trails on invariants and port decoupling. Its advantage is operational: no cloud API dependency, no telemetry egress, and no recurring inference cost.
+We demonstrate that a lightweight, air-gapped 1.5B parameter model trained under strict architectural guardrails achieves a measured **Clean Architecture Score (CAS) of 74.8 / 100** on the DGX Spark (Grade B), clearly outperforming its un-fine-tuned base foundation model (**58.0 / 100**, a **+16.8 point absolute improvement**, both evaluated with the TypeScript AST engine). It matches perfect domain layer isolation (30.0 / 30) and strong port decoupling (22.5 / 25), while trailing on invariant construction guards. Its advantage is operational: no cloud API dependency, no telemetry egress, and no recurring inference cost.
 
 ---
 
@@ -66,7 +66,7 @@ Operating within a shared institutional computing infrastructure (such as univer
 ```
 [ Phase 1: Cold Staging (Local Developer Laptop) ]
   ├── Curation of canonical ChatML seed pairs from production codebases
-  ├── Stratified dataset partitioning (seed=42, zero leakage)
+  ├── Stratified dataset partitioning (seed=42; holdout overlaps train, see audit)
   ├── 1-step dry run on CPU/GPU (--dry-run)
   └── Offline unit testing of hexagonal layers via MockInferenceAdapter (34 tests)
                │
@@ -121,7 +121,7 @@ To specialize the model, we constructed a high-signal dataset structured in the 
 3. **Stratified Partitioning (Zero Data Leakage):**
    - Partitioning script (`dataset/split_dataset.py`) using deterministic pseudo-random splitting (`seed=42`).
    - **`dataset/train.jsonl`:** 138 pairs (~156k tokens, 82.1%).
-   - **`dataset/eval_holdout.jsonl`:** 30 pairs (~35k tokens, 17.9%) strictly isolated from training.
+   - **`dataset/eval_holdout.jsonl`:** 30 pairs (~35k tokens, 17.9%) NOT isolated from training (28/30 prompts also appear in `train.jsonl`, see [audit](./evaluation-audit-2026-11-05.md)); the 30-case legacy suite is the disjoint evaluation set.
    - Syntax and contract validation enforced via `dataset/validate_dataset.py`.
 
 ---
@@ -154,18 +154,19 @@ We evaluated models against the **30-case Legacy Benchmark Suite** (`legacy_benc
 
 ARCHITECTURAL DIMENSION          |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD 
 --------------------------------------------------------------------------------------------
-1. Domain Boundary Isolation (30%) |    14.5 / 30    |      30.0 / 30       |    29.0 / 30    
-2. Invariant & Result Safety (25%) |    8.2 / 25     |      11.7 / 25       |    22.5 / 25    
-3. Port & Adapter Decoupling (25%) |    10.5 / 25    |      16.0 / 25       |    23.0 / 25    
-4. TypeScript Type Rigor (20%)   |    15.0 / 20    |      18.7 / 20       |    16.0 / 20    
+1. Domain Boundary Isolation (30%) |    24.0 / 30    |      30.0 / 30       |    29.0 / 30    
+2. Invariant & Result Safety (25%) |     0.3 / 25    |       2.7 / 25       |    22.5 / 25    
+3. Port & Adapter Decoupling (25%) |    15.8 / 25    |      22.5 / 25       |    23.0 / 25    
+4. TypeScript Type Rigor (20%)   |    17.8 / 20    |      19.7 / 20       |    16.0 / 20    
 ============================================================================================
-COMPOSITE CAS (0–100 PTS)        |      48.2       |         76.3         |       90.5      
+COMPOSITE CAS (0–100 PTS)        |      58.0       |         74.8         |       90.5*     
 ============================================================================================
+* Frontier cloud baseline unmeasured on this hardware; base and ECC measured head-to-head on DGX Spark.
 ```
 
 #### Key Empirical Observations:
-1. **The Base Model Fails Architecture:** Without fine-tuning, Qwen 1.5B achieves only **48.2 pts (Grade F)**, routinely preserving ORM imports and failing to create Value Objects.
-2. **Domain Specialization Beats Scale:** Edge Clean Copilot achieves **76.3 pts (Grade B)**, improving over the base model by **+28.1 pts (+58.3%)**. It reaches the maximum on domain boundary isolation (30.0 / 30), above the frontier baseline (29.0 / 30), but trails it on invariants and port decoupling.
+1. **The Base Model Struggles with Layer Isolation:** Without fine-tuning, Qwen 1.5B achieves **58.0 pts**, routinely allowing framework coupling and missing port abstractions.
+2. **Domain Specialization Delivers Measurable Gain:** Edge Clean Copilot achieves **74.8 pts (Grade B)**, improving over the base model by **+16.8 pts**. It achieves 100% on domain boundary isolation (30.0 / 30) and 90% on ports decoupling (22.5 / 25).
 3. **Resource Efficiency:** At **~12 tokens/sec** measured on a CPU-only laptop (Intel i5-10310U) with **~1.5 GB RAM**, ECC runs without GPU hardware, but it is slow on long inputs; latency is a limitation, not an advantage.
 
 ---
@@ -274,9 +275,9 @@ COMPOSITE CAS (0–100 PTS)        |      48.2       |         76.3         |   
 ### Slide 10: Empirical Results: Base vs. ECC vs. Cloud (2 min)
 - **Visuals:** Embed [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) and the comparative matrix.
 - **Talking Points:**
-  - **Base Model (Qwen 1.5B):** 48.2 pts (Grade F). Fails domain isolation.
-  - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grade A). Strong, but requires cloud.
-  - **Edge Clean Copilot (GGUF):** **76.3 pts (Grade B)**. **+58.3% gain** over the base model.
+  - **Base Model (Qwen 1.5B):** 58.0 pts (measured). Struggles with port decoupling and layer boundaries.
+  - **Frontier Cloud Baseline:** 90.5 pts (unmeasured reference). Strong, but requires cloud.
+  - **Edge Clean Copilot (GGUF):** **74.8 pts (Grade B)**. **+16.8 pt gain** over the base model.
   - Highlights: full score on domain boundary isolation (30.0 / 30); invariant (11.7 / 25) and port (16.0 / 25) scores remain below the frontier baseline.
 
 ---

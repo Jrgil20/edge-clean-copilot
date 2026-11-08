@@ -3,20 +3,20 @@
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
 > **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)
 >
-> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier speeds are unverified.
+> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier CAS and speeds are unmeasured placeholders; the ECC CAS comes from a run without model attribution. See [audit](../docs/evaluation-audit-2026-11-05.md).
 >
-> **Last Verification:** 2026-10-30 02:05:04Z
+> **Last Verification:** 2026-11-05 14:48:32Z
 
 ---
 
 ## 1. Executive Findings
 
-Measured on the 30-case legacy suite, the fine-tuned **Edge Clean Copilot** improves on its base model by 28.1 CAS points (+58.3%) but does not reach the frontier baseline:
+Measured on the 30-case legacy suite, the fine-tuned **Edge Clean Copilot** improves on its base model by 16.8 CAS points (+29.0%) but does not reach the frontier baseline:
 
-$$\Delta \text{CAS} = +28.1\text{ pts} \quad (+58.3\% \text{ improvement over base foundation model})$$
+$$\Delta \text{CAS} = +16.8\text{ pts} \quad (+29.0\% \text{ improvement over base foundation model})$$
 
 1. **Domain Boundaries:** ECC scores 30.0 / 30, at the maximum and above the frontier baseline (29.0).
-2. **Invariants and Ports:** ECC trails the frontier baseline on invariant safety (11.7 vs 22.5) and port decoupling (16.0 vs 23.0).
+2. **Invariants and Ports:** ECC trails the frontier baseline on invariant safety (2.7 vs 22.5) and port decoupling (22.5 vs 23.0).
 3. **Edge Efficiency:** ~12 tokens/sec measured on CPU (Intel i5-10310U) with ~1.5 GB RAM. Slow on long inputs; every output should be reviewed before use.
 
 _Single-run variance: a 2026-10-29 rerun measured 73.8 CAS (invariant 2.0), so the composite can move by several points between runs._
@@ -27,11 +27,11 @@ _Single-run variance: a 2026-10-29 rerun measured 73.8 CAS (invariant 2.0), so t
 
 | Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Gemini 3.8 Flash) | Net Improvement (ECC vs Base) |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **Domain Boundary Isolation** | 30 pts | 14.5 pts | **30.0 pts** | 29.0 pts | **+15.5 pts** |
-| **Invariant & Result Pattern** | 25 pts | 8.2 pts | **11.7 pts** | 22.5 pts | **+3.5 pts** |
-| **Port & Adapter Decoupling** | 25 pts | 10.5 pts | **16.0 pts** | 23.0 pts | **+5.5 pts** |
-| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 15.0 pts | **18.7 pts** | 16.0 pts | **+3.7 pts** |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **48.2 pts** | **76.3 pts (Grade B)** | **90.5 pts (Grade A)** | **+28.1 pts (+58.3%)** |
+| **Domain Boundary Isolation** | 30 pts | 24.0 pts | **30.0 pts** | 29.0 pts | **+6.0 pts** |
+| **Invariant & Result Pattern** | 25 pts | 0.3 pts | **2.7 pts** | 22.5 pts | **+2.4 pts** |
+| **Port & Adapter Decoupling** | 25 pts | 15.8 pts | **22.5 pts** | 23.0 pts | **+6.7 pts** |
+| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 17.8 pts | **19.7 pts** | 16.0 pts | **+1.9 pts** |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **58.0 pts** | **74.8 pts (Grade B)** | **90.5 pts (Grade A)** | **+16.8 pts (+29.0%)** |
 
 ---
 
@@ -41,7 +41,7 @@ _Single-run variance: a 2026-10-29 rerun measured 73.8 CAS (invariant 2.0), so t
 | :--- | :---: | :---: | :---: | :--- |
 | **Generation Speed** | ~52.0 tok/s (unverified) | **~12.0 tok/s (measured, CPU)** | ~85.0 tok/s (unverified) | Usable on CPU; slow on long inputs |
 | **System RAM Footprint** | ~3.1 GB | **~1.5 GB** | 0 GB (Cloud) | Runs easily alongside developer IDE |
-| **Disk Binary Footprint** | ~3.10 GB | **~0.94 GB** | 0 MB (API) | Lightweight portable distribution |
+| **Disk Binary Footprint** | ~0.94 GB | **~0.94 GB** | 0 MB (API) | Lightweight portable distribution |
 | **Network & Privacy** | Offline | **100% Offline / Zero Telemetry** | Internet Required | Complete proprietary code protection |
 | **Per-Token Cost** | $0.00 | **$0.00** | Metered API billing | Zero recurring API expenditures |
 

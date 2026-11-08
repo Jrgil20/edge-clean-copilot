@@ -31,7 +31,7 @@ Fine-tuned from `Qwen/Qwen2.5-Coder-1.5B-Instruct` via Parameter-Efficient Fine-
 
 - **Purpose:** an extremely light, private refactoring assistant for small, bounded TypeScript artifacts (single entities, services or classes) that must stay on the machine.
 - **Not optimized for speed:** ~12 tokens/s measured on a CPU-only laptop (Intel Core i5-10310U, 15 GB RAM). Long inputs will be slow.
-- **Not a frontier replacement:** 76.3 vs 90.5 for the frontier baseline on our benchmark. Review every output before use.
+- **Not a frontier replacement:** 74.8 vs 90.5 for the frontier baseline on our benchmark. Review every output before use.
 
 ---
 
@@ -41,7 +41,7 @@ Fine-tuned from `Qwen/Qwen2.5-Coder-1.5B-Instruct` via Parameter-Efficient Fine-
 - **Domain Purity (Zero Leakage):** Eradicates 100% of prohibited external framework/database imports (`express`, `mongoose`, `axios`, `typeorm`, `prisma`) from the core domain layer.
 - **Hexagonal Port & Adapter Decoupling:** Generates abstract interfaces (`IRepository`, `IPort`, `IGateway`) with constructor dependency injection.
 - **Strict TypeScript Rigor:** Enforces deterministic typing and completely eliminates explicit `any` types.
-- **Measured Gain:** Scores **76.3 / 100 Clean Architecture Score (CAS)**, Grade B, on our 30-case legacy refactoring benchmark (+58.3% over the base foundation model). It does not reach frontier-model quality (90.5 / 100).
+- **Measured Gain:** Scores **74.8 / 100 Clean Architecture Score (CAS)**, Grade B, on our 30-case legacy refactoring benchmark (+16.8 points over the base foundation model at 58.0). It does not reach frontier-model quality (90.5 / 100).
 
 ---
 
@@ -49,15 +49,15 @@ Fine-tuned from `Qwen/Qwen2.5-Coder-1.5B-Instruct` via Parameter-Efficient Fine-
 
 Evaluated against the **30-case Legacy Benchmark Suite** (`legacy_benchmark_suite.jsonl`) via an automated AST syntax analyzer:
 
-| Architectural Dimension | Maximum | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Gemini 3.8 Flash) |
+| Architectural Dimension | Maximum | Base Model (Qwen 1.5B Q4_K_M) | **Edge Clean Copilot (Q4_K_M)** | Frontier Cloud Reference (unmeasured) |
 | :--- | :---: | :---: | :---: | :---: |
-| **Domain Boundary Isolation** | 30 pts | 14.5 pts | **30.0 pts** | 29.0 pts |
-| **Invariant & Result Pattern** | 25 pts | 8.2 pts | **11.7 pts** | 22.5 pts |
-| **Port & Adapter Decoupling** | 25 pts | 10.5 pts | **16.0 pts** | 23.0 pts |
-| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 15.0 pts | **18.7 pts** | 16.0 pts |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **48.2 pts (Grade F)** | **76.3 pts (Grade B)** | **90.5 pts (Grade A)** |
+| **Domain Boundary Isolation** | 30 pts | 24.0 pts | **30.0 pts** | 29.0 pts |
+| **Invariant & Result Pattern** | 25 pts | 0.3 pts | **2.7 pts** | 22.5 pts |
+| **Port & Adapter Decoupling** | 25 pts | 15.8 pts | **22.5 pts** | 23.0 pts |
+| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 17.8 pts | **19.7 pts** | 16.0 pts |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **58.0 pts** | **74.8 pts (Grade B)** | **90.5 pts** |
 
-The Edge column comes from the saved report `evaluation/benchmark_report_edge_copilot.json`. A rerun on 2026-10-29 measured 73.8 (invariant 2.0), so treat it as run-to-run variance.
+Measured in a head-to-head reproducible run on NVIDIA DGX Spark under identical quantization (Q4_K_M) using the TypeScript compiler AST analyzer (see report `evaluation/reports/spark-20261105T143540Z`).
 
 ### Operational Edge Metrics
 

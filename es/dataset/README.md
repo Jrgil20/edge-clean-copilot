@@ -72,4 +72,4 @@ Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`
 | **TOTAL** | **168** | **138** | **30** |
 
 > [!IMPORTANT]
-> El conjunto de evaluación ciega (`eval_holdout.jsonl`) está estrictamente aislado y nunca es expuesto al modelo durante el fine-tuning con LoRA. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`proyecto/evaluation/`](../../evaluation/).
+> El conjunto `eval_holdout.jsonl` generado por el `split_dataset.py` actual se divide por prompt: ningún prompt aparece a la vez en `train.jsonl` y en el holdout (verificable con `python3 audit_dataset.py`). El modelo publicado, en cambio, se entrenó con la división anterior, donde 28/30 prompts del holdout también estaban en `train.jsonl`; por eso la suite legacy disjunta de `evaluation/` es la evaluación real de ese modelo. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`evaluation/`](../../evaluation/).

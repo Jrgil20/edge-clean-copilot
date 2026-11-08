@@ -44,6 +44,10 @@ Where:
 
 ## 3. Usage & Recipes
 
+### 3.0 Attributed Multi-Model Run (recommended)
+
+Reports now carry a `meta` block (model name, file SHA-256, endpoint, suite, failed prompts). On the Spark use `spark_day.sh` (one command, see [spark-day-plan](../docs/spark-day-plan.md)); otherwise use `run_comparison.sh` to run one suite against several running `llama-server` endpoints; see [spark-eval-runbook](../docs/spark-eval-runbook.md). Extra flags on `eval_benchmark.py`: `--model-name`, `--model-file`, `--save-completions`.
+
 ### 3.1 Offline Evaluation (Batch JSONL)
 Evaluate generated datasets or model completion files without needing an active inference server:
 

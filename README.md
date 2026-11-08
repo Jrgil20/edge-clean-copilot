@@ -96,7 +96,7 @@ cli/src/
 - **Teacher Distillation Generator (`dataset/generate_with_teacher.py`):** Automated prompt pipeline interrogating a 30B teacher model (`Qwen3-Coder-30B-A3B-Instruct`) deployed on dedicated port `8085` of the NVIDIA DGX Spark cluster.
 - **Stratified Partitioning (`dataset/split_dataset.py`):** Deterministic split (`seed=42`) creating:
   - `dataset/train.jsonl`: **138 pairs** (82.1%, ~156k tokens) for LoRA adaptation.
-  - `dataset/eval_holdout.jsonl`: **30 pairs** (17.9%, ~35k tokens) strictly isolated for post-training validation (zero leakage).
+  - `dataset/eval_holdout.jsonl`: **30 pairs** (17.9%, ~35k tokens) NOT isolated from training: 28/30 prompts also appear in `train.jsonl` (see [audit](docs/evaluation-audit-2026-11-05.md)); the disjoint 30-case legacy suite is the evaluation set.
 - **Validation Engine (`dataset/validate_dataset.py`):** ChatML syntax and contract linter.
 
 ### 3.3 Training & Quantization Subsystem (`training/`)
@@ -188,7 +188,7 @@ clean-copilot refactor path/to/SourceFile.ts -o path/to/RefactoredFile.ts
 | **Phase 1** | Infrastructure & Teacher Dataset | Weeks 1–3 | **100%** | Direct link `/26`, port 8085 isolated, 168 ChatML pairs partitioned (138 train / 30 holdout). |
 | **Phase 2** | LoRA Adaptation & Specialization | Weeks 4–7 | **100%** | 3 epochs trained in 5m 30s on GB10 GPU; loss 0.0312; weights merged via `merge_and_unload()`. |
 | **Phase 3** | Weight Consolidation & GGUF Export | Weeks 8–11 | **100%** | Exported `Q4_K_M` (941MB), `Q5_K_M` (1.1GB), `Q8_0` (1.6GB) with `--clean-f16`. |
-| **Phase 4** | Hexagonal CLI & Offline Inference | Weeks 12–15 | **100%** | 41/41 Vitest unit tests green; live CAS benchmark evaluated at **76.3 / 100 (Grade B)** (vs 48.2 base). |
+| **Phase 4** | Hexagonal CLI & Offline Inference | Weeks 12–15 | **100%** | 41/41 Vitest unit tests green; measured head-to-head CAS benchmark on Spark: **74.8 / 100 (Grade B)** vs **58.0 base** (+16.8 delta). |
 | **GLOBAL** | **Comprehensive Project Maturity** | **Overall** | **100%** | **All 4 Phases Fully Completed, Tested, and Deployed.** |
 
 ---

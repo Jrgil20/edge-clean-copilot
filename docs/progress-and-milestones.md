@@ -15,7 +15,7 @@
 | **Phase 1** | Infrastructure, Networking & Teacher Dataset Generation | Weeks 1–3 | **100%** | **COMPLETED & VERIFIED** |
 | **Phase 2** | LoRA Adaptation & Small Language Model Specialization | Weeks 4–7 | **100%** (3 epochs trained, loss: 0.0312, merged) | **COMPLETED & VERIFIED ON SPARK** |
 | **Phase 3** | Weight Consolidation, Quantization & GGUF Export | Weeks 8–11 | **100%** (Q4_K_M, Q5_K_M, Q8_0 exported) | **COMPLETED & VERIFIED ON SPARK** |
-| **Phase 4** | Hexagonal CLI, Unit Tests & Automated Benchmark | Weeks 12–15 | **100%** (41/41 tests green, live CAS benchmark: 76.3/100, Grade B) | **COMPLETED & VERIFIED** |
+| **Phase 4** | Hexagonal CLI, Unit Tests & Automated Benchmark | Weeks 12–15 | **100%** (41/41 tests green, measured head-to-head CAS benchmark on Spark: 74.8/100 Grade B vs 58.0 base) | **COMPLETED & VERIFIED** |
 
 ---
 
@@ -42,7 +42,7 @@
 - [x] **Stratified Dataset Partitioning (Zero Data Leakage):**
   - Implemented [`dataset/split_dataset.py`](../dataset/split_dataset.py) with deterministic seed (`seed=42`).
   - Created [`dataset/train.jsonl`](../dataset/train.jsonl) (**138 samples**, ~156k tokens, 82.1%).
-  - Created [`dataset/eval_holdout.jsonl`](../dataset/eval_holdout.jsonl) (**30 samples**, ~35k tokens, 17.9%) strictly isolated for evaluation.
+  - Created [`dataset/eval_holdout.jsonl`](../dataset/eval_holdout.jsonl) (**30 samples**, ~35k tokens, 17.9%) intended for evaluation, but 28/30 of its prompts also appear in `train.jsonl` ([audit](./evaluation-audit-2026-11-05.md)).
   - Syntax validated via [`dataset/validate_dataset.py`](../dataset/validate_dataset.py).
 
 ---

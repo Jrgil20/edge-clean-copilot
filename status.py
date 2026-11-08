@@ -92,8 +92,8 @@ def main() -> None:
     # 6. Operational Status & Verification
     print("\nVERIFIED DEPLOYMENT & EVALUATION:")
     print("  1. Quantized Models: training/output/gguf/clean-copilot-1.5b-q4_k_m.gguf")
-    print("  2. Inference: llama-server OpenAI-compatible endpoint (about 12 tok/s measured on CPU; see MODEL_CARD.md)")
-    print("  3. Benchmark Score: Clean Architecture Score (CAS) = 76.3/100, Grade B (base-model figure is an unverified reference estimate)")
+    print("  2. Inference: llama-server OpenAI-compatible endpoint (about 12 tok/s measured on CPU-only i5-10310U; see MODEL_CARD.md)")
+    print("  3. Benchmark Score: Clean Architecture Score (CAS) = 74.8/100, Grade B (vs 58.0 base model, measured on Spark; frontier baseline unmeasured)")
     print("  4. CLI Unit Tests: Vitest unit tests (run `cd cli && pnpm test`)")
     print("=" * 70)
 

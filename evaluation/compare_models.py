@@ -30,38 +30,38 @@ CYAN = "\033[36m"
 RED = "\033[31m"
 GRAY = "\033[90m"
 
-# Published figures from the model card (huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf).
-# Edge CAS and speed were measured on an Intel i5-10310U (CPU-only). Base and frontier
-# speeds are marked unverified by the card; base RAM/disk describe the 1.5B F16 model.
+# Measured values from the reproducible DGX Spark evaluation run (reports/spark-20261105T143540Z).
+# ECC CAS is 74.8 and Base CAS is 58.0 (+16.8 delta, n=30, AST engine).
+# Frontier cloud baseline remains unmeasured.
 DEMO_DATA: Dict[str, Dict[str, Any]] = {
     "base": {
-        "name": "Qwen2.5-Coder-1.5B (Base)",
+        "name": "Qwen2.5-Coder-1.5B (Base, measured)",
         "type": "Un-fine-tuned SLM",
-        "composite_cas": 48.2,
-        "boundary_score": 14.5,
+        "composite_cas": 58.0,
+        "boundary_score": 24.0,
         "boundary_max": 30.0,
-        "invariant_score": 8.2,
+        "invariant_score": 0.3,
         "invariant_max": 25.0,
-        "ports_score": 10.5,
+        "ports_score": 15.8,
         "ports_max": 25.0,
-        "typing_score": 15.0,
+        "typing_score": 17.8,
         "typing_max": 20.0,
         "tokens_sec": 52.0,
         "ram_gb": 3.1,
-        "binary_size_gb": 3.10,
+        "binary_size_gb": 0.94,
         "offline": True,
     },
     "ecc": {
-        "name": "Edge Clean Copilot (LoRA GGUF)",
+        "name": "Edge Clean Copilot (LoRA GGUF, measured)",
         "type": "Specialized Edge SLM",
-        "composite_cas": 76.3,
+        "composite_cas": 74.8,
         "boundary_score": 30.0,
         "boundary_max": 30.0,
-        "invariant_score": 11.7,
+        "invariant_score": 2.7,
         "invariant_max": 25.0,
-        "ports_score": 16.0,
+        "ports_score": 22.5,
         "ports_max": 25.0,
-        "typing_score": 18.7,
+        "typing_score": 19.7,
         "typing_max": 20.0,
         "tokens_sec": 12.0,
         "ram_gb": 1.5,
@@ -69,7 +69,7 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
         "offline": True,
     },
     "cloud": {
-        "name": "Frontier Cloud LLM (Gemini 3.8 Flash)",
+        "name": "Frontier Cloud LLM (unmeasured)",
         "type": "Commercial Baseline (API)",
         "composite_cas": 90.5,
         "boundary_score": 29.0,
@@ -109,11 +109,11 @@ def load_report_or_fallback(file_path: Optional[str], default_key: str) -> Dict[
         entry["source"] = f"report:{Path(file_path).name} (n={data.get('total_samples', len(results))})"
         return entry
     print(
-        f"[WARNING] No report for '{default_key}': using hardcoded reference estimates (unverified).",
+        f"[WARNING] No report for '{default_key}': using the hardcoded values from the Spark run recorded in this file (the frontier column is unmeasured).",
         file=sys.stderr,
     )
     entry = dict(DEMO_DATA[default_key])
-    entry["source"] = "hardcoded reference estimate (no report)"
+    entry["source"] = "hardcoded value (no report passed)"
     return entry
 
 def render_ascii_table(models: Dict[str, Dict[str, Any]]) -> str:
@@ -192,7 +192,7 @@ def generate_markdown_report(models: Dict[str, Dict[str, Any]], output_path: Pat
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
 > **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)
 >
-> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier speeds are unverified.
+> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier CAS and speeds are unmeasured placeholders; the ECC CAS comes from a run without model attribution. See [audit](../docs/evaluation-audit-2026-11-05.md).
 >
 > **Last Verification:** {time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime())}
 
@@ -364,7 +364,7 @@ def main():
     parser.add_argument("--base-report", type=str, default=None, help="Path to base model benchmark JSON report")
     parser.add_argument("--ecc-report", type=str, default=None, help="Path to Edge Clean Copilot benchmark JSON report")
     parser.add_argument("--cloud-report", type=str, default=None, help="Path to cloud baseline benchmark JSON report")
-    parser.add_argument("--demo", action="store_true", default=True, help="Deprecated no-op. Base and cloud columns are hardcoded reference estimates with no source report (see evaluation/README.md).")
+    parser.add_argument("--demo", action="store_true", default=True, help="Deprecated no-op. Without --*-report flags the script uses hardcoded values (base and ECC from the Spark run; frontier is unmeasured).")
     parser.add_argument("--output-md", type=str, default="comparative_benchmark_matrix.md", help="Output markdown matrix path")
     parser.add_argument("--output-svg", type=str, default="benchmark_comparison_chart.svg", help="Output SVG chart path")
 

@@ -1,0 +1,1230 @@
+{
+  "meta": {
+    "model_name": "ecc-ft",
+    "model_file": "/home/ucab-spark1/proyecto/training/output/gguf/clean-copilot-1.5b-q4_k_m.gguf",
+    "model_sha256": "d2deae6542d14c65c6d3fdb0db900330eb82103723aa863eb87c3b2b3b24f95e",
+    "mode": "live",
+    "endpoint": "http://127.0.0.1:8085/v1/chat/completions",
+    "cases_file": "/home/ucab-spark1/proyecto/evaluation/legacy_benchmark_suite.jsonl",
+    "engine": "ast",
+    "temperature": 0.1,
+    "max_tokens": 1024,
+    "prompts_attempted": 30,
+    "prompts_failed": [],
+    "degenerate_samples": []
+  },
+  "timestamp": "2026-11-05T14:37:54Z",
+  "total_samples": 30,
+  "duration_seconds": 115.37,
+  "average_score": 74.83,
+  "results": [
+    {
+      "sample_index": 1,
+      "label": "Case 01: Direct Prisma Client Coupling in Domain Entity",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: UserAccountProps",
+            "Port: UpdateEmailUseCase",
+            "Port: UserAccountRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: UserAccountProps",
+        "Port: UpdateEmailUseCase",
+        "Port: UserAccountRepository"
+      ]
+    },
+    {
+      "sample_index": 2,
+      "label": "Case 02: TypeORM ActiveRecord Entity Coupling",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: Product",
+            "Port: ApplyDiscountUseCase",
+            "Port: ProductRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Product",
+        "Port: ApplyDiscountUseCase",
+        "Port: ProductRepository"
+      ]
+    },
+    {
+      "sample_index": 3,
+      "label": "Case 03: Raw PostgreSQL Client in Domain Logic",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: InventoryItem",
+            "Port: DeductInventoryUseCase",
+            "Port: InventoryRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: InventoryItem",
+        "Port: DeductInventoryUseCase",
+        "Port: InventoryRepository"
+      ]
+    },
+    {
+      "sample_index": 4,
+      "label": "Case 04: Mongoose Model Direct Usage in Domain",
+      "total_score": 65,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: Subscription",
+            "Port: SubscriptionRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 15,
+          "max": 20.0,
+          "violations": [
+            "Detected 1 `any` keyword(s)"
+          ]
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Subscription",
+        "Port: SubscriptionRepository",
+        "Detected 1 `any` keyword(s)"
+      ]
+    },
+    {
+      "sample_index": 5,
+      "label": "Case 05: SQLite Direct Query in Order Processing",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: IOrderRepository",
+            "Port: ICreateOrderUseCase"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IOrderRepository",
+        "Port: ICreateOrderUseCase"
+      ]
+    },
+    {
+      "sample_index": 6,
+      "label": "Case 06: Knex Query Builder in Domain Logic",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: ICustomerRepository",
+            "Port: IBalanceService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: ICustomerRepository",
+        "Port: IBalanceService"
+      ]
+    },
+    {
+      "sample_index": 7,
+      "label": "Case 07: Sequelize Model Inheritance in Domain",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: IInvoice",
+            "Port: IInvoiceRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IInvoice",
+        "Port: IInvoiceRepository"
+      ]
+    },
+    {
+      "sample_index": 8,
+      "label": "Case 08: Direct Axios HTTP Client in Domain Entity",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: IPaymentToken",
+            "Port: IAmount",
+            "Port: IPaymentService",
+            "Port: IController"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IPaymentToken",
+        "Port: IAmount",
+        "Port: IPaymentService",
+        "Port: IController"
+      ]
+    },
+    {
+      "sample_index": 9,
+      "label": "Case 09: Direct Global Fetch in Domain Logic",
+      "total_score": 90,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: GetCountryByIpUseCase",
+            "Port: IGeolocationService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: GetCountryByIpUseCase",
+        "Port: IGeolocationService"
+      ]
+    },
+    {
+      "sample_index": 10,
+      "label": "Case 10: Direct SendGrid SDK Coupling",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: INotificationService",
+            "Port: IApplicationService",
+            "Port: IEmailService",
+            "Port: EmailAddress",
+            "Port: IEmailValidator",
+            "Port: IExceptionMapper",
+            "Port: INotificationRepository",
+            "Port: IApplicationPort"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: INotificationService",
+        "Port: IApplicationService",
+        "Port: IEmailService",
+        "Port: EmailAddress",
+        "Port: IEmailValidator",
+        "Port: IExceptionMapper",
+        "Port: INotificationRepository",
+        "Port: IApplicationPort"
+      ]
+    },
+    {
+      "sample_index": 11,
+      "label": "Case 11: Direct Redis Client Coupling in Cache",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: SessionData",
+            "Port: ISessionRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: SessionData",
+        "Port: ISessionRepository"
+      ]
+    },
+    {
+      "sample_index": 12,
+      "label": "Case 12: Direct Stripe SDK Coupling",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: SubscriptionId",
+            "Port: SubscriptionCancellationRequest",
+            "Port: ISubscriptionService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: SubscriptionId",
+        "Port: SubscriptionCancellationRequest",
+        "Port: ISubscriptionService"
+      ]
+    },
+    {
+      "sample_index": 13,
+      "label": "Case 13: Direct AWS S3 Client in Domain",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: AvatarData",
+            "Port: IAvatarUploadUseCase",
+            "Port: IAvatarStorageRepository",
+            "Port: IAvatarUploadPort"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: AvatarData",
+        "Port: IAvatarUploadUseCase",
+        "Port: IAvatarStorageRepository",
+        "Port: IAvatarUploadPort"
+      ]
+    },
+    {
+      "sample_index": 14,
+      "label": "Case 14: Direct Twilio Client in SMS Verification",
+      "total_score": 65,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 15,
+          "max": 25.0,
+          "violations": [
+            "Port: ISmsVerificationUseCase"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: ISmsVerificationUseCase"
+      ]
+    },
+    {
+      "sample_index": 15,
+      "label": "Case 15: Primitive Obsession on Money & Negative Amounts",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: IBankAccountRepository",
+            "Port: IDepositUseCase"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IBankAccountRepository",
+        "Port: IDepositUseCase"
+      ]
+    },
+    {
+      "sample_index": 16,
+      "label": "Case 16: Raw String Email with Untyped Generic Throw",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: RegisterUserUseCase",
+            "Port: UserRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: RegisterUserUseCase",
+        "Port: UserRepository"
+      ]
+    },
+    {
+      "sample_index": 17,
+      "label": "Case 17: Password Primitive without Security Invariants",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: UpdateUserCredentialsUseCase",
+            "Port: UserRepository",
+            "Port: PasswordHasher"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: UpdateUserCredentialsUseCase",
+        "Port: UserRepository",
+        "Port: PasswordHasher"
+      ]
+    },
+    {
+      "sample_index": 18,
+      "label": "Case 18: Unbounded Order Quantity Primitive",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: IOrderItem",
+            "Port: IOrderRepository",
+            "Port: IOrderService",
+            "Port: OrderItemDTO"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IOrderItem",
+        "Port: IOrderRepository",
+        "Port: IOrderService",
+        "Port: OrderItemDTO"
+      ]
+    },
+    {
+      "sample_index": 19,
+      "label": "Case 19: Unbounded Discount Percentage Calculation",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: IDiscountCalculator",
+            "Port: IDiscountService",
+            "Port: IDatabaseDiscountRepository",
+            "Port: IDiscountRepository",
+            "Port: DiscountEntity"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IDiscountCalculator",
+        "Port: IDiscountService",
+        "Port: IDatabaseDiscountRepository",
+        "Port: IDiscountRepository",
+        "Port: DiscountEntity"
+      ]
+    },
+    {
+      "sample_index": 20,
+      "label": "Case 20: Inverted Date Range Period Primitives",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: IBooking",
+            "Port: IBookUseCase",
+            "Port: IBookingRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IBooking",
+        "Port: IBookUseCase",
+        "Port: IBookingRepository"
+      ]
+    },
+    {
+      "sample_index": 21,
+      "label": "Case 21: Raw Tax Identification Number Primitive",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: ITaxPayer",
+            "Port: GetTaxPayerUseCase",
+            "Port: TaxRepository",
+            "Port: TaxPayerController"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: ITaxPayer",
+        "Port: GetTaxPayerUseCase",
+        "Port: TaxRepository",
+        "Port: TaxPayerController"
+      ]
+    },
+    {
+      "sample_index": 22,
+      "label": "Case 22: Raw String IP Address Primitive",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: INetworkHost",
+            "Port: INetworkHostRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: INetworkHost",
+        "Port: INetworkHostRepository"
+      ]
+    },
+    {
+      "sample_index": 23,
+      "label": "Case 23: Untyped Any Payment Payload",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: PaymentPayload",
+            "Port: PaymentStatus",
+            "Port: ProcessPaymentUseCase",
+            "Port: PaymentRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: PaymentPayload",
+        "Port: PaymentStatus",
+        "Port: ProcessPaymentUseCase",
+        "Port: PaymentRepository"
+      ]
+    },
+    {
+      "sample_index": 24,
+      "label": "Case 24: Untyped Webhook Event Handler",
+      "total_score": 65,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: IWebhookEvent",
+            "Port: IWebhookHandler"
+          ]
+        },
+        "any_penalty": {
+          "score": 15,
+          "max": 20.0,
+          "violations": [
+            "Detected 1 `any` keyword(s)"
+          ]
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: IWebhookEvent",
+        "Port: IWebhookHandler",
+        "Detected 1 `any` keyword(s)"
+      ]
+    },
+    {
+      "sample_index": 25,
+      "label": "Case 25: Untyped Order Item Calculation",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: Item",
+            "Port: TotalCalculator",
+            "Port: ItemRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Item",
+        "Port: TotalCalculator",
+        "Port: ItemRepository"
+      ]
+    },
+    {
+      "sample_index": 26,
+      "label": "Case 26: Loose Untyped User Profile Metadata",
+      "total_score": 65,
+      "grade": "C (Architectural Violations)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 15,
+          "max": 25.0,
+          "violations": [
+            "Port: UserProfileProps"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: UserProfileProps"
+      ]
+    },
+    {
+      "sample_index": 27,
+      "label": "Case 27: Untyped Batch Importer",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: DataRecord",
+            "Port: ImportDataUseCase",
+            "Port: DataRepository"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: DataRecord",
+        "Port: ImportDataUseCase",
+        "Port: DataRepository"
+      ]
+    },
+    {
+      "sample_index": 28,
+      "label": "Case 28: Monolithic Checkout Controller (Multi-Antipattern)",
+      "total_score": 70,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Port: OrderItem",
+            "Port: CheckoutUseCase"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: OrderItem",
+        "Port: CheckoutUseCase"
+      ]
+    },
+    {
+      "sample_index": 29,
+      "label": "Case 29: Monolithic User Registration Manager",
+      "total_score": 95,
+      "grade": "A (Clean Architecture Certified)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 20,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: User",
+            "Port: RegisterUserRequest",
+            "Port: RegisterUserResponse",
+            "Port: UserRepository",
+            "Port: AnalyticsService"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: User",
+        "Port: RegisterUserRequest",
+        "Port: RegisterUserResponse",
+        "Port: UserRepository",
+        "Port: AnalyticsService"
+      ]
+    },
+    {
+      "sample_index": 30,
+      "label": "Case 30: Monolithic Invoice & PDF Dispatcher",
+      "total_score": 75,
+      "grade": "B (Partially Clean)",
+      "metrics": {
+        "domain_boundary": {
+          "score": 30,
+          "max": 30.0,
+          "violations": []
+        },
+        "invariant_safety": {
+          "score": 0,
+          "max": 25.0,
+          "violations": [
+            "Missing constructor invariant guard."
+          ]
+        },
+        "ports_decoupling": {
+          "score": 25,
+          "max": 25.0,
+          "violations": [
+            "Port: Invoice",
+            "Port: ProcessInvoiceUseCase",
+            "Port: InvoiceRepository",
+            "Port: EmailService",
+            "Port: InvoiceController"
+          ]
+        },
+        "any_penalty": {
+          "score": 20,
+          "max": 20.0,
+          "violations": []
+        }
+      },
+      "all_notes": [
+        "Missing constructor invariant guard.",
+        "Port: Invoice",
+        "Port: ProcessInvoiceUseCase",
+        "Port: InvoiceRepository",
+        "Port: EmailService",
+        "Port: InvoiceController"
+      ]
+    }
+  ]
+}
