@@ -2,9 +2,9 @@
 
 > **Módulo:** Cumplimiento Arquitectónico y Arnés de Evaluación  
 > **Modelos Objetivo:** SLM Base (`Qwen-2.5-Coder-1.5B/3B`), Modelo Especializado LoRA y Modelos Comerciales de Referencia  
-> **Motor de Ejecución:** Motor Dual (AST determinista del compilador TypeScript vía [`ast_analyzer.ts`](./ast_analyzer.ts) con fallback a expresiones regulares en Python)  
+> **Motor de Ejecución:** Motor Dual (AST determinista del compilador TypeScript vía [`ast_analyzer.ts`](../../evaluation/ast_analyzer.ts) con fallback a expresiones regulares en Python)  
 
-Este directorio contiene el arnés de benchmarking automatizado ([`eval_benchmark.py`](./eval_benchmark.py)) y el analizador AST ([`ast_analyzer.ts`](./ast_analyzer.ts)), diseñados para medir, calificar y demostrar empíricamente la hipótesis central del proyecto **Edge Clean Copilot**.
+Este directorio contiene el arnés de benchmarking automatizado ([`eval_benchmark.py`](../../evaluation/eval_benchmark.py)) y el analizador AST ([`ast_analyzer.ts`](../../evaluation/ast_analyzer.ts)), diseñados para medir, calificar y demostrar empíricamente la hipótesis central del proyecto **Edge Clean Copilot**.
 
 ---
 
@@ -74,9 +74,9 @@ python3 eval_benchmark.py \
 
 | Archivo | Casos | Alcance y Antipatrones |
 | :--- | :---: | :--- |
-| **[`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl)** | **30** | Benchmark empírico completo cubriendo ORMs/Prisma (7), fuga de HTTP/SDKs (7), Obsesión por Primitivas (8), proliferación de `any` (5) y God Classes (3). |
-| **[`test_benchmark_cases.jsonl`](./test_benchmark_cases.jsonl)** | **10** | Dataset de validación y control para calibración del arnés y dry-runs rápidos. |
-| **[`generate_benchmark_suite.py`](./generate_benchmark_suite.py)** | — | Generador determinista sintético de la suite de 30 casos. |
+| **[`legacy_benchmark_suite.jsonl`](../../evaluation/legacy_benchmark_suite.jsonl)** | **30** | Benchmark empírico completo cubriendo ORMs/Prisma (7), fuga de HTTP/SDKs (7), Obsesión por Primitivas (8), proliferación de `any` (5) y God Classes (3). |
+| **[`test_benchmark_cases.jsonl`](../../evaluation/test_benchmark_cases.jsonl)** | **10** | Dataset de validación y control para calibración del arnés y dry-runs rápidos. |
+| **[`generate_benchmark_suite.py`](../../evaluation/generate_benchmark_suite.py)** | — | Generador determinista sintético de la suite de 30 casos. |
 
 ---
 
@@ -96,5 +96,5 @@ python3 compare_models.py \
 ```
 
 ### Entregables Generados
-- **[`comparative_benchmark_matrix.md`](./comparative_benchmark_matrix.md):** Reporte comparativo consolidado con cálculo de deltas porcentuales y métricas de inferencia en el borde.
-- **[`benchmark_comparison_chart.svg`](./benchmark_comparison_chart.svg):** Gráfico vectorial en SVG de alta resolución listo para diapositivas y presentaciones académicas.
+- **[`comparative_benchmark_matrix.md`](../../evaluation/comparative_benchmark_matrix.md):** Reporte comparativo consolidado con cálculo de deltas porcentuales y métricas de inferencia en el borde.
+- **[`benchmark_comparison_chart.svg`](../../evaluation/benchmark_comparison_chart.svg):** Gráfico vectorial en SVG de alta resolución listo para diapositivas y presentaciones académicas.

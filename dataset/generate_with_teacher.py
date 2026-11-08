@@ -87,7 +87,7 @@ def query_teacher(url: str, user_prompt: str) -> str:
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt}
         ],
-        "max_tokens": 1024,
+        "max_tokens": 2048,
         "temperature": 0.2
     }
     req = urllib.request.Request(
@@ -97,7 +97,13 @@ def query_teacher(url: str, user_prompt: str) -> str:
     )
     with urllib.request.urlopen(req, timeout=120) as resp:
         res = json.loads(resp.read().decode("utf-8"))
-        return res["choices"][0]["message"]["content"]
+        choice = res["choices"][0]
+        if choice.get("finish_reason") == "length":
+            raise ValueError("teacher output truncated (finish_reason=length); sample discarded")
+        content = choice["message"]["content"]
+        if content.count("```") % 2 != 0:
+            raise ValueError("teacher output has an unbalanced code fence; sample discarded")
+        return content
 
 def main():
     args = parse_args()

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import * as path from 'node:path';
 import { Command } from 'commander';
 import { FileDiskReader } from '../fs/FileDiskReader.js';
 import { FileDiskWriter } from '../fs/FileDiskWriter.js';
@@ -29,7 +30,7 @@ program
   .description('Refactor a TypeScript/JavaScript source file to adhere strictly to Clean Architecture')
   .argument('<file>', 'Path to the source file to refactor')
   .option('-m, --mock', 'Use deterministic mock inference engine (for offline testing/dry-run)', false)
-  .option('-u, --url <url>', 'Llama-server base URL', process.env.CLEAN_COPILOT_URL || 'http://192.168.6.35:8085')
+  .option('-u, --url <url>', 'Llama-server base URL', process.env.CLEAN_COPILOT_URL || process.env.LLAMA_SERVER_URL || 'http://127.0.0.1:8080')
   .option('-n, --model <model>', 'Model name identifier', process.env.CLEAN_COPILOT_MODEL || 'clean-copilot')
   .option('-d, --diff', 'Show unified terminal diff (+/-) comparing original vs refactored code', false)
   .option('-o, --output <path>', 'Write refactored code directly to the specified destination path')
@@ -42,8 +43,17 @@ program
     console.log(`[Target File]  : ${file}`);
     console.log(`[Engine Mode]  : ${options.mock ? 'Mock Engine (Deterministic)' : `Llama-Server (${options.url})`}`);
 
-    const parsedTemp = options.temperature ? parseFloat(options.temperature) : undefined;
-    const parsedMaxTokens = options.maxTokens ? parseInt(options.maxTokens, 10) : undefined;
+    const parsedTemp = options.temperature !== undefined ? Number(options.temperature) : undefined;
+    const parsedMaxTokens = options.maxTokens !== undefined ? Number(options.maxTokens) : undefined;
+
+    if (parsedTemp !== undefined && (!Number.isFinite(parsedTemp) || parsedTemp < 0 || parsedTemp > 2)) {
+      console.error('\n[ERROR] --temperature must be a number between 0 and 2.');
+      process.exit(1);
+    }
+    if (parsedMaxTokens !== undefined && (!Number.isInteger(parsedMaxTokens) || parsedMaxTokens <= 0)) {
+      console.error('\n[ERROR] --max-tokens must be a positive integer.');
+      process.exit(1);
+    }
 
     if (parsedTemp !== undefined) {
       console.log(`[Temperature]  : ${parsedTemp}`);
@@ -106,6 +116,10 @@ program
 
     // 5. Persist output if requested
     if (options.output) {
+      if (path.resolve(options.output) === path.resolve(file)) {
+        console.error('\n[ERROR] --output must differ from the input file (refusing to overwrite the original).');
+        process.exit(1);
+      }
       const fileWriter = new FileDiskWriter();
       const writeResult = await fileWriter.write(options.output, result.data.refactoredCode);
 

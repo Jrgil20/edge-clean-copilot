@@ -18,7 +18,7 @@ LOCAL_MODEL_PATH = REPO_ROOT / "models" / "clean-copilot-1.5b-q4_k_m.gguf"
 PID_FILE = Path.home() / ".local" / "share" / "clean-copilot-server.pid"
 LOG_FILE = Path.home() / ".local" / "share" / "clean-copilot-server.log"
 
-DEFAULT_SPARK_IP = "192.168.6.35"
+DEFAULT_SPARK_IP = os.environ.get("CLEAN_COPILOT_SPARK_IP", "192.168.6.35")
 COPILOT_PORT = "8085"
 QWEN_PORT = "8080"
 

@@ -133,4 +133,39 @@ describe('LlamaServerAdapter Infrastructure Adapter', () => {
       }
     });
   });
+
+  describe('Failure Modes', () => {
+    it('should fail with TRUNCATED_COMPLETION_ERROR when finish_reason is length', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
+        new Response(JSON.stringify({ choices: [{ message: { content: 'partial' }, finish_reason: 'length' }] }), { status: 200 })
+      ));
+      const adapter = new LlamaServerAdapter({ baseUrl: 'http://127.0.0.1:8080' });
+      const result = await adapter.complete({ systemPrompt: 's', userPrompt: 'u' });
+      expect(result.success).toBe(false);
+      if (!result.success) expect(result.error.code).toBe('TRUNCATED_COMPLETION_ERROR');
+      vi.unstubAllGlobals();
+    });
+
+    it('should fail with INVALID_RESPONSE_ERROR on a non-JSON 200 body', async () => {
+      vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('<html>proxy</html>', { status: 200 })));
+      const adapter = new LlamaServerAdapter({ baseUrl: 'http://127.0.0.1:8080' });
+      const result = await adapter.complete({ systemPrompt: 's', userPrompt: 'u' });
+      expect(result.success).toBe(false);
+      if (!result.success) expect(result.error.code).toBe('INVALID_RESPONSE_ERROR');
+      vi.unstubAllGlobals();
+    });
+
+    it('should fail with LLAMA_TIMEOUT_ERROR when the server never answers', async () => {
+      vi.stubGlobal('fetch', vi.fn((_url: string, init: RequestInit) =>
+        new Promise((_resolve, reject) => {
+          init.signal?.addEventListener('abort', () => reject(new Error('aborted')));
+        })
+      ));
+      const adapter = new LlamaServerAdapter({ baseUrl: 'http://127.0.0.1:8080', timeoutMs: 20 });
+      const result = await adapter.complete({ systemPrompt: 's', userPrompt: 'u' });
+      expect(result.success).toBe(false);
+      if (!result.success) expect(result.error.code).toBe('LLAMA_TIMEOUT_ERROR');
+      vi.unstubAllGlobals();
+    });
+  });
 });

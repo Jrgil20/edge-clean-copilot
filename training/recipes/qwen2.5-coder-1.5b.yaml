@@ -22,7 +22,7 @@ bias: "none"
 # Tokenization & Masking
 response_template: "<|im_start|>assistant\n"
 max_seq_len: 2048
-trust_remote_code: true
+trust_remote_code: false
 
 # Precision & Training
 torch_dtype: "bfloat16"

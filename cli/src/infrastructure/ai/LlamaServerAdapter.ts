@@ -34,10 +34,10 @@ export class LlamaServerAdapter implements IInferenceEngine {
     prompt: InferencePrompt
   ): Promise<Result<InferenceOutput, InfrastructureError>> {
     const startTime = Date.now();
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.timeoutMs);
 
     try {
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), this.timeoutMs);
 
       const response = await fetch(this.endpoint, {
         method: 'POST',
@@ -54,10 +54,10 @@ export class LlamaServerAdapter implements IInferenceEngine {
           ]
         }),
         signal: controller.signal
-      }).finally(() => clearTimeout(timer));
+      });
 
       if (!response.ok) {
-        const errorText = await response.text().catch(() => 'Unknown error body');
+        const errorText = (await response.text().catch(() => 'Unknown error body')).slice(0, 500);
         return Result.fail(
           new InfrastructureError(
             `llama-server HTTP ${response.status}: ${errorText}`,
@@ -69,14 +69,35 @@ export class LlamaServerAdapter implements IInferenceEngine {
       interface ChatCompletionResponse {
         choices?: Array<{
           message?: {
-            content?: string;
+            content?: unknown;
           };
+          finish_reason?: string;
         }>;
         model?: string;
       }
 
-      const json = (await response.json()) as ChatCompletionResponse;
-      const text = json.choices?.[0]?.message?.content;
+      let json: ChatCompletionResponse;
+      try {
+        json = (await response.json()) as ChatCompletionResponse;
+      } catch (parseError) {
+        if (controller.signal.aborted) {
+          throw parseError;
+        }
+        return Result.fail(
+          new InfrastructureError('llama-server returned a non-JSON response body', 'INVALID_RESPONSE_ERROR', parseError)
+        );
+      }
+      const choice = json.choices?.[0];
+      const text = typeof choice?.message?.content === 'string' ? choice.message.content : undefined;
+
+      if (choice?.finish_reason === 'length') {
+        return Result.fail(
+          new InfrastructureError(
+            'llama-server output was truncated (finish_reason=length). Increase --max-tokens or reduce the input size.',
+            'TRUNCATED_COMPLETION_ERROR'
+          )
+        );
+      }
 
       if (!text) {
         return Result.fail(
@@ -90,6 +111,15 @@ export class LlamaServerAdapter implements IInferenceEngine {
         durationMs: Date.now() - startTime
       });
     } catch (error) {
+      if (controller.signal.aborted) {
+        return Result.fail(
+          new InfrastructureError(
+            `llama-server at ${this.endpoint} did not respond within ${this.timeoutMs}ms.`,
+            'LLAMA_TIMEOUT_ERROR',
+            error
+          )
+        );
+      }
       return Result.fail(
         new InfrastructureError(
           `Failed to connect to llama-server at ${this.endpoint}. Ensure llama-server is running.`,
@@ -97,6 +127,8 @@ export class LlamaServerAdapter implements IInferenceEngine {
           error
         )
       );
+    } finally {
+      clearTimeout(timer);
     }
   }
 }

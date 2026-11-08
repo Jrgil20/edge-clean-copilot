@@ -270,7 +270,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      58.0       |         74.8         |   
 ---
 
 ### Diapositiva 10: Resultados Experimentales: Base vs. ECC vs. Cloud (2 min)
-- **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
+- **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
 - **Puntos a Exponer:**
   - **Modelo Base (1.5B):** 58.0 pts (medido). Presenta dificultades con aislamiento de capas y desacoplamiento.
   - **Línea Base Cloud:** 90.5 pts (referencia no medida). Excelente, pero requiere nube.

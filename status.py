@@ -61,7 +61,7 @@ def main() -> None:
     print(f"  • Domain entity          : {'OK' if domain_entity.exists() else 'MISSING'}")
     print(f"  • Application use case   : {'OK' if use_case.exists() else 'MISSING'}")
     print(f"  • Infrastructure adapter : {'OK' if llama_adapter.exists() else 'MISSING'}")
-    print("  • Unit test suite        : 41 Vitest unit tests (100% green, ~790ms)")
+    print("  • Unit test suite        : Vitest unit tests (run `cd cli && pnpm test`)")
 
     # 4. Evaluation Benchmark
     print("\n[4] EVALUATION & BENCHMARK HARNESS")
@@ -91,10 +91,10 @@ def main() -> None:
 
     # 6. Operational Status & Verification
     print("\nVERIFIED DEPLOYMENT & EVALUATION:")
-    print("  1. Quantized Models: proyecto/training/output/gguf/clean-copilot-1.5b-q4_k_m.gguf (941MB)")
-    print("  2. In-Service Endpoint: http://192.168.6.35:8085/v1 (150+ tokens/s on Grace Blackwell GB10; ~12 tokens/s measured on CPU-only i5-10310U)")
-    print("  3. Benchmark Score: Clean Architecture Score (CAS) = 76.3/100, Grade B (vs 48.2 base model)")
-    print("  4. CLI Unit Tests: 41 Vitest unit tests (100% green, ~790ms)")
+    print("  1. Quantized Models: training/output/gguf/clean-copilot-1.5b-q4_k_m.gguf")
+    print("  2. Inference: llama-server OpenAI-compatible endpoint (about 12 tok/s measured on CPU-only i5-10310U; see MODEL_CARD.md)")
+    print("  3. Benchmark Score: Clean Architecture Score (CAS) = 74.8/100, Grade B (vs 58.0 base model, measured on Spark; frontier baseline unmeasured)")
+    print("  4. CLI Unit Tests: Vitest unit tests (run `cd cli && pnpm test`)")
     print("=" * 70)
 
 if __name__ == "__main__":

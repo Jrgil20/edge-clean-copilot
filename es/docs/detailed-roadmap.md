@@ -90,7 +90,7 @@ Consolidar el adaptador LoRA con el modelo base en una matriz de pesos unificada
 - **Semana 8: Fusión de Pesos con `merge_and_unload()`**
   - [ ] Ejecutar `train_lora.py --merge` para emitir `./output/merged_model/`.
 - **Semana 9: Scripting de Conversión a GGUF**
-  - [x] Crear script [`proyecto/training/convert_to_gguf.sh`](../../../proyecto/training/convert_to_gguf.sh) utilizando `llama.cpp/convert_hf_to_gguf.py` y `llama-quantize`.
+  - [x] Crear script [`proyecto/training/convert_to_gguf.sh`](../../training/convert_to_gguf.sh) utilizando `llama.cpp/convert_hf_to_gguf.py` y `llama-quantize`.
   - [ ] Producir `clean-copilot-1.5b-f16.gguf` tras la consolidación LoRA en la DGX Spark.
 - **Semana 10: Pipeline Multi-Cuantización**
   - [ ] Cuantizar binarios `q4_k_m`, `q5_k_m` y `q8_0` con `llama-quantize`.
@@ -106,7 +106,7 @@ Consolidar el adaptador LoRA con el modelo base en una matriz de pesos unificada
 Entregar una herramienta CLI production-ready con Arquitectura Hexagonal y un arnés automatizado que evalúe y demuestre matemáticamente la superioridad en adherencia a Clean Architecture frente a modelos generales.
 
 ### 4.2 Métricas del Benchmark Automatizado (`eval_benchmark.py`):
-Para demostrar la hipótesis central del proyecto, el arnés de evaluación automatizado ([`proyecto/evaluation/eval_benchmark.py`](../../../proyecto/evaluation/eval_benchmark.py)) califica modelos contra código acoplado y datasets sintéticos:
+Para demostrar la hipótesis central del proyecto, el arnés de evaluación automatizado ([`proyecto/evaluation/eval_benchmark.py`](../../evaluation/eval_benchmark.py)) califica modelos contra código acoplado y datasets sintéticos:
 
 ```
 Métricas del Benchmark (Documentadas en es/proyecto/evaluation/README.md):

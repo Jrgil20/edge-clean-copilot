@@ -22,7 +22,7 @@ bias: "none"
 # Tokenization & Masking
 response_template: "<start_of_turn>model\n"
 max_seq_len: 2048
-trust_remote_code: true
+trust_remote_code: false
 
 # Precision & Training (Gemma-2 requires bfloat16)
 torch_dtype: "bfloat16"

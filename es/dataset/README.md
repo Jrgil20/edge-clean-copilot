@@ -49,7 +49,10 @@ Para garantizar compatibilidad nativa con Hugging Face `trl` (`SFTTrainer`) y el
 
 ## 5. Partición Estratificada y Prevención de Data Leakage
 
-Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`seed_examples.jsonl` + `generated_examples.jsonl`) se dividen en dos conjuntos mutuamente excluyentes usando [`split_dataset.py`](../../../proyecto/dataset/split_dataset.py) con semilla determinista (`seed=42`):
+Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`seed_examples.jsonl` + `generated_examples.jsonl`) se dividen en dos conjuntos mutuamente excluyentes usando [`split_dataset.py`](../../dataset/split_dataset.py) con semilla determinista (`seed=42`):
+
+> **Nota (2026-11-08):** las cifras siguientes describen el dataset con el que se entrenó el modelo publicado. `split_dataset.py` ahora divide por prompt normalizado y descarta respuestas con fences de código sin cerrar, por lo que al ejecutarlo resultan 125 muestras (91 train / 34 holdout, 36 prompts distintos). `ARCH_REFACTOR` y `SOLID_CRITIQUE` se reconstruyeron con 19 ejemplos escritos a mano (10 por categoría tras el split) en `authored_examples.jsonl`; siguen siendo pocos, así que generá más con `generate_with_teacher.py` antes de reentrenar.
+
 
 ```text
 ======================================================================
@@ -69,4 +72,4 @@ Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`
 | **TOTAL** | **168** | **138** | **30** |
 
 > [!IMPORTANT]
-> El conjunto de evaluación ciega (`eval_holdout.jsonl`) NO está aislado del entrenamiento (28/30 de sus prompts también están en `train.jsonl`; ejecutar `python3 audit_dataset.py`). La suite legacy disjunta de `evaluation/` es el conjunto de evaluación real. No se usó como validación durante el fine-tuning. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`proyecto/evaluation/`](../../../proyecto/evaluation/).
+> El conjunto `eval_holdout.jsonl` generado por el `split_dataset.py` actual se divide por prompt: ningún prompt aparece a la vez en `train.jsonl` y en el holdout (verificable con `python3 audit_dataset.py`). El modelo publicado, en cambio, se entrenó con la división anterior, donde 28/30 prompts del holdout también estaban en `train.jsonl`; por eso la suite legacy disjunta de `evaluation/` es la evaluación real de ese modelo. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`evaluation/`](../../evaluation/).

@@ -108,6 +108,12 @@ def parse_args() -> argparse.Namespace:
         help="Override LoRA dropout rate."
     )
     parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for reproducible shuffling, LoRA init and dropout (default: 42)."
+    )
+    parser.add_argument(
         "--max-time-minutes",
         type=float,
         default=None,
@@ -193,7 +199,8 @@ def load_dataset(
     tokenizer: Any,
     max_seq_len: int,
     dry_run: bool = False,
-    response_template: Optional[str] = None
+    response_template: Optional[str] = None,
+    batch_size: int = 1,
 ):
     """Loads ChatML JSONL, tokenizes via chat template, and configures loss masking."""
     import torch
@@ -240,7 +247,7 @@ def load_dataset(
     pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
     collate = collate_fn_factory(pad_id, response_token_ids=response_token_ids)
     dataset = ChatDataset(tokenized_samples)
-    return DataLoader(dataset, batch_size=2 if dry_run else 1, shuffle=not dry_run, collate_fn=collate)
+    return DataLoader(dataset, batch_size=2 if dry_run else batch_size, shuffle=not dry_run, collate_fn=collate)
 
 
 def validate_target_modules(model: Any, target_modules: List[str]) -> List[str]:
@@ -265,9 +272,19 @@ def train_loop(
     grad_accum: int,
     dry_run: bool = False,
     max_time_minutes: float = None,
+    warmup_ratio: float = 0.0,
 ):
     """Executes native training loop with optional graceful time-capping."""
+    import math
     import torch
+
+    steps_per_epoch = max(1, math.ceil(len(dataloader) / grad_accum))
+    total_steps = steps_per_epoch * epochs
+    warmup_steps = int(total_steps * warmup_ratio)
+    scheduler = torch.optim.lr_scheduler.LambdaLR(
+        optimizer,
+        lambda s: 1.0 if warmup_steps == 0 else min(1.0, (s + 1) / warmup_steps),
+    )
 
     model.train()
     step = 0
@@ -297,7 +314,10 @@ def train_loop(
                 attention_mask=attention_mask,
                 labels=labels,
             )
-            loss = outputs.loss / grad_accum
+            # The last group of an epoch may be smaller than grad_accum: scale by its real size
+            group_start = (batch_idx // grad_accum) * grad_accum
+            group_size = min(grad_accum, len(dataloader) - group_start)
+            loss = outputs.loss / group_size
             loss.backward()
 
             total_loss += loss.item()
@@ -305,6 +325,7 @@ def train_loop(
 
             if (batch_idx + 1) % grad_accum == 0 or (batch_idx + 1) == len(dataloader):
                 optimizer.step()
+                scheduler.step()
                 optimizer.zero_grad()
                 step += 1
 
@@ -312,7 +333,7 @@ def train_loop(
                     current_lr = optimizer.param_groups[0]["lr"]
                     print(
                         f"Epoch [{epoch+1}/{epochs}] Step {step} | "
-                        f"Loss: {loss.item() * grad_accum:.4f} | LR: {current_lr:.2e} | "
+                        f"Loss: {loss.item() * group_size:.4f} | LR: {current_lr:.2e} | "
                         f"Elapsed: {elapsed:.1f}s"
                     )
 
@@ -333,15 +354,22 @@ def main():
         raise FileNotFoundError(f"Recipe file not found: {args.recipe}")
 
     # Hierarchical override: CLI flags take precedence over Recipe defaults
+    import random
+    import torch as _torch
+    random.seed(args.seed)
+    _torch.manual_seed(args.seed)
+    if _torch.cuda.is_available():
+        _torch.cuda.manual_seed_all(args.seed)
+
     model_id = args.model_id or recipe.model_id
-    epochs = args.epochs or recipe.num_train_epochs
-    batch_size = args.batch_size or recipe.batch_size
-    grad_accum = args.grad_accum or recipe.grad_accum_steps
-    lr = args.lr or recipe.learning_rate
-    max_seq_len = args.max_seq_len or recipe.max_seq_len
-    lora_r = args.lora_r or recipe.r
-    lora_alpha = args.lora_alpha or recipe.lora_alpha
-    lora_dropout = args.lora_dropout or recipe.lora_dropout
+    epochs = args.epochs if args.epochs is not None else recipe.num_train_epochs
+    batch_size = args.batch_size if args.batch_size is not None else recipe.batch_size
+    grad_accum = args.grad_accum if args.grad_accum is not None else recipe.grad_accum_steps
+    lr = args.lr if args.lr is not None else recipe.learning_rate
+    max_seq_len = args.max_seq_len if args.max_seq_len is not None else recipe.max_seq_len
+    lora_r = args.lora_r if args.lora_r is not None else recipe.r
+    lora_alpha = args.lora_alpha if args.lora_alpha is not None else recipe.lora_alpha
+    lora_dropout = args.lora_dropout if args.lora_dropout is not None else recipe.lora_dropout
     target_modules = recipe.target_modules
 
     print(f"\n========================================================")
@@ -352,7 +380,7 @@ def main():
     print(f"  Base Model        : {model_id}")
     print(f"  LoRA Targets      : {', '.join(target_modules)}")
     print(f"  Rank / Alpha / Drop: r={lora_r}, alpha={lora_alpha}, dropout={lora_dropout}")
-    print(f"  Epochs / Batch    : {epochs} epochs | batch={batch_size} (accum={grad_accum})")
+    print(f"  Epochs / Batch    : {epochs} epochs | batch={batch_size} (accum={grad_accum}, effective={batch_size * grad_accum})")
     print(f"  Learning Rate     : {lr}")
     print(f"  Recommended Quant : {recipe.recommended_quant}")
     print(f"========================================================\n")
@@ -394,7 +422,8 @@ def main():
         tokenizer,
         max_seq_len,
         dry_run=args.dry_run,
-        response_template=recipe.response_template
+        response_template=recipe.response_template,
+        batch_size=batch_size,
     )
 
     # 5. Model Loading
@@ -422,7 +451,11 @@ def main():
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    optimizer = torch.optim.AdamW(
+        [p for p in model.parameters() if p.requires_grad],
+        lr=lr,
+        weight_decay=recipe.weight_decay,
+    )
 
     # 8. Run Native Optimization Loop
     train_loop(
@@ -434,6 +467,7 @@ def main():
         grad_accum=grad_accum,
         dry_run=args.dry_run,
         max_time_minutes=args.max_time_minutes,
+        warmup_ratio=recipe.warmup_ratio,
     )
 
     # 9. Save Trained LoRA Adapters
