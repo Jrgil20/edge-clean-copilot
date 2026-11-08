@@ -24,3 +24,9 @@ dist/
 *.safetensors
 *.bin
 output/
+.env
+*.pt
+*.ckpt
+coverage/
+*.tsbuildinfo
+.DS_Store

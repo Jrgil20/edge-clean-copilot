@@ -108,6 +108,12 @@ def parse_args() -> argparse.Namespace:
         help="Override LoRA dropout rate."
     )
     parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+        help="Random seed for reproducible shuffling, LoRA init and dropout (default: 42)."
+    )
+    parser.add_argument(
         "--max-time-minutes",
         type=float,
         default=None,
@@ -333,15 +339,22 @@ def main():
         raise FileNotFoundError(f"Recipe file not found: {args.recipe}")
 
     # Hierarchical override: CLI flags take precedence over Recipe defaults
+    import random
+    import torch as _torch
+    random.seed(args.seed)
+    _torch.manual_seed(args.seed)
+    if _torch.cuda.is_available():
+        _torch.cuda.manual_seed_all(args.seed)
+
     model_id = args.model_id or recipe.model_id
-    epochs = args.epochs or recipe.num_train_epochs
-    batch_size = args.batch_size or recipe.batch_size
-    grad_accum = args.grad_accum or recipe.grad_accum_steps
-    lr = args.lr or recipe.learning_rate
-    max_seq_len = args.max_seq_len or recipe.max_seq_len
-    lora_r = args.lora_r or recipe.r
-    lora_alpha = args.lora_alpha or recipe.lora_alpha
-    lora_dropout = args.lora_dropout or recipe.lora_dropout
+    epochs = args.epochs if args.epochs is not None else recipe.num_train_epochs
+    batch_size = args.batch_size if args.batch_size is not None else recipe.batch_size
+    grad_accum = args.grad_accum if args.grad_accum is not None else recipe.grad_accum_steps
+    lr = args.lr if args.lr is not None else recipe.learning_rate
+    max_seq_len = args.max_seq_len if args.max_seq_len is not None else recipe.max_seq_len
+    lora_r = args.lora_r if args.lora_r is not None else recipe.r
+    lora_alpha = args.lora_alpha if args.lora_alpha is not None else recipe.lora_alpha
+    lora_dropout = args.lora_dropout if args.lora_dropout is not None else recipe.lora_dropout
     target_modules = recipe.target_modules
 
     print(f"\n========================================================")

@@ -14,7 +14,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **Fase 1** | Infraestructura, Redes y Dataset del Modelo Teacher | Semanas 1–3 | **100%** | **COMPLETA Y VERIFICADA** |
 | **Fase 2** | Adaptación LoRA y Especialización del SLM Estudiante | Semanas 4–7 | **85%** (Runtime listo, 73% pesos en NVMe) | **ACTIVA / LISTA PARA RÁFAGA** |
-| **Fase 3** | Consolidación de Pesos, Cuantización y Exportación GGUF | Semanas 8–11 | **50%** (Script automatizado y probado) | EN ESPERA |
+| **Fase 3** | Consolidación de Pesos, Cuantización y Exportación GGUF | Semanas 8–11 | **100%** (Q4_K_M, Q5_K_M, Q8_0 exportados) | **COMPLETADA Y VERIFICADA EN SPARK** |
 | **Fase 4** | CLI Hexagonal, Tests Unitarios y Benchmark Automatizado| Semanas 12–15 | **70%** (28/28 tests en verde, benchmark listo)| EN PROGRESO |
 
 ---
@@ -65,7 +65,7 @@
 
 ---
 
-## 4. Hitos de la Fase 3 (En Espera / 50% Completada)
+## 4. Hitos de la Fase 3 (Completada y Validada)
 
 - [x] **Script Automatizado One-Click de Cuantización a GGUF:**
   - Implementado [`training/convert_to_gguf.sh`](../../../proyecto/training/convert_to_gguf.sh) con autodetección de `llama.cpp` y `lora_venv`.

@@ -41,7 +41,7 @@ class ModelRecipe:
     # Tokenization & Loss Masking
     response_template: Optional[str] = None
     max_seq_len: int = 2048
-    trust_remote_code: bool = True
+    trust_remote_code: bool = False
     
     # Precision & Execution
     torch_dtype: str = "bfloat16"  # "bfloat16", "float16", "float32"

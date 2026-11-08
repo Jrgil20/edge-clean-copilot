@@ -346,7 +346,7 @@ def main():
     parser.add_argument("--base-report", type=str, default=None, help="Path to base model benchmark JSON report")
     parser.add_argument("--ecc-report", type=str, default=None, help="Path to Edge Clean Copilot benchmark JSON report")
     parser.add_argument("--cloud-report", type=str, default=None, help="Path to cloud baseline benchmark JSON report")
-    parser.add_argument("--demo", action="store_true", default=True, help="Use calibrated empirical demo baselines")
+    parser.add_argument("--demo", action="store_true", default=True, help="Deprecated no-op. Base and cloud columns are hardcoded reference estimates with no source report (see evaluation/README.md).")
     parser.add_argument("--output-md", type=str, default="comparative_benchmark_matrix.md", help="Output markdown matrix path")
     parser.add_argument("--output-svg", type=str, default="benchmark_comparison_chart.svg", help="Output SVG chart path")
 
