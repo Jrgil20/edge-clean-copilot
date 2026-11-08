@@ -271,9 +271,19 @@ def train_loop(
     grad_accum: int,
     dry_run: bool = False,
     max_time_minutes: float = None,
+    warmup_ratio: float = 0.0,
 ):
     """Executes native training loop with optional graceful time-capping."""
+    import math
     import torch
+
+    steps_per_epoch = max(1, math.ceil(len(dataloader) / grad_accum))
+    total_steps = steps_per_epoch * epochs
+    warmup_steps = int(total_steps * warmup_ratio)
+    scheduler = torch.optim.lr_scheduler.LambdaLR(
+        optimizer,
+        lambda s: 1.0 if warmup_steps == 0 else min(1.0, (s + 1) / warmup_steps),
+    )
 
     model.train()
     step = 0
@@ -303,7 +313,10 @@ def train_loop(
                 attention_mask=attention_mask,
                 labels=labels,
             )
-            loss = outputs.loss / grad_accum
+            # The last group of an epoch may be smaller than grad_accum: scale by its real size
+            group_start = (batch_idx // grad_accum) * grad_accum
+            group_size = min(grad_accum, len(dataloader) - group_start)
+            loss = outputs.loss / group_size
             loss.backward()
 
             total_loss += loss.item()
@@ -311,6 +324,7 @@ def train_loop(
 
             if (batch_idx + 1) % grad_accum == 0 or (batch_idx + 1) == len(dataloader):
                 optimizer.step()
+                scheduler.step()
                 optimizer.zero_grad()
                 step += 1
 
@@ -318,7 +332,7 @@ def train_loop(
                     current_lr = optimizer.param_groups[0]["lr"]
                     print(
                         f"Epoch [{epoch+1}/{epochs}] Step {step} | "
-                        f"Loss: {loss.item() * grad_accum:.4f} | LR: {current_lr:.2e} | "
+                        f"Loss: {loss.item() * group_size:.4f} | LR: {current_lr:.2e} | "
                         f"Elapsed: {elapsed:.1f}s"
                     )
 
@@ -365,7 +379,7 @@ def main():
     print(f"  Base Model        : {model_id}")
     print(f"  LoRA Targets      : {', '.join(target_modules)}")
     print(f"  Rank / Alpha / Drop: r={lora_r}, alpha={lora_alpha}, dropout={lora_dropout}")
-    print(f"  Epochs / Batch    : {epochs} epochs | batch={batch_size} (accum={grad_accum})")
+    print(f"  Epochs / Batch    : {epochs} epochs | recipe batch={batch_size} (NOTE: DataLoader uses per-device batch 1, effective batch = accum = {grad_accum})")
     print(f"  Learning Rate     : {lr}")
     print(f"  Recommended Quant : {recipe.recommended_quant}")
     print(f"========================================================\n")
@@ -435,7 +449,11 @@ def main():
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    optimizer = torch.optim.AdamW(
+        [p for p in model.parameters() if p.requires_grad],
+        lr=lr,
+        weight_decay=recipe.weight_decay,
+    )
 
     # 8. Run Native Optimization Loop
     train_loop(
@@ -447,6 +465,7 @@ def main():
         grad_accum=grad_accum,
         dry_run=args.dry_run,
         max_time_minutes=args.max_time_minutes,
+        warmup_ratio=recipe.warmup_ratio,
     )
 
     # 9. Save Trained LoRA Adapters
