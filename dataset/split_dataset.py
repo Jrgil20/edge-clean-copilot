@@ -50,6 +50,7 @@ def main():
     # 1. Load and deduplicate samples
     all_samples: List[Dict[str, Any]] = []
     seen_prompts = set()
+    dropped_truncated = 0
 
     for file_path in [Path(args.seed_file), Path(args.generated_file)]:
         if not file_path.exists():
@@ -73,6 +74,9 @@ def main():
                     if m.get("role") == "assistant":
                         assistant_text = m.get("content", "").strip()
                         break
+                if assistant_text.count("```") % 2 != 0:
+                    dropped_truncated += 1
+                    continue
                 key = (user_text, assistant_text)
                 if key in seen_prompts:
                     continue
@@ -80,6 +84,7 @@ def main():
                 all_samples.append(item)
 
     total_samples = len(all_samples)
+    print(f"Dropped (unbalanced code fence / truncated): {dropped_truncated}")
     print("=" * 70)
     print("        EDGE CLEAN COPILOT — STRATIFIED DATASET SPLITTER        ")
     print("=" * 70)

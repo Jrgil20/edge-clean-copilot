@@ -88,15 +88,33 @@ DEMO_DATA: Dict[str, Dict[str, Any]] = {
 }
 
 def load_report_or_fallback(file_path: Optional[str], default_key: str) -> Dict[str, Any]:
+    """Load a benchmark report; per-dimension scores come from the report, never from the hardcoded defaults."""
     if file_path and Path(file_path).exists():
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-            # Adapt eval_benchmark.py format if loaded
-            total_score = data.get("average_score", DEMO_DATA[default_key]["composite_cas"])
-            entry = dict(DEMO_DATA[default_key])
-            entry["composite_cas"] = round(total_score, 1)
-            return entry
-    return DEMO_DATA[default_key]
+        results = data.get("results", [])
+        entry = dict(DEMO_DATA[default_key])
+        if results:
+            mapping = {
+                "domain_boundary": "boundary_score",
+                "invariant_safety": "invariant_score",
+                "ports_decoupling": "ports_score",
+                "any_penalty": "typing_score",
+            }
+            for metric, field in mapping.items():
+                values = [r["metrics"][metric]["score"] for r in results if metric in r.get("metrics", {})]
+                if values:
+                    entry[field] = round(sum(values) / len(values), 1)
+        entry["composite_cas"] = round(data.get("average_score", entry["composite_cas"]), 1)
+        entry["source"] = f"report:{Path(file_path).name} (n={data.get('total_samples', len(results))})"
+        return entry
+    print(
+        f"[WARNING] No report for '{default_key}': using hardcoded reference estimates (unverified).",
+        file=sys.stderr,
+    )
+    entry = dict(DEMO_DATA[default_key])
+    entry["source"] = "hardcoded reference estimate (no report)"
+    return entry
 
 def render_ascii_table(models: Dict[str, Dict[str, Any]]) -> str:
     lines = []

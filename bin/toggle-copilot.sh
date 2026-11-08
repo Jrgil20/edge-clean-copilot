@@ -99,7 +99,7 @@ stop_local() {
 
 connect_spark() {
     copilot-local on > /dev/null 2>&1 || true
-    echo -e "${CYAN}⚡ VS Code GitHub Copilot conectado a NVIDIA DGX Spark: http://192.168.6.35:${PORT}${NC}"
+    echo -e "${CYAN}⚡ VS Code GitHub Copilot conectado a NVIDIA DGX Spark: http://${CLEAN_COPILOT_SPARK_IP:-192.168.6.35}:${PORT}${NC}"
     echo -e "${BOLD}💡 Tip: Recargá la ventana de VS Code para aplicar el cambio.${NC}"
 }
 

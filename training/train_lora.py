@@ -199,7 +199,8 @@ def load_dataset(
     tokenizer: Any,
     max_seq_len: int,
     dry_run: bool = False,
-    response_template: Optional[str] = None
+    response_template: Optional[str] = None,
+    batch_size: int = 1,
 ):
     """Loads ChatML JSONL, tokenizes via chat template, and configures loss masking."""
     import torch
@@ -246,7 +247,7 @@ def load_dataset(
     pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
     collate = collate_fn_factory(pad_id, response_token_ids=response_token_ids)
     dataset = ChatDataset(tokenized_samples)
-    return DataLoader(dataset, batch_size=2 if dry_run else 1, shuffle=not dry_run, collate_fn=collate)
+    return DataLoader(dataset, batch_size=2 if dry_run else batch_size, shuffle=not dry_run, collate_fn=collate)
 
 
 def validate_target_modules(model: Any, target_modules: List[str]) -> List[str]:
@@ -379,7 +380,7 @@ def main():
     print(f"  Base Model        : {model_id}")
     print(f"  LoRA Targets      : {', '.join(target_modules)}")
     print(f"  Rank / Alpha / Drop: r={lora_r}, alpha={lora_alpha}, dropout={lora_dropout}")
-    print(f"  Epochs / Batch    : {epochs} epochs | recipe batch={batch_size} (NOTE: DataLoader uses per-device batch 1, effective batch = accum = {grad_accum})")
+    print(f"  Epochs / Batch    : {epochs} epochs | batch={batch_size} (accum={grad_accum}, effective={batch_size * grad_accum})")
     print(f"  Learning Rate     : {lr}")
     print(f"  Recommended Quant : {recipe.recommended_quant}")
     print(f"========================================================\n")
@@ -421,7 +422,8 @@ def main():
         tokenizer,
         max_seq_len,
         dry_run=args.dry_run,
-        response_template=recipe.response_template
+        response_template=recipe.response_template,
+        batch_size=batch_size,
     )
 
     # 5. Model Loading
