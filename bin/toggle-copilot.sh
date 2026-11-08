@@ -10,9 +10,9 @@
 #   ./toggle-copilot.sh status  -> Muestra estado actual del servidor y VS Code
 # ==============================================================================
 
-set -eo pipefail
+set -euo pipefail
 
-MODEL_PATH="/home/jr_g/Develop/IA_Aplicada/proyecto/models/clean-copilot-1.5b-q4_k_m.gguf"
+MODEL_PATH="${CLEAN_COPILOT_MODEL_PATH:-$HOME/models/clean-copilot-1.5b-q4_k_m.gguf}"
 PID_FILE="$HOME/.local/share/clean-copilot-server.pid"
 LOG_FILE="$HOME/.local/share/clean-copilot-server.log"
 SETTINGS_FILE="$HOME/.config/Code/User/settings.json"
@@ -38,8 +38,8 @@ is_running() {
     fi
     # Verificación secundaria por puerto
     local port_pid
-    port_pid=$(ss -tlpn 2>/dev/null | grep ":$PORT " | sed -n 's/.*pid=\([0-9]*\).*/\1/p' | head -n1 || true)
-    if [[ -n "$port_pid" ]]; then
+    port_pid=$(ss -tlpn 2>/dev/null | grep -E ":${PORT}[[:space:]]" | sed -n 's/.*pid=\([0-9]*\).*/\1/p' | head -n1 || true)
+    if [[ -n "$port_pid" ]] && tr '\0' ' ' < "/proc/${port_pid}/cmdline" 2>/dev/null | grep -q "llama-server"; then
         echo "$port_pid"
         return 0
     fi

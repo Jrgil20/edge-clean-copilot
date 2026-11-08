@@ -49,7 +49,7 @@ Para garantizar compatibilidad nativa con Hugging Face `trl` (`SFTTrainer`) y el
 
 ## 5. Partición Estratificada y Prevención de Data Leakage
 
-Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`seed_examples.jsonl` + `generated_examples.jsonl`) se dividen en dos conjuntos mutuamente excluyentes usando [`split_dataset.py`](../../../proyecto/dataset/split_dataset.py) con semilla determinista (`seed=42`):
+Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`seed_examples.jsonl` + `generated_examples.jsonl`) se dividen en dos conjuntos mutuamente excluyentes usando [`split_dataset.py`](../../dataset/split_dataset.py) con semilla determinista (`seed=42`):
 
 ```text
 ======================================================================
@@ -69,4 +69,4 @@ Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`
 | **TOTAL** | **168** | **138** | **30** |
 
 > [!IMPORTANT]
-> El conjunto de evaluación ciega (`eval_holdout.jsonl`) está estrictamente aislado y nunca es expuesto al modelo durante el fine-tuning con LoRA. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`proyecto/evaluation/`](../../../proyecto/evaluation/).
+> El conjunto de evaluación ciega (`eval_holdout.jsonl`) está estrictamente aislado y nunca es expuesto al modelo durante el fine-tuning con LoRA. Se reserva de forma exclusiva para el benchmark posterior al entrenamiento en [`proyecto/evaluation/`](../../evaluation/).

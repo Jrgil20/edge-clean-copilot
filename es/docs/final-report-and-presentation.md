@@ -269,7 +269,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      48.2       |         76.3         |   
 ---
 
 ### Diapositiva 10: Resultados Experimentales: Base vs. ECC vs. Cloud (2 min)
-- **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
+- **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
 - **Puntos a Exponer:**
   - **Modelo Base (1.5B):** 48.2 pts (Grado F). No respeta aislamiento de capas.
   - **Frontier Cloud (Gemini 3.8 Flash):** 90.5 pts (Grado A). Excelente, pero requiere nube.
