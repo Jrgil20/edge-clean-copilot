@@ -51,7 +51,7 @@ Para garantizar compatibilidad nativa con Hugging Face `trl` (`SFTTrainer`) y el
 
 Para garantizar rigor académico y metodológico, las 168 muestras unificadas (`seed_examples.jsonl` + `generated_examples.jsonl`) se dividen en dos conjuntos mutuamente excluyentes usando [`split_dataset.py`](../../dataset/split_dataset.py) con semilla determinista (`seed=42`):
 
-> **Nota (2026-11-08):** las cifras siguientes describen el dataset con el que se entrenó el modelo publicado. `split_dataset.py` ahora divide por prompt normalizado y descarta respuestas con fences de código sin cerrar, por lo que al ejecutarlo resultan 117 muestras (84 train / 33 holdout, 28 prompts distintos). `ARCH_REFACTOR` y `SOLID_CRITIQUE` se reconstruyeron con 11 ejemplos escritos a mano en `authored_examples.jsonl`; siguen siendo pocos, así que generá más con `generate_with_teacher.py` antes de reentrenar.
+> **Nota (2026-11-08):** las cifras siguientes describen el dataset con el que se entrenó el modelo publicado. `split_dataset.py` ahora divide por prompt normalizado y descarta respuestas con fences de código sin cerrar, por lo que al ejecutarlo resultan 125 muestras (91 train / 34 holdout, 36 prompts distintos). `ARCH_REFACTOR` y `SOLID_CRITIQUE` se reconstruyeron con 19 ejemplos escritos a mano (10 por categoría tras el split) en `authored_examples.jsonl`; siguen siendo pocos, así que generá más con `generate_with_teacher.py` antes de reentrenar.
 
 
 ```text
