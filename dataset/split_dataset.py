@@ -8,6 +8,7 @@ Splits by normalized user prompt so no prompt appears in both train and holdout.
 
 import argparse
 import json
+import re
 import random
 import sys
 from collections import defaultdict
@@ -22,15 +23,19 @@ def classify_sample(sample: Dict[str, Any]) -> str:
             user_content = msg.get("content", "").lower()
             break
 
-    if "aaa" in user_content or "arrange-act-assert" in user_content or "unit test" in user_content:
+    def has(*patterns: str) -> bool:
+        # Whole-word matching: "import"/"report" must not match "port"
+        return any(re.search(rf"\b{p}\b", user_content) for p in patterns)
+
+    if has("aaa", "arrange-act-assert", "unit tests?"):
         return "AAA_TEST"
-    elif "port" in user_content or "adapter" in user_content or "gateway" in user_content:
+    elif has("ports?", "adapters?", "gateways?"):
         return "PORT_ADAPTER"
-    elif "value object" in user_content or "entity" in user_content or "money" in user_content or "email" in user_content:
+    elif has("value objects?", "entity", "entities", "money", "email"):
         return "ENTITY_VALUE_OBJECT"
-    elif "use case" in user_content or "usecase" in user_content:
+    elif has("use cases?", "usecases?"):
         return "USE_CASE"
-    elif "solid" in user_content or "critique" in user_content or "srp" in user_content:
+    elif has("solid", "critique", "srp"):
         return "SOLID_CRITIQUE"
     else:
         return "ARCH_REFACTOR"

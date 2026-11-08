@@ -49,5 +49,21 @@ class SplitDatasetTest(unittest.TestCase):
         self.assertNotIn("b", user_prompts(out_t) | user_prompts(out_e))
 
 
+class ClassifierTest(unittest.TestCase):
+    def classify(self, prompt: str) -> str:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("split_dataset", SCRIPT)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod.classify_sample(sample(prompt, "x"))
+
+    def test_substrings_do_not_trigger_port_adapter(self):
+        self.assertEqual(self.classify("Refactor this code that does an import and builds a report"), "ARCH_REFACTOR")
+
+    def test_whole_words_still_match(self):
+        self.assertEqual(self.classify("Create a port and an adapter for storage"), "PORT_ADAPTER")
+        self.assertEqual(self.classify("Critique this class with SOLID"), "SOLID_CRITIQUE")
+
+
 if __name__ == "__main__":
     unittest.main()
