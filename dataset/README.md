@@ -51,6 +51,9 @@ To ensure full compatibility with Hugging Face `trl` (`SFTTrainer`) and Qwen's n
 
 To uphold strict scientific and academic validity, the cumulative dataset of 168 unified samples (`seed_examples.jsonl` + `generated_examples.jsonl`) is partitioned into two mutually exclusive sets using [`split_dataset.py`](./split_dataset.py) with a fixed random seed (`seed=42`):
 
+> **Note (2026-11-08):** the figures below describe the dataset the published model was trained on. `split_dataset.py` now splits by normalized prompt and drops answers with unbalanced code fences, so rerunning it yields 106 samples (70 train / 36 holdout, 17 distinct prompts, no `ARCH_REFACTOR` or `SOLID_CRITIQUE`). Regenerate those categories with `generate_with_teacher.py` before retraining.
+
+
 ```text
 ======================================================================
 168 Unified Canonical Samples (~191,364 Total Tokens)
