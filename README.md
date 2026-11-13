@@ -1,202 +1,185 @@
 # Edge Clean Copilot (ECC)
 
-> **Specialized, Edge-Native Small Language Model (SLM) & Hexagonal CLI for Strict Clean Architecture and Domain-Driven Design Refactoring.**
+> **Proof of concept:** a small language model (Qwen2.5-Coder-1.5B-Instruct + LoRA) that runs offline as a GGUF file and refactors small TypeScript snippets toward Clean Architecture / DDD, plus a hexagonal CLI to drive it.
 
-[![Phase Progress](https://img.shields.io/badge/Progress-100%25%20Verified-brightgreen.svg)](docs/progress-and-milestones.md)
-[![Architecture](https://img.shields.io/badge/Architecture-Hexagonal%20%2F%20Clean-emerald.svg)](propuesta.md)
-[![Base Model](https://img.shields.io/badge/Base%20SLM-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
-[![Quantization](https://img.shields.io/badge/Edge%20Target-GGUF%20Q4__K__M%20(~12%20tok%2Fs%20CPU)-purple.svg)](training/convert_to_gguf.sh)
-[![Tests](https://img.shields.io/badge/Vitest-41%2F41%20Passing-brightgreen.svg)](cli/tests/)
-[![Web Portal](https://img.shields.io/badge/Docs-Interactive%20Portal-teal.svg)](docs/index.html)
+[![Status](https://img.shields.io/badge/Status-Proof%20of%20Concept-yellow.svg)](docs/next-steps.md)
+[![Base Model](https://img.shields.io/badge/Base-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
+[![Quantization](https://img.shields.io/badge/GGUF-Q4__K__M%20(~12%20tok%2Fs%20CPU)-purple.svg)](training/convert_to_gguf.sh)
+[![Tests](https://img.shields.io/badge/Vitest-44%20passing-brightgreen.svg)](cli/tests/)
 [![License](https://img.shields.io/badge/License-Academic%20%2F%20MIT-lightgrey.svg)](README.md)
 
 🌐 **[Versión en español disponible →](./es/README.md)**
 
 ---
 
-## 1. Executive Summary
+## 1. What this is (and what it is not)
 
-**Edge Clean Copilot (ECC)** is an offline, specialized AI coding assistant designed to enforce **Clean Architecture**, **Ports & Adapters (Hexagonal Architecture)**, and **Domain-Driven Design (DDD)** principles on edge developer workstations without requiring cloud API connections.
+ECC tests one idea: **can a 1.5B-parameter model, fine-tuned on a small set of architecture examples, produce code that follows Clean Architecture conventions more often than its base model, while running offline on a laptop CPU?**
 
-Mainstream commercial code LLMs frequently fail architectural boundaries: they inject `any` types, introduce circular layer dependencies, mix database SDKs directly into business entities, and hallucinate external framework couplings. ECC solves this by fine-tuning an agile Small Language Model (**Qwen2.5-Coder-1.5B-Instruct**) on high-signal architectural refactoring pairs, deploying it locally via **GGUF Q4_K_M** quantization served through `llama.cpp`. It is deliberately light and **not optimized for speed**: measured at ~12 tokens/second on a CPU-only laptop (Intel Core i5-10310U). Its purpose is private, offline refactoring of small, bounded code artifacts.
+On the project's own benchmark the answer is a qualified yes (see §3). The model was trained, merged, quantized to GGUF and served with `llama.cpp`; the full pipeline is in this repository.
 
-> **Key Architectural Value:** Beyond a single model checkpoint, ECC is designed as a reproducible **[Model Factory](docs/model-factory-architecture.md)**. The pipeline decoupled from specific model weights, allowing new open-weight SLMs (Llama-3.2, Gemma-2, DeepSeek) to be ingested, specialized, and edge-quantized through an automated, repeatable workflow.
+It is **not** a production tool:
 
----
+- The training data is small and repetitive (18 distinct prompts behind 138 training rows).
+- The benchmark measures whether output *looks* architecturally clean (patterns such as ports, `Result`, no `any`), not whether it compiles or preserves behavior.
+- Results come from one self-authored 30-case suite. No frontier model has been run on it.
+- It is slow by design: about 12 tokens/second on a CPU-only laptop (Intel Core i5-10310U). It is meant for small, bounded snippets.
 
-## 2. Core Methodology: "Cold Staging, Hot Burst"
-
-To reconcile shared multi-tenant AI infrastructure (such as university clusters) with independent local development, the project follows the **Cold Staging, Hot Burst** operational model:
-
-```
-[ Cold Staging (Local Developer Laptop) ]
-  ├── Curation of canonical ChatML seed pairs
-  ├── Deterministic stratified dataset partitioning (train/eval holdout)
-  ├── 1-step offline dry runs (--dry-run)
-  └── Offline unit testing of CLI layers via MockInferenceAdapter (28/28 green)
-               │
-               ▼ (Network Burst — SSH / Subnet /26)
-[ Hot Burst (NVIDIA DGX Spark Cluster) ]
-  ├── High-throughput Teacher distillation (Qwen3-Coder-30B on port 8085)
-  ├── Multi-epoch LoRA fine-tuning (train_lora.py with --max-time-minutes 15.0)
-  └── Consolidated weight merge (LoRA adapter + base model -> FP16)
-               │
-               ▼ (Artifact Consolidation)
-[ Edge Deployment (100% Offline Local Machine) ]
-  └── GGUF quantization (Q4_K_M) served via llama-server (zero cloud dependencies)
-```
+Known problems and the work to address them are listed in **[docs/next-steps.md](docs/next-steps.md)**.
 
 ---
 
-## 3. Subsystem Architecture
+## 2. How it was built: "Cold Staging, Hot Burst"
 
-The repository is organized into five decoupled subsystems:
+GPU time was available only in short windows on a shared NVIDIA DGX Spark (GB10). Everything that does not need a GPU was prepared on a laptop first:
+
+```
+[ Cold Staging: laptop ]
+  ├── Hand-written seed examples (ChatML)
+  ├── Deterministic train/holdout split (seed=42)
+  ├── 1-step training dry runs (--dry-run)
+  └── CLI unit tests against a mock inference engine
+               │
+               ▼
+[ Hot Burst: DGX Spark ]
+  ├── Teacher generation of training pairs (Qwen3-Coder-30B)
+  ├── LoRA fine-tuning, time-capped (--max-time-minutes 15)
+  └── Merge adapter into base weights (FP16)
+               │
+               ▼
+[ Edge: laptop, offline ]
+  └── GGUF Q4_K_M served by llama-server
+```
+
+---
+
+## 3. Measured results
+
+Head-to-head run on the DGX Spark, same suite, same quantization (Q4_K_M), same `llama-server` settings, AST scoring engine. Evidence: [`evaluation/reports/spark-20261105T143540Z/`](evaluation/reports/spark-20261105T143540Z/RESULT.md).
+
+| CAS component (max) | Fine-tune | Base | Delta |
+| :--- | ---: | ---: | ---: |
+| Domain boundary (30) | 30.0 | 24.0 | +6.0 |
+| Invariant safety (25) | 2.7 | 0.3 | +2.4 |
+| Ports decoupling (25) | 22.5 | 15.8 | +6.7 |
+| TypeScript typing (20) | 19.7 | 17.8 | +1.9 |
+| **Composite CAS (100)** | **74.8** | **58.0** | **+16.8** |
+
+How to read these numbers:
+
+- **An empty answer scores 50.** It earns 30 for having no forbidden imports and 20 for having no `any`. The base model is 8 points above doing nothing; the fine-tune is about 25 above it. Neither run produced empty or refusal outputs.
+- **Invariant safety is weak in both models** (2.7 / 25). The fine-tune rarely produces validated constructors or `Result` handling.
+- **Run-to-run noise is large.** Two runs of the same GGUF on the laptop scored 72.5 and 76.3, with a mean per-case difference of 17.8 points. Differences under about 5 points should be treated as noise.
+- **Not yet measured:** whether the code compiles, whether behavior is preserved, how a prompted (few-shot) base model scores, and how the 30B teacher or a frontier model scores.
+
+Full audit: [docs/evaluation-audit-2026-11-05.md](docs/evaluation-audit-2026-11-05.md).
+
+---
+
+## 4. Repository layout
 
 ```
 edge-clean-copilot/
-├── cli/          # Hexagonal CLI client in TypeScript (Ports & Adapters, zero-any)
-├── dataset/      # Canonical seeds, synthetic generator, and stratified partitions
-├── training/     # PyTorch LoRA fine-tuning pipeline & GGUF export scripts
-├── evaluation/   # Automated Clean Architecture Score (CAS 0-100) benchmark harness
-├── docs/         # Technical specifications, telemetry logs, and execution roadmaps
-├── es/           # Full documentation mirror in Spanish
-└── status.py     # Zero-dependency instant diagnostic & session resume dashboard
+├── cli/          # TypeScript CLI (hexagonal: domain / application / infrastructure)
+├── dataset/      # ChatML examples, teacher generator, split and audit scripts
+├── training/     # LoRA training (recipe-driven) and GGUF export
+├── evaluation/   # CAS benchmark harness, suites and attributed reports
+├── docs/         # Runbooks, audit, progress logs
+├── es/           # Spanish mirror of the documentation
+└── status.py     # Quick project status dashboard
 ```
 
-### 3.1 Hexagonal CLI Subsystem (`cli/`)
+### 4.1 CLI (`cli/`)
 
-The CLI client enforces strict Clean Architecture internally while refactoring user code externally:
+A small TypeScript CLI that reads a file, sends it to a `llama-server` endpoint (or a mock engine), and prints or writes the refactored result. It follows the conventions the model is trained to produce:
 
-```
-cli/src/
-├── domain/             # Enterprise business rules
-│   └── entities/       # SourceFile entity (path validation, language invariants)
-├── application/        # Application business rules
-│   ├── use-cases/      # RefactorCodeUseCase (functional orchestration)
-│   ├── ports/          # IInferenceEngine (abstract AI completion contract)
-│   └── dtos/           # RefactorDTO (typed input/output structures)
-├── infrastructure/     # External adapters & tools
-│   ├── ai/             # LlamaServerAdapter (HTTP) & MockInferenceAdapter (offline unit testing)
-│   ├── fs/             # FileDiskReader (deterministic file I/O)
-│   └── cli/            # Commander.js entrypoint & terminal UI
-└── shared/             # Cross-cutting primitives
-    ├── types/          # Result<T, E> monad for deterministic error handling
-    └── errors/         # DomainError typed hierarchy (zero untyped throws)
-```
+- `domain/` and `application/` do not import from `infrastructure/` or third-party packages.
+- Inference goes through a port (`IInferenceEngine`), with `LlamaServerAdapter` and `MockInferenceAdapter` as adapters.
+- Functions return `Result<T, E>` with typed errors instead of throwing.
+- Strict TypeScript, no `any`. All tests run offline against the mock engine.
 
-#### Non-Negotiable Architectural Guardrails
-1. **The Dependency Rule:** Inner layers (`domain`, `application`) contain zero dependencies on outer layers (`infrastructure`, frameworks, file system, or network).
-2. **Zero `any` Policy:** Explicit typing throughout; forbidden usage of `any`.
-3. **Deterministic Error Monad:** Use cases return functional `Result<T, DomainError>` rather than throwing unhandled exceptions.
-4. **100% Offline Testability:** The test suite runs completely offline via `MockInferenceAdapter` without requiring a live inference server.
+### 4.2 Dataset (`dataset/`)
 
-### 3.2 Dataset Subsystem (`dataset/`)
+ChatML JSONL (`system` / `user` / `assistant`).
 
-- **Canonical Seed Examples (`dataset/seed_examples.jsonl`):** 8 hand-crafted, production-grade refactoring pairs extracted from real-world domain models (ArrowMaze).
-- **Teacher Distillation Generator (`dataset/generate_with_teacher.py`):** Automated prompt pipeline interrogating a 30B teacher model (`Qwen3-Coder-30B-A3B-Instruct`) deployed on dedicated port `8085` of the NVIDIA DGX Spark cluster.
-- **Stratified Partitioning (`dataset/split_dataset.py`):** Deterministic split (`seed=42`) creating:
-  - `dataset/train.jsonl`: **138 pairs** (82.1%, ~156k tokens) for LoRA adaptation.
-  - `dataset/eval_holdout.jsonl`: **30 pairs** (17.9%, ~35k tokens) NOT isolated from training: 28/30 prompts also appear in `train.jsonl` (see [audit](docs/evaluation-audit-2026-11-05.md)); the disjoint 30-case legacy suite is the evaluation set.
-- **Validation Engine (`dataset/validate_dataset.py`):** ChatML syntax and contract linter.
+| Source | Rows | Notes |
+| :--- | ---: | :--- |
+| `seed_examples.jsonl` | 8 | Hand-written, taken from a real project (ArrowMaze). |
+| `generated_examples.jsonl` | 160 | Generated by the 30B teacher from a small set of prompt templates. |
+| `authored_examples.jsonl` | 19 | Hand-written `ARCH_REFACTOR` and `SOLID_CRITIQUE` examples, added after training. |
 
-### 3.3 Training & Quantization Subsystem (`training/`)
+**The published model was trained on an earlier split** (commit `64f3c6c`): 138 training rows built from only **18 distinct prompts**, with a holdout that shared 28 of its 30 prompts with training. That split is no longer in the working tree.
 
-- **Native PyTorch LoRA Pipeline (`training/train_lora.py`):**
-  - **Base Foundation Model:** `Qwen/Qwen2.5-Coder-1.5B-Instruct`
-  - **LoRA Configuration:** Rank $r=16$, $\alpha=32$, targeting all linear attention and MLP projections (`q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`).
-  - **Hardware Acceleration:** Native `bfloat16` execution on Grace Blackwell GB10 GPU (`2.14.1+cu130`).
-  - **Defensive Multi-Tenancy Guardrail:** Bounded execution cutoff (`--max-time-minutes 15.0`) preventing queue exhaustion.
-  - **Weight Merge:** Automated `model.merge_and_unload()` export flag (`--merge`).
-- **GGUF Export (`training/convert_to_gguf.sh`):** Automated pipeline converting merged FP16 PyTorch weights to GGUF `Q4_K_M` for local inference via `llama.cpp`.
+The current `split_dataset.py` splits by normalized prompt and drops truncated answers. Rerunning it gives 91 training / 34 holdout rows from 36 distinct prompts, with no prompt overlap (`python3 dataset/audit_dataset.py`). **This split has not been used for training.**
 
-### 3.4 Evaluation Subsystem (`evaluation/`)
+The evaluation suite (`evaluation/legacy_benchmark_suite.jsonl`, 30 cases) shares no prompts or code with the training data.
 
-The evaluation harness (`evaluation/eval_benchmark.py`) calculates the **Clean Architecture Score (CAS)** on a 0–100 scale:
+### 4.3 Training (`training/`)
 
-| Component | Weight | Validation Rule |
-| :--- | :--- | :--- |
-| **Layer Isolation** | 25 pts | Domain entities have 0 imports from outer layers or external libraries. |
-| **Inversion of Control** | 25 pts | Use cases interact with external adapters strictly through abstract interfaces (Ports). |
-| **Zero `any` Compliance** | 25 pts | Generated TypeScript code contains 0 occurrences of explicit `any`. |
-| **Typed Error Handling** | 25 pts | Functions return functional `Result<T, DomainError>` rather than untyped throws. |
+- Base: `Qwen/Qwen2.5-Coder-1.5B-Instruct`. LoRA r=16, α=32 on all attention and MLP projections, bfloat16.
+- Hyperparameters live in recipe files (`training/recipes/*.yaml`); CLI flags override them.
+- Published run: 3 epochs, about 5.5 minutes on the GB10; final training loss 0.031. No validation loss was tracked. A loss that low on 18 distinct prompts points to memorization.
+- `--merge` merges the adapter into the base weights; `convert_to_gguf.sh` exports Q4_K_M (941 MB), with optional Q5_K_M and Q8_0.
+
+### 4.4 Evaluation (`evaluation/`)
+
+`eval_benchmark.py` computes the **Clean Architecture Score (CAS, 0–100)** using the TypeScript compiler AST (`ast_analyzer.ts`), with a regex fallback:
+
+| Component | Points | Rule |
+| :--- | ---: | :--- |
+| Domain boundary | 30 | No imports of frameworks/ORMs (`express`, `typeorm`, `prisma`, `axios`, …). |
+| Invariant safety | 25 | `Result` usage and constructor validation guards. |
+| Ports decoupling | 25 | `interface I…Repository/Port/Gateway` and constructor injection. |
+| TypeScript typing | 20 | −5 per explicit `any`. |
+
+This is pattern matching. It does not compile the output or check that behavior is preserved. Reports record the model name, GGUF SHA-256, endpoint and suite so each score can be traced to a model.
 
 ---
 
-## 4. Quickstart & Developer Workflow
+## 5. Quickstart
 
-### Prerequisites
-- **Python:** 3.10+ (with PyTorch and Hugging Face tools if training)
-- **Node.js & PNPM:** Node 20+, `pnpm` 10+ (mandatory package manager)
+Requirements: Python 3.10+, Node 20+, `pnpm` 10+. Training additionally needs PyTorch and the packages in `training/requirements.txt`.
 
-### 4.1 Instant Diagnostic Check
-Inspect live project health, test suites, and partition counts at any time:
 ```bash
-python3 status.py
-```
+python3 status.py                          # project status
 
-### 4.2 Run CLI Unit Tests
-The hexagonal TypeScript CLI includes 28 AAA unit tests:
-```bash
-cd cli
-pnpm install
-pnpm test
-```
+cd cli && pnpm install && pnpm test        # CLI tests (offline)
 
-### 4.3 Validate Dataset Partitions
-Ensure all ChatML pairs comply with schema standards:
-```bash
+python3 -m unittest discover -s evaluation/tests -v
+python3 -m unittest dataset/test_split_dataset.py -v
+
 python3 dataset/validate_dataset.py dataset/train.jsonl
-python3 dataset/validate_dataset.py dataset/eval_holdout.jsonl
+python3 dataset/audit_dataset.py           # duplicate / leakage audit
 ```
 
-### 4.5 VS Code GitHub Copilot Local Integration (One-Click Toggle)
+### 5.1 Refactor a file
 
-You can route official GitHub Copilot inside VS Code directly to our local / Spark models with an easy toggle tool:
+Requires `llama-server` running the GGUF (default `http://127.0.0.1:8080`), or `--mock` to test without a model. `bin/` must be on your `PATH`.
 
 ```bash
-# Switch GitHub Copilot to Edge Clean Copilot (Spark Port 8085)
-copilot-local on
+clean-copilot refactor path/to/File.ts --diff
+clean-copilot refactor path/to/File.ts -o path/to/RefactoredFile.ts
+clean-copilot refactor path/to/File.ts --mock
+```
 
-# Switch GitHub Copilot to Qwen3-Coder 30B (Spark Port 8080)
-copilot-local on qwen
+### 5.2 Route VS Code Copilot to a local model
 
-# Check current active routing status
+`bin/copilot-local` edits `debug.overrideProxyUrl` in `~/.config/Code/User/settings.json`. Reload the VS Code window after switching.
+
+```bash
+copilot-local on        # ECC on the Spark (port 8085)
+copilot-local on qwen   # Qwen3-Coder 30B on the Spark (port 8080)
 copilot-local status
-
-# Revert GitHub Copilot back to official GitHub Cloud
-copilot-local off
-```
-
-> **How it works:** `copilot-local` transparently updates `debug.overrideProxyUrl` in `~/.config/Code/User/settings.json`. Reload your VS Code window (`Developer: Reload Window`) after toggling for immediate effect.
-
-### 4.6 Global CLI Refactoring Command
-Refactor any TypeScript or JavaScript file using the global CLI:
-```bash
-# Refactor file with unified diff
-clean-copilot refactor path/to/SourceFile.ts --diff
-
-# Write refactored clean code directly to destination
-clean-copilot refactor path/to/SourceFile.ts -o path/to/RefactoredFile.ts
+copilot-local off       # back to GitHub's service
 ```
 
 ---
 
-## 5. Phase Completion & Verification Board
+## 6. Further documentation
 
-| Phase | Description | Scope | Status | Verified Metrics |
-| :--- | :--- | :--- | :--- | :--- |
-| **Phase 1** | Infrastructure & Teacher Dataset | Weeks 1–3 | **100%** | Direct link `/26`, port 8085 isolated, 168 ChatML pairs partitioned (138 train / 30 holdout). |
-| **Phase 2** | LoRA Adaptation & Specialization | Weeks 4–7 | **100%** | 3 epochs trained in 5m 30s on GB10 GPU; loss 0.0312; weights merged via `merge_and_unload()`. |
-| **Phase 3** | Weight Consolidation & GGUF Export | Weeks 8–11 | **100%** | Exported `Q4_K_M` (941MB), `Q5_K_M` (1.1GB), `Q8_0` (1.6GB) with `--clean-f16`. |
-| **Phase 4** | Hexagonal CLI & Offline Inference | Weeks 12–15 | **100%** | 41/41 Vitest unit tests green; measured head-to-head CAS benchmark on Spark: **74.8 / 100 (Grade B)** vs **58.0 base** (+16.8 delta). |
-| **GLOBAL** | **Comprehensive Project Maturity** | **Overall** | **100%** | **All 4 Phases Fully Completed, Tested, and Deployed.** |
-
----
-
-## 6. Technical Documentation Index
-
-For deep-dive architecture specs, hardware runbooks, and telemetry:
-- **[Detailed Execution Roadmap (Weeks 4–15)](docs/detailed-roadmap.md):** Tactical plan, milestones, and deliverables.
-- **[Verified Progress Board](docs/progress-and-milestones.md):** Evidence-based milestone validation log.
-- **[Session Report: 2026-10-22](docs/session-2026-10-22-burst-and-lessons.md):** Cluster telemetry, port isolation post-mortem, and dataset distillation metrics.
-- **[Academic Technical Proposal](propuesta.md):** Theoretical foundation, research hypotheses, and academic articulation.
+- [docs/next-steps.md](docs/next-steps.md): known problems and planned work.
+- [Evaluation audit](docs/evaluation-audit-2026-11-05.md): findings behind the caveats above.
+- [Spark evaluation runbook](docs/spark-eval-runbook.md) and [Spark day plan](docs/spark-day-plan.md): how the head-to-head run was produced.
+- [Model card](MODEL_CARD.md) and [usage and sharing guide](docs/model-usage-and-sharing-guide.md).
+- [Model Factory architecture](docs/model-factory-architecture.md): recipe-driven design for training other base models (Llama-3.2, Gemma-2 recipes exist but have not been trained).
+- [Progress log](docs/progress-and-milestones.md) and [academic proposal](docs/propuesta.md).
