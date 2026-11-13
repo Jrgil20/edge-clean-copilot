@@ -7,9 +7,10 @@ La documentación está agrupada por propósito. Si vas a citar este proyecto co
 ## Orden de lectura para citar el proyecto como antecedente
 
 1. [project/project-analysis.md](./project/project-analysis.md): objetivos frente a resultados, ideas, qué está bien y qué está mal, afirmaciones que se pueden citar con seguridad.
-2. [project/propuesta.md](./project/propuesta.md): la propuesta original y su hipótesis.
-3. [usage/use-cases.md](./usage/use-cases.md): dónde es válido usar el modelo y dónde no.
-4. [next-steps.md](./next-steps.md): problemas conocidos y trabajo planeado (primero el dataset).
+2. [project/retrospective.md](./project/retrospective.md): observaciones y lecciones: dónde está el valor y de dónde vienen los límites.
+3. [project/propuesta.md](./project/propuesta.md): la propuesta original y su hipótesis.
+4. [usage/use-cases.md](./usage/use-cases.md): dónde es válido usar el modelo y dónde no.
+5. [next-steps.md](./next-steps.md): problemas conocidos y trabajo planeado (primero el dataset).
 
 ---
 
@@ -18,6 +19,7 @@ La documentación está agrupada por propósito. Si vas a citar este proyecto co
 | Documento | Contenido |
 | :-- | :-- |
 | [project-analysis.md](./project/project-analysis.md) | Análisis completo (2026-11-13): objetivos planificados frente a logrados, el proceso etapa por etapa, fortalezas, hallazgos, fe de erratas, afirmaciones seguras. **Referencia vigente.** |
+| [retrospective.md](./project/retrospective.md) | Observaciones y lecciones extraídas del análisis: el proceso por encima del artefacto, los datos como restricción decisiva, puntos ciegos de la métrica, preguntas abiertas. |
 | [propuesta.md](./project/propuesta.md) | Propuesta original: visión, hipótesis, fases, replicabilidad. |
 | [ideas.md](./project/ideas.md) | Banco de ideas: idea elegida y alternativas consideradas (RAG, linters). |
 | [final-report-and-presentation.md](./project/final-report-and-presentation.md) | Informe final del curso y guion de defensa de 12 diapositivas (2026-10-23). Algunas afirmaciones quedaron superadas; ver la fe de erratas del análisis (§5.5). |

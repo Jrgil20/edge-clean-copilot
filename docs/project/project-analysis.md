@@ -3,7 +3,7 @@
 > **Date:** 2026-11-13
 > **Purpose:** a complete and verifiable account of the project to cite as background (prior work) for a later thesis. This project is not the thesis itself. The document covers its objectives, its ideas, what worked, what did not, and which claims the evidence supports.
 > **Method:** every figure below was re-measured from the repository on this date: test suites run, dataset files counted, the published training split and training code recovered from git history, and the committed benchmark completions re-analysed (paired statistics, standalone type-checking). Scripts were run locally. No model was queried.
-> **Related:** [evaluation audit (2026-11-05)](../evaluation/evaluation-audit-2026-11-05.md), [next steps](../next-steps.md), [valid use cases](../usage/use-cases.md).
+> **Related:** [retrospective](./retrospective.md), [evaluation audit (2026-11-05)](../evaluation/evaluation-audit-2026-11-05.md), [next steps](../next-steps.md), [valid use cases](../usage/use-cases.md).
 
 ---
 
