@@ -69,10 +69,10 @@ How to read these numbers:
 
 - **An empty answer scores 50.** It earns 30 for having no forbidden imports and 20 for having no `any`. The base model is 8 points above doing nothing; the fine-tune is about 25 above it. Neither run produced empty or refusal outputs.
 - **Invariant safety is weak in both models** (2.7 / 25). The fine-tune rarely produces validated constructors or `Result` handling.
-- **Run-to-run noise is large.** Two runs of the same GGUF on the laptop scored 72.5 and 76.3, with a mean per-case difference of 17.8 points. Differences under about 5 points should be treated as noise.
+- **Run-to-run noise is real.** The same GGUF (same SHA-256) scored 72.5 on the laptop CPU and 74.8 on the Spark GPU, with 17/30 cases identical and a mean per-case difference of 4.7 points. An earlier run without model attribution scored 76.3 and differed from the laptop run by 17.8 points per case. Differences under about 5 points should be treated as noise.
 - **Not yet measured:** whether the code compiles, whether behavior is preserved, how a prompted (few-shot) base model scores, and how the 30B teacher or a frontier model scores.
 
-Full audit: [docs/evaluation-audit-2026-11-05.md](docs/evaluation-audit-2026-11-05.md).
+Full audit: [docs/evaluation/evaluation-audit-2026-11-05.md](docs/evaluation/evaluation-audit-2026-11-05.md).
 
 ---
 
@@ -177,9 +177,11 @@ copilot-local off       # back to GitHub's service
 
 ## 6. Further documentation
 
+- [Project analysis](docs/project/project-analysis.md): objectives vs results, strengths, findings and safe claims (for citing the project as prior work).
+- [Valid use cases](docs/usage/use-cases.md): where to use the model and where not.
 - [docs/next-steps.md](docs/next-steps.md): known problems and planned work.
-- [Evaluation audit](docs/evaluation-audit-2026-11-05.md): findings behind the caveats above.
-- [Spark evaluation runbook](docs/spark-eval-runbook.md) and [Spark day plan](docs/spark-day-plan.md): how the head-to-head run was produced.
-- [Model card](MODEL_CARD.md) and [usage and sharing guide](docs/model-usage-and-sharing-guide.md).
-- [Model Factory architecture](docs/model-factory-architecture.md): recipe-driven design for training other base models (Llama-3.2, Gemma-2 recipes exist but have not been trained).
-- [Progress log](docs/progress-and-milestones.md) and [academic proposal](docs/propuesta.md).
+- [Evaluation audit](docs/evaluation/evaluation-audit-2026-11-05.md): findings behind the caveats above.
+- [Spark evaluation runbook](docs/evaluation/spark-eval-runbook.md) and [Spark day plan](docs/evaluation/spark-day-plan.md): how the head-to-head run was produced.
+- [Model card](MODEL_CARD.md) and [usage and sharing guide](docs/usage/model-usage-and-sharing-guide.md).
+- [Model Factory architecture](docs/architecture/model-factory-architecture.md): recipe-driven design for training other base models (Llama-3.2, Gemma-2 recipes exist but have not been trained).
+- [Progress log](docs/history/progress-and-milestones.md) and [academic proposal](docs/project/propuesta.md).

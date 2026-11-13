@@ -1,5 +1,7 @@
 # Edge Clean Copilot: Detailed Execution Roadmap (Weeks 4–15)
 
+> **Superseded figures.** This document is kept as written on its date. Some of its claims (frontier comparison, hyperparameters, test counts, completion status) are corrected in [project-analysis.md](../project/project-analysis.md), §5.5.
+
 > **Document Type:** Operational Master Plan & Engineering Specification  
 > **Target Delivery:** Semester Final Evaluation — Applied AI (UCAB)  
 > **Methodology:** "Cold Staging, Hot Burst"  
@@ -95,7 +97,7 @@ Transform the separate LoRA adapter and base model into a single unified 16-bit 
   - [ ] Execute `train_lora.py --merge` to output `./output/merged_model/`.
   - [ ] Validate that merged weights retain identical forward pass output to base+adapter.
 - **Week 9: Automated GGUF Conversion Scripting**
-  - [x] Create [`proyecto/training/convert_to_gguf.sh`](../training/convert_to_gguf.sh) utilizing `llama.cpp/convert_hf_to_gguf.py` and `llama-quantize`.
+  - [x] Create [`proyecto/training/convert_to_gguf.sh`](../../training/convert_to_gguf.sh) utilizing `llama.cpp/convert_hf_to_gguf.py` and `llama-quantize`.
   - [ ] Produce `clean-copilot-1.5b-f16.gguf` upon LoRA merge on DGX Spark.
 - **Week 10: Multi-Quantization Pipeline**
   - [ ] Quantize intermediate F16 GGUF into `q4_k_m`, `q5_k_m`, and `q8_0` binaries using `llama-quantize`.
@@ -112,7 +114,7 @@ Transform the separate LoRA adapter and base model into a single unified 16-bit 
 Deliver a production-ready developer tool adhering strictly to Hexagonal Architecture, equipped with an automated evaluation benchmark that mathematically proves superiority in Clean Architecture compliance over unspecialized models.
 
 ### 4.2 Automated Benchmark Harness Specification
-To prove the core hypothesis of the project, an automated evaluation harness ([`proyecto/evaluation/eval_benchmark.py`](../evaluation/eval_benchmark.py)) evaluates models against unseen legacy/coupled code files and pre-generated completion datasets:
+To prove the core hypothesis of the project, an automated evaluation harness ([`proyecto/evaluation/eval_benchmark.py`](../../evaluation/eval_benchmark.py)) evaluates models against unseen legacy/coupled code files and pre-generated completion datasets:
 
 ```
 Benchmark Metrics (Documented in proyecto/evaluation/README.md):

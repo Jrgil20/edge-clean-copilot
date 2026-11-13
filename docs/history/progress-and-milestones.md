@@ -1,5 +1,7 @@
 # Edge Clean Copilot: Progress & Verified Milestones
 
+> **Superseded figures.** This document is kept as written on its date. Some of its claims (frontier comparison, hyperparameters, test counts, completion status) are corrected in [project-analysis.md](../project/project-analysis.md), §5.5.
+
 > **Project:** Edge Clean Copilot — Specialized Small Language Model (SLM) for Clean Architecture  
 > **Course:** Applied Artificial Intelligence (UCAB)  
 > **Author:** Jesús Rodolfo Gil Farías  
@@ -36,21 +38,21 @@
   - Explicit enforcement of Domain Entities, pure Value Objects, Use Cases with `Result<T, DomainError>`, abstract Ports, and AAA unit tests.
 
 - [x] **Automated Teacher Dataset Generator:**
-  - Implemented [`dataset/generate_with_teacher.py`](../dataset/generate_with_teacher.py) with time-bounding flag (`--max-time-minutes`).
-  - Generated **160 verified ChatML pairs** (~186k tokens) stored in [`dataset/generated_examples.jsonl`](../dataset/generated_examples.jsonl).
+  - Implemented [`dataset/generate_with_teacher.py`](../../dataset/generate_with_teacher.py) with time-bounding flag (`--max-time-minutes`).
+  - Generated **160 verified ChatML pairs** (~186k tokens) stored in [`dataset/generated_examples.jsonl`](../../dataset/generated_examples.jsonl).
 
 - [x] **Stratified Dataset Partitioning (Zero Data Leakage):**
-  - Implemented [`dataset/split_dataset.py`](../dataset/split_dataset.py) with deterministic seed (`seed=42`).
-  - Created [`dataset/train.jsonl`](../dataset/train.jsonl) (**138 samples**, ~156k tokens, 82.1%).
-  - Created [`dataset/eval_holdout.jsonl`](../dataset/eval_holdout.jsonl) (**30 samples**, ~35k tokens, 17.9%) intended for evaluation, but 28/30 of its prompts also appear in `train.jsonl` ([audit](./evaluation-audit-2026-11-05.md)).
-  - Syntax validated via [`dataset/validate_dataset.py`](../dataset/validate_dataset.py).
+  - Implemented [`dataset/split_dataset.py`](../../dataset/split_dataset.py) with deterministic seed (`seed=42`).
+  - Created [`dataset/train.jsonl`](../../dataset/train.jsonl) (**138 samples**, ~156k tokens, 82.1%).
+  - Created [`dataset/eval_holdout.jsonl`](../../dataset/eval_holdout.jsonl) (**30 samples**, ~35k tokens, 17.9%) intended for evaluation, but 28/30 of its prompts also appear in `train.jsonl` ([audit](../evaluation/evaluation-audit-2026-11-05.md)).
+  - Syntax validated via [`dataset/validate_dataset.py`](../../dataset/validate_dataset.py).
 
 ---
 
 ## 3. Phase 2 Milestones (In Progress / 85% Completed)
 
 - [x] **Native PyTorch Fine-Tuning Pipeline:**
-  - Implemented [`training/train_lora.py`](../training/train_lora.py) with AdamW, dynamic batch padding, `--max-time-minutes`, and `--merge`.
+  - Implemented [`training/train_lora.py`](../../training/train_lora.py) with AdamW, dynamic batch padding, `--max-time-minutes`, and `--merge`.
   - LoRA rank $r=16$, $\alpha=32$, targeting all attention and MLP projections.
   - Default dataset pointing to `../dataset/train.jsonl`.
 
@@ -72,7 +74,7 @@
 ## 4. Phase 3 Milestones (Completed & Validated)
 
 - [x] **Automated One-Click GGUF Quantization Script:**
-  - Implemented [`training/convert_to_gguf.sh`](../training/convert_to_gguf.sh) with autodetection of `llama.cpp` and `lora_venv`.
+  - Implemented [`training/convert_to_gguf.sh`](../../training/convert_to_gguf.sh) with autodetection of `llama.cpp` and `lora_venv`.
   - Defensive error handling against missing models or unbuilt binaries.
   - Generates `Q4_K_M` (default) and multi-quantization matrix (`Q4_K_M`, `Q5_K_M`, `Q8_0`) with `--clean-f16`.
 
@@ -88,8 +90,8 @@
 ## 5. Phase 4 Milestones (CLI Client & Benchmark — 70% Completed)
 
 - [x] **Hexagonal Architecture Implementation (Ports & Adapters):**
-  - TypeScript CLI under [`proyecto/cli/`](../cli/) strictly separating Domain, Application, Ports, and Infrastructure.
-  - Defensive URL normalization in [`LlamaServerAdapter.ts`](../cli/src/infrastructure/ai/LlamaServerAdapter.ts) tolerating `/`, `/v1`, and `/v1/chat/completions`.
+  - TypeScript CLI under [`proyecto/cli/`](../../cli/) strictly separating Domain, Application, Ports, and Infrastructure.
+  - Defensive URL normalization in [`LlamaServerAdapter.ts`](../../cli/src/infrastructure/ai/LlamaServerAdapter.ts) tolerating `/`, `/v1`, and `/v1/chat/completions`.
 
 - [x] **Comprehensive Vitest Unit Testing Suite:**
   - **28 tests passing in 278 ms (100% green)** across all 5 test suites:
@@ -100,6 +102,6 @@
     - `FileDiskReader.test.ts` (2 tests)
 
 - [x] **Automated Architectural Benchmark Harness:**
-  - Implemented [`evaluation/eval_benchmark.py`](../evaluation/eval_benchmark.py) in pure Python 3 (zero dependencies).
+  - Implemented [`evaluation/eval_benchmark.py`](../../evaluation/eval_benchmark.py) in pure Python 3 (zero dependencies).
   - Clean Architecture Score (CAS, 0–100 pts) evaluating Domain Boundary (30%), Invariants (25%), Ports (25%), and Type Safety (20%).
-  - Calibrated against 10 control test cases in [`evaluation/test_benchmark_cases.jsonl`](../evaluation/test_benchmark_cases.jsonl) (canonical 100/100, coupled $\le 50/100$).
+  - Calibrated against 10 control test cases in [`evaluation/test_benchmark_cases.jsonl`](../../evaluation/test_benchmark_cases.jsonl) (canonical 100/100, coupled $\le 50/100$).

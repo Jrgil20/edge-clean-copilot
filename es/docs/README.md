@@ -1,33 +1,60 @@
-# Base de Conocimiento Técnico — Edge Clean Copilot
+# Edge Clean Copilot: Documentación
 
-> **Audiencia Principal:** Agentes de Inteligencia Artificial (Asistentes de código, pipelines RAG, planificadores autónomos)  
-> **Audiencia Secundaria:** Desarrolladores y evaluadores académicos  
+🌐 **[English version →](../../docs/README.md)**
 
-Este directorio contiene la documentación técnica oficial, registros de telemetría de sesiones, bitácoras de hitos y el roadmap de ingeniería para el proyecto de semestre **Edge Clean Copilot**.
+La documentación está agrupada por propósito. Si vas a citar este proyecto como antecedente (trabajo previo), empieza por el análisis.
 
----
+## Orden de lectura para citar el proyecto como antecedente
 
-## 1. Índice de Documentación
-
-| Documento | Propósito | Contenido Clave |
-| :--- | :--- | :--- |
-| **[Portal Web Interactivo (docs/index.html)](./index.html)** | Presentación Visual y Showcase Interactivo | Portal responsivo de un solo archivo con comparador de código Before/After y métricas CAS. |
-| **[Guía de Uso y Compartición](./model-usage-and-sharing-guide.md)** | Guía Operativa y Distribución | Cómo prender/apagar, usar el CLI, conectar en VS Code y compartir vía Ollama/LM Studio/Hugging Face. |
-| **[Arquitectura de Factoría de Modelos](./model-factory-architecture.md)** | Arquitectura de Especialización Escalable de SLMs | Especificación para incorporar nuevos SLMs base, etapas desacopladas y reproducibilidad técnica. |
-| **[Memoria Técnica Final y Guion de Defensa](./final-report-and-presentation.md)** | Paper Académico y Guion de Exposición | Informe exhaustivo de ingeniería, hallazgos formales de CAS y guion de 12 diapositivas. |
-| **[Roadmap Detallado de Ejecución](./detailed-roadmap.md)** | Plan Maestro Operativo (Semanas 4–15) | Hiperparámetros, metas de cuantización, métricas de evaluación automatizadas y tareas semanales. |
-| **[Progreso e Hitos Verificados](./progress-and-milestones.md)** | Tablero de Estado en Vivo | Desglose empírico de avances en las Fases 1, 2, 3 y 4. |
-| **[Reporte de Sesión: 2026-10-22](./session-2026-10-22-burst-and-lessons.md)** | Informe Técnico y Análisis de Causa Raíz | Aislamiento multi-instancia en puertos (8085 vs 8080), burst de dataset a 160 muestras, setup del runtime en GB10. |
-| **[Auditoría de Evaluación: 2026-11-05](./evaluation-audit-2026-11-05.md)** | Auditoría de solo lectura de tests, benchmark y dataset | Afirmaciones verificadas, hallazgos F1–F8 (fuga en holdout, puntajes sin atribución), higiene de afirmaciones. |
-| **[Próximos Pasos](./next-steps.md)** | Problemas conocidos y trabajo planeado | Diversidad y verificación del dataset (prioridad), carencias de evaluación, condiciones para reentrenar, coherencia de la documentación. |
-| **[Plan del Día de la Spark](./spark-day-plan.md)** | Plan de un comando para la sesión en la Spark | Conectar, sincronizar, preflight, correr `spark_day.sh`, copiar resultados, tabla de fallos. |
-| **[Runbook de Evaluación en Spark](./spark-eval-runbook.md)** | Plan paso a paso para la próxima sesión en la Spark | Servir base y fine-tune, ejecutar `run_comparison.sh`, chequeos de aceptación, actualización de afirmaciones. |
+1. [project/project-analysis.md](./project/project-analysis.md): objetivos frente a resultados, ideas, qué está bien y qué está mal, afirmaciones que se pueden citar con seguridad.
+2. [project/propuesta.md](./project/propuesta.md): la propuesta original y su hipótesis.
+3. [usage/use-cases.md](./usage/use-cases.md): dónde es válido usar el modelo y dónde no.
+4. [next-steps.md](./next-steps.md): problemas conocidos y trabajo planeado (primero el dataset).
 
 ---
 
-## 2. Recursos Relacionados del Proyecto
+## `project/`: propuesta, ideas y evaluación
 
-- **[Propuesta y Visión Técnica](./propuesta.md):** Articulación académica, hipótesis central y marco teórico.
-- **[Directorio del Dataset](../../dataset/README.md):** Generadores sintéticos, ejemplos semilla canónicos y suites de validación.
-- **[Pipeline de Entrenamiento LoRA](../../training/README.md):** Bucle de entrenamiento en PyTorch, collator dinámico y utilidades de merge.
-- **[CLI Hexagonal](../../cli/README.md):** Implementación en TypeScript con Ports & Adapters y adaptadores mock offline.
+| Documento | Contenido |
+| :-- | :-- |
+| [project-analysis.md](./project/project-analysis.md) | Análisis completo (2026-11-13): objetivos planificados frente a logrados, el proceso etapa por etapa, fortalezas, hallazgos, fe de erratas, afirmaciones seguras. **Referencia vigente.** |
+| [propuesta.md](./project/propuesta.md) | Propuesta original: visión, hipótesis, fases, replicabilidad. |
+| [ideas.md](./project/ideas.md) | Banco de ideas: idea elegida y alternativas consideradas (RAG, linters). |
+| [final-report-and-presentation.md](./project/final-report-and-presentation.md) | Informe final del curso y guion de defensa de 12 diapositivas (2026-10-23). Algunas afirmaciones quedaron superadas; ver la fe de erratas del análisis (§5.5). |
+
+## `usage/`: uso del modelo
+
+| Documento | Contenido |
+| :-- | :-- |
+| [use-cases.md](./usage/use-cases.md) | Casos de uso válidos, entornos ideales, para qué no usarlo, consejos prácticos. |
+| [model-usage-and-sharing-guide.md](./usage/model-usage-and-sharing-guide.md) | Encender y apagar el servidor, CLI, enrutamiento en VS Code, compartir vía Ollama, LM Studio y Hugging Face. |
+
+## `evaluation/`: benchmark, auditoría y ejecuciones en el Spark
+
+| Documento | Contenido |
+| :-- | :-- |
+| [evaluation-audit-2026-11-05.md](./evaluation/evaluation-audit-2026-11-05.md) | Auditoría de tests, benchmark y dataset; hallazgos F1–F10; resultado de la comparación directa. |
+| [spark-day-plan.md](./evaluation/spark-day-plan.md) | Plan de un comando para una sesión en el Spark. |
+| [spark-eval-runbook.md](./evaluation/spark-eval-runbook.md) | Runbook manual paso a paso para la comparación base frente a fine-tune. |
+
+## `architecture/`: diseño
+
+| Documento | Contenido |
+| :-- | :-- |
+| [model-factory-architecture.md](./architecture/model-factory-architecture.md) | Diseño basado en recetas para especializar otros modelos base. Solo se ha entrenado la receta de Qwen 1.5B. |
+
+## `history/`: bitácoras y planes tal como se escribieron
+
+Estos documentos registran lo que se planeaba o se creía en su fecha. Sus cifras pueden estar superadas; la referencia vigente es el análisis.
+
+| Documento | Contenido |
+| :-- | :-- |
+| [progress-and-milestones.md](./history/progress-and-milestones.md) | Bitácora de progreso por fases. |
+| [detailed-roadmap.md](./history/detailed-roadmap.md) | Plan de ejecución de las semanas 4–15. |
+| [session-2026-10-22-burst-and-lessons.md](./history/session-2026-10-22-burst-and-lessons.md) | Bitácora de sesión en el Spark: aislamiento de puertos, ráfaga de datos con el maestro, lecciones aprendidas. |
+
+## Otros
+
+- [next-steps.md](./next-steps.md): problemas conocidos y trabajo planeado.
+- [index.html](./index.html): portal web interactivo (escrito antes de la auditoría; sus cifras no son la referencia).
+- READMEs de los subsistemas: [dataset](../dataset/README.md), [entrenamiento](../training/README.md), [evaluación](../evaluation/README.md), [CLI](../../cli/README.md).
