@@ -82,7 +82,7 @@ class QualityGateTest(unittest.TestCase):
         out_t, out_e = tmp / "t.jsonl", tmp / "e.jsonl"
         subprocess.run(
             [sys.executable, "-I", str(SCRIPT), "--seed-file", str(seed), "--generated-file", str(gen),
-             "--authored-file", str(tmp / "none.jsonl"), "--train-output", str(out_t), "--eval-output", str(out_e),
+             "--authored-file", str(tmp / "none.jsonl"), "--claude-file", str(tmp / "none.jsonl"), "--train-output", str(out_t), "--eval-output", str(out_e),
              "--eval-target-count", "0", *extra],
             check=True, capture_output=True,
         )
@@ -105,6 +105,14 @@ class ClassifierTest(unittest.TestCase):
 
     def test_substrings_do_not_trigger_port_adapter(self):
         self.assertEqual(self.classify("Refactor this code that does an import and builds a report"), "ARCH_REFACTOR")
+
+    def test_cli_refactor_prompt_is_arch_refactor(self):
+        prompt = ("Refactor the following typescript code to adhere strictly to Clean Architecture "
+                  "and Ports & Adapters:\n\n```typescript\nconst port = process.env.PORT;\n```")
+        self.assertEqual(self.classify(prompt), "ARCH_REFACTOR")
+
+    def test_words_inside_code_blocks_are_ignored(self):
+        self.assertEqual(self.classify("Refactor this route:\n```ts\nsendEmail(user.email);\n```"), "ARCH_REFACTOR")
 
     def test_whole_words_still_match(self):
         self.assertEqual(self.classify("Create a port and an adapter for storage"), "PORT_ADAPTER")
