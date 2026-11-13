@@ -167,7 +167,7 @@ print(response["choices"][0]["message"]["content"])
   - Learning Rate: 2e-4
   - Optimizer: AdamW (`bfloat16`)
   - Epochs: 3 (Batch Size 2, Gradient Accumulation 4)
-- **Dataset:** 138 curated ChatML instruction pairs enforcing strict Domain Boundaries, Value Objects with invariant validation, Port & Adapter contracts, and functional `Result<T, E>` error handling.
+- **Dataset:** 138 curated ChatML instruction pairs enforcing strict Domain Boundaries, Value Objects with invariant validation, Port & Adapter contracts, and functional `Result<T, E>` error handling. The exact training and holdout files are `dataset/published_model_train.jsonl` and `dataset/published_model_holdout.jsonl` (from commit `64f3c6c`; 18 distinct training prompts, and 28 of the 30 holdout prompts also appear in training, see `docs/next-steps.md` 1.1 and 1.5).
 - **Quantization:** Consolidated 16-bit weights exported to GGUF using `llama.cpp` quantizer (`Q4_K_M` medium-precision 4-bit).
 
 ---

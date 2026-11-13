@@ -211,8 +211,8 @@ python3 -m unittest discover -s evaluation/tests -v
 python3 -m unittest dataset/test_split_dataset.py -v
 
 # Partición publicada frente a la actual
-git show 64f3c6c:dataset/train.jsonl > /tmp/train_published.jsonl
-python3 dataset/audit_dataset.py                       # partición actual: 0/15 de solapamiento, todas pasan --typecheck
+python3 dataset/audit_dataset.py --train dataset/published_model_train.jsonl --eval dataset/published_model_holdout.jsonl
+python3 dataset/audit_dataset.py                       # partición actual: 0/30 de solapamiento, todas pasan --typecheck
 
 # Código de entrenamiento que produjo el modelo publicado
 git show fb3e812:training/train_lora.py | grep -n "batch_size=2 if dry_run"

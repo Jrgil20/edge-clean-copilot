@@ -15,14 +15,14 @@ Figures were measured on 2026-11-13 unless noted. Related audit: [docs/evaluatio
 | Split | Rows | Distinct prompts |
 | :--- | ---: | ---: |
 | Used to train the published model (commit `64f3c6c`) | 138 train / 30 holdout | **18** in train |
-| Current split (`split_dataset.py`, not yet trained on) | 168 train / 15 holdout | 133 in total, 118 in train |
+| Current split (`split_dataset.py`, not yet trained on) | 153 train / 30 holdout | 133 in total, 108 in train |
 
 The 160 teacher-generated rows come from a small set of prompt templates sampled several times. The most repeated training prompts appear 13–14 times each (`python3 dataset/audit_dataset.py`). With a final training loss of 0.031, the model most likely learned these templates rather than a general refactoring skill.
 
 **Next:**
 - Raise the number of *distinct* tasks, not rows. Target at least 150–200 distinct prompts before any retraining. One answer per prompt is better than many sampled answers to the same prompt.
 - Vary the input code: different domains (billing, inventory, auth, scheduling), sizes, coding styles, and plain JavaScript as well as TypeScript.
-- Add a duplicate/near-duplicate check to `audit_dataset.py` that compares the code inside prompts, not only the prompt text.
+- ~~Add a duplicate/near-duplicate check to `audit_dataset.py` that compares the code inside prompts.~~ **Done:** the audit compares the code blocks of prompts (Jaccard similarity of 5-token shingles, `--near-dup-threshold`, default 0.8), reports eval rows whose code is near a train row and near-duplicate pairs inside train, and `--strict` fails on eval near-duplicates. The published split has 9/30 such holdout rows; the current split has none (no pair reaches 0.3).
 - Make `audit_dataset.py --strict` a required check before any training run.
 
 ### 1.2 Category imbalance
@@ -38,7 +38,7 @@ Current distribution across train + holdout (`classify_sample` in `split_dataset
 | `ARCH_REFACTOR` | 49 | **40%** |
 | `SOLID_CRITIQUE` | 20 | 10% |
 
-`ARCH_REFACTOR` (messy code → layered code) is the task the CLI actually performs, and it was the thinnest category. All 49 examples were added after the model was trained: 9 hand-written and 40 written by Claude (`claude_authored_examples.jsonl`, pending manual review). A third batch added Claude-written use cases, AAA tests, SOLID critiques and port designs (100 Claude rows in total). With 183 rows, `ARCH_REFACTOR` is 27%, below its 40% target again, and distinct prompts (133) are close to the 150–200 goal. The 15-row holdout cap is now small for 133 prompts.
+`ARCH_REFACTOR` (messy code → layered code) is the task the CLI actually performs, and it was the thinnest category. All 49 examples were added after the model was trained: 9 hand-written and 40 written by Claude (`claude_authored_examples.jsonl`, pending manual review). A third batch added Claude-written use cases, AAA tests, SOLID critiques and port designs (100 Claude rows in total). With 183 rows, `ARCH_REFACTOR` is 27%, below its 40% target again, and distinct prompts (133) are close to the 150–200 goal. The holdout cap was raised from 15 to 30 rows (25 distinct prompts, at least 4 rows per category); one 6-row teacher group (`Email` value object) landed in it.
 
 **Next:** write or generate more `ARCH_REFACTOR` pairs first, starting from realistic coupled code (Express handlers with SQL, React components calling APIs, services importing ORMs).
 
@@ -51,15 +51,13 @@ Teacher answers are only checked for ChatML structure and balanced code fences. 
 - For `ARCH_REFACTOR`, keep a small runnable test with the original code and check that the refactored version passes it.
 - Score each training answer with CAS and drop low scorers, so the model is not trained on examples the benchmark would penalize.
 
-### 1.4 The published training data is not in the working tree
+### 1.4 The published training data ~~is not in the working tree~~
 
-The committed `train.jsonl` / `eval_holdout.jsonl` are the new split. The data the published model was trained on only exists in git history (`git show 64f3c6c:dataset/train.jsonl`).
-
-**Next:** store it as `dataset/published_model_train.jsonl` (or record the commit in `MODEL_CARD.md`) so the model's training data stays easy to find.
+**Done:** the split the published model was trained on is stored as `dataset/published_model_train.jsonl` (138 rows) and `dataset/published_model_holdout.jsonl` (30 rows), copied verbatim from commit `64f3c6c`, and `MODEL_CARD.md` points to them. The committed `train.jsonl` / `eval_holdout.jsonl` are the new split.
 
 ### 1.5 The holdout set was contaminated
 
-The holdout used with the published model shared 28 of 30 prompts with training. It cannot be used as evidence about that model. The current split fixes this (0/15 overlap), but it has not been used yet.
+The holdout used with the published model shared 28 of 30 prompts with training. It cannot be used as evidence about that model. The current split fixes this (0/30 overlap, exact or near-duplicate), but it has not been used yet.
 
 ---
 

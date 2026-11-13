@@ -109,9 +109,9 @@ ChatML JSONL (`system` / `user` / `assistant`).
 | `authored_examples.jsonl` | 19 | Hand-written `ARCH_REFACTOR` and `SOLID_CRITIQUE` examples, added after training. |
 | `claude_authored_examples.jsonl` | 100 | Written by Claude (Opus 5.5) in Claude Code sessions, one per distinct task, added after training: 40 `ARCH_REFACTOR` (10 with the CLI's exact refactor prompt), 20 use cases, 20 AAA tests, 10 SOLID critiques, 10 port/adapter designs. Checked by an automated reviewer, pending manual review. |
 
-**The published model was trained on an earlier split** (commit `64f3c6c`): 138 training rows built from only **18 distinct prompts**, with a holdout that shared 28 of its 30 prompts with training. That split is no longer in the working tree.
+**The published model was trained on an earlier split** (commit `64f3c6c`): 138 training rows built from only **18 distinct prompts**, with a holdout that shared 28 of its 30 prompts with training. That split is kept as `dataset/published_model_train.jsonl` / `published_model_holdout.jsonl` (copied from `64f3c6c`).
 
-The current `split_dataset.py` splits by normalized prompt and drops answers that are truncated, contain explicit `any` or fail an isolated `tsc` type-check. Rerunning it gives 168 training / 15 holdout rows from 133 distinct prompts, with no prompt overlap (`python3 dataset/audit_dataset.py`). **This split has not been used for training.**
+The current `split_dataset.py` splits by normalized prompt and drops answers that are truncated, contain explicit `any` or fail an isolated `tsc` type-check. Rerunning it gives 153 training / 30 holdout rows from 133 distinct prompts, with no prompt overlap (`python3 dataset/audit_dataset.py`). **This split has not been used for training.**
 
 The evaluation suite (`evaluation/legacy_benchmark_suite.jsonl`, 30 cases) shares no prompts or code with the training data.
 

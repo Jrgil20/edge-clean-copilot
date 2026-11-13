@@ -15,14 +15,14 @@ Cifras medidas el 2026-11-13 salvo que se indique otra cosa. Auditoría relacion
 | Partición | Filas | Prompts distintos |
 | :--- | ---: | ---: |
 | Usada para entrenar el modelo publicado (commit `64f3c6c`) | 138 train / 30 holdout | **18** en train |
-| Partición actual (`split_dataset.py`, aún sin entrenar) | 168 train / 15 holdout | 133 en total, 118 en train |
+| Partición actual (`split_dataset.py`, aún sin entrenar) | 153 train / 30 holdout | 133 en total, 108 en train |
 
 Las 160 filas generadas por el maestro salen de un conjunto pequeño de plantillas de prompt muestreadas varias veces. Los prompts más repetidos de entrenamiento aparecen 13–14 veces cada uno (`python3 dataset/audit_dataset.py`). Con un loss final de entrenamiento de 0.031, lo más probable es que el modelo haya aprendido esas plantillas y no una habilidad general de refactorización.
 
 **Siguiente:**
 - Aumentar el número de tareas *distintas*, no de filas. Objetivo: al menos 150–200 prompts distintos antes de cualquier reentrenamiento. Una respuesta por prompt es mejor que muchas respuestas muestreadas al mismo prompt.
 - Variar el código de entrada: distintos dominios (facturación, inventario, autenticación, agenda), tamaños, estilos de código, y JavaScript además de TypeScript.
-- Añadir a `audit_dataset.py` una detección de duplicados y casi-duplicados que compare el código dentro de los prompts, no solo el texto del prompt.
+- ~~Añadir a `audit_dataset.py` una detección de duplicados y casi-duplicados que compare el código dentro de los prompts.~~ **Hecho:** la auditoría compara los bloques de código de los prompts (similitud de Jaccard sobre shingles de 5 tokens, `--near-dup-threshold`, 0.8 por defecto), informa de las filas del holdout cuyo código se parece a una de train y de los pares casi duplicados dentro de train, y `--strict` falla si hay casi-duplicados en el holdout. La partición publicada tiene 9/30 filas así en el holdout; la actual, ninguna (ningún par llega a 0.3).
 - Hacer de `audit_dataset.py --strict` una comprobación obligatoria antes de cualquier entrenamiento.
 
 ### 1.2 Desbalance de categorías
@@ -38,7 +38,7 @@ Distribución actual en train + holdout (`classify_sample` en `split_dataset.py`
 | `ARCH_REFACTOR` | 49 | **40%** |
 | `SOLID_CRITIQUE` | 20 | 10% |
 
-`ARCH_REFACTOR` (código desordenado → código por capas) es la tarea que realmente hace el CLI, y era la categoría más escasa. Sus 49 ejemplos se añadieron después de entrenar el modelo: 9 escritos a mano y 40 escritos por Claude (`claude_authored_examples.jsonl`, pendiente de revisión manual). Un tercer lote añadió casos de uso, tests AAA, críticas SOLID y diseños de puertos escritos por Claude (100 filas de Claude en total). Con 183 filas, `ARCH_REFACTOR` queda en un 27%, de nuevo por debajo de su objetivo del 40%, y los prompts distintos (133) están cerca del objetivo de 150–200. El tope de 15 filas del holdout ya es pequeño para 133 prompts.
+`ARCH_REFACTOR` (código desordenado → código por capas) es la tarea que realmente hace el CLI, y era la categoría más escasa. Sus 49 ejemplos se añadieron después de entrenar el modelo: 9 escritos a mano y 40 escritos por Claude (`claude_authored_examples.jsonl`, pendiente de revisión manual). Un tercer lote añadió casos de uso, tests AAA, críticas SOLID y diseños de puertos escritos por Claude (100 filas de Claude en total). Con 183 filas, `ARCH_REFACTOR` queda en un 27%, de nuevo por debajo de su objetivo del 40%, y los prompts distintos (133) están cerca del objetivo de 150–200. El tope del holdout subió de 15 a 30 filas (25 prompts distintos, al menos 4 filas por categoría); entró en él un grupo de 6 filas del maestro (value object `Email`).
 
 **Siguiente:** escribir o generar más pares `ARCH_REFACTOR` primero, partiendo de código acoplado realista (handlers de Express con SQL, componentes React que llaman APIs, servicios que importan ORMs).
 
@@ -51,15 +51,13 @@ Las respuestas del maestro solo se comprueban por estructura ChatML y por bloque
 - Para `ARCH_REFACTOR`, guardar un test ejecutable pequeño con el código original y comprobar que la versión refactorizada lo pasa.
 - Puntuar cada respuesta de entrenamiento con CAS y descartar las de puntuación baja, para no entrenar el modelo con ejemplos que el propio benchmark penalizaría.
 
-### 1.4 Los datos de entrenamiento publicados no están en el árbol de trabajo
+### 1.4 Los datos de entrenamiento publicados ~~no están en el árbol de trabajo~~
 
-Los `train.jsonl` / `eval_holdout.jsonl` del repo son la partición nueva. Los datos con los que se entrenó el modelo publicado solo existen en el historial de git (`git show 64f3c6c:dataset/train.jsonl`).
-
-**Siguiente:** guardarlos como `dataset/published_model_train.jsonl` (o registrar el commit en `MODEL_CARD.md`) para que los datos de entrenamiento del modelo sean fáciles de encontrar.
+**Hecho:** la partición con la que se entrenó el modelo publicado se guarda como `dataset/published_model_train.jsonl` (138 filas) y `dataset/published_model_holdout.jsonl` (30 filas), copiadas tal cual del commit `64f3c6c`, y `MODEL_CARD.md` apunta a ellas. Los `train.jsonl` / `eval_holdout.jsonl` del repo son la partición nueva.
 
 ### 1.5 El holdout estaba contaminado
 
-El holdout usado con el modelo publicado compartía 28 de 30 prompts con el entrenamiento. No sirve como evidencia sobre ese modelo. La partición actual lo corrige (0/15 de solapamiento), pero todavía no se ha usado.
+El holdout usado con el modelo publicado compartía 28 de 30 prompts con el entrenamiento. No sirve como evidencia sobre ese modelo. La partición actual lo corrige (0/30 de solapamiento, exacto o casi duplicado), pero todavía no se ha usado.
 
 ---
 

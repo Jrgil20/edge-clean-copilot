@@ -209,8 +209,8 @@ python3 -m unittest discover -s evaluation/tests -v
 python3 -m unittest dataset/test_split_dataset.py -v
 
 # Published training split vs current split
-git show 64f3c6c:dataset/train.jsonl > /tmp/train_published.jsonl
-python3 dataset/audit_dataset.py                       # current split: 0/15 overlap, all answers pass --typecheck
+python3 dataset/audit_dataset.py --train dataset/published_model_train.jsonl --eval dataset/published_model_holdout.jsonl
+python3 dataset/audit_dataset.py                       # current split: 0/30 overlap, all answers pass --typecheck
 
 # Training code that produced the published model
 git show fb3e812:training/train_lora.py | grep -n "batch_size=2 if dry_run"
