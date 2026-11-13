@@ -15,7 +15,7 @@ Cifras medidas el 2026-11-13 salvo que se indique otra cosa. Auditoría relacion
 | Partición | Filas | Prompts distintos |
 | :--- | ---: | ---: |
 | Usada para entrenar el modelo publicado (commit `64f3c6c`) | 138 train / 30 holdout | **18** en train |
-| Partición actual (`split_dataset.py`, aún sin entrenar) | 108 train / 15 holdout | 73 en total, 59 en train |
+| Partición actual (`split_dataset.py`, aún sin entrenar) | 168 train / 15 holdout | 133 en total, 118 en train |
 
 Las 160 filas generadas por el maestro salen de un conjunto pequeño de plantillas de prompt muestreadas varias veces. Los prompts más repetidos de entrenamiento aparecen 13–14 veces cada uno (`python3 dataset/audit_dataset.py`). Con un loss final de entrenamiento de 0.031, lo más probable es que el modelo haya aprendido esas plantillas y no una habilidad general de refactorización.
 
@@ -31,13 +31,14 @@ Distribución actual en train + holdout (`classify_sample` en `split_dataset.py`
 
 | Categoría | Filas | Objetivo en `dataset/README.md` |
 | :--- | ---: | ---: |
-| Entidad / value object | 31 | — |
-| Puerto / adaptador | 21 | — |
-| Test AAA | 12 | 20% |
+| Entidad / value object | 31 | 30% (con casos de uso) |
+| `USE_CASE` | 20 | |
+| Puerto / adaptador | 31 | — |
+| Test AAA | 32 | 20% |
 | `ARCH_REFACTOR` | 49 | **40%** |
-| `SOLID_CRITIQUE` | 10 | 10% |
+| `SOLID_CRITIQUE` | 20 | 10% |
 
-`ARCH_REFACTOR` (código desordenado → código por capas) es la tarea que realmente hace el CLI, y era la categoría más escasa. Sus 49 ejemplos se añadieron después de entrenar el modelo: 9 escritos a mano y 40 escritos por Claude (`claude_authored_examples.jsonl`, pendiente de revisión manual). Ya alcanza su objetivo del 40% (49 de 123 filas); ahora las categorías escasas son las demás, y el total de prompts distintos (73) sigue por debajo del objetivo de 150–200.
+`ARCH_REFACTOR` (código desordenado → código por capas) es la tarea que realmente hace el CLI, y era la categoría más escasa. Sus 49 ejemplos se añadieron después de entrenar el modelo: 9 escritos a mano y 40 escritos por Claude (`claude_authored_examples.jsonl`, pendiente de revisión manual). Un tercer lote añadió casos de uso, tests AAA, críticas SOLID y diseños de puertos escritos por Claude (100 filas de Claude en total). Con 183 filas, `ARCH_REFACTOR` queda en un 27%, de nuevo por debajo de su objetivo del 40%, y los prompts distintos (133) están cerca del objetivo de 150–200. El tope de 15 filas del holdout ya es pequeño para 133 prompts.
 
 **Siguiente:** escribir o generar más pares `ARCH_REFACTOR` primero, partiendo de código acoplado realista (handlers de Express con SQL, componentes React que llaman APIs, servicios que importan ORMs).
 
