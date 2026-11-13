@@ -80,7 +80,7 @@ def main():
                         help="Examples written by Claude (Opus 5.5) in a Claude Code session, kept apart for provenance.")
     parser.add_argument("--train-output", type=str, default=str(Path(__file__).parent / "train.jsonl"))
     parser.add_argument("--eval-output", type=str, default=str(Path(__file__).parent / "eval_holdout.jsonl"))
-    parser.add_argument("--eval-target-count", type=int, default=15,
+    parser.add_argument("--eval-target-count", type=int, default=30,
                         help="Maximum row count for the holdout set (whole prompt groups are never split).")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for deterministic reproducibility.")
     parser.add_argument("--no-verify", action="store_true",
