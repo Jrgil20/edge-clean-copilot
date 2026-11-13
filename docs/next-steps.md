@@ -15,7 +15,7 @@ Figures were measured on 2026-11-13 unless noted. Related audit: [docs/evaluatio
 | Split | Rows | Distinct prompts |
 | :--- | ---: | ---: |
 | Used to train the published model (commit `64f3c6c`) | 138 train / 30 holdout | **18** in train |
-| Current split (`split_dataset.py`, not yet trained on) | 88 train / 15 holdout | 53 in total, 39 in train |
+| Current split (`split_dataset.py`, not yet trained on) | 108 train / 15 holdout | 73 in total, 59 in train |
 
 The 160 teacher-generated rows come from a small set of prompt templates sampled several times. The most repeated training prompts appear 13–14 times each (`python3 dataset/audit_dataset.py`). With a final training loss of 0.031, the model most likely learned these templates rather than a general refactoring skill.
 
@@ -34,10 +34,10 @@ Current distribution across train + holdout (`classify_sample` in `split_dataset
 | Entity / value object | 31 | — |
 | Port / adapter | 21 | — |
 | AAA test | 12 | 20% |
-| `ARCH_REFACTOR` | 29 | **40%** |
+| `ARCH_REFACTOR` | 49 | **40%** |
 | `SOLID_CRITIQUE` | 10 | 10% |
 
-`ARCH_REFACTOR` (messy code → layered code) is the task the CLI actually performs, and it was the thinnest category. All 29 examples were added after the model was trained: 9 hand-written and 20 written by Claude in a pilot (`claude_authored_examples.jsonl`, pending manual review). It is still below its 40% target (29 of 103 rows).
+`ARCH_REFACTOR` (messy code → layered code) is the task the CLI actually performs, and it was the thinnest category. All 49 examples were added after the model was trained: 9 hand-written and 40 written by Claude (`claude_authored_examples.jsonl`, pending manual review). It now meets its 40% target (49 of 123 rows); the other categories are the thin ones now, and the total number of distinct prompts (73) is still below the 150–200 goal.
 
 **Next:** write or generate more `ARCH_REFACTOR` pairs first, starting from realistic coupled code (Express handlers with SQL, React components calling APIs, services importing ORMs).
 
