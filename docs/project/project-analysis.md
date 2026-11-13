@@ -114,14 +114,16 @@ The proposal is mostly about a **process**: how to specialise, package and evalu
 
 ### 4.1 Verified laptop CPU execution
 
-The fine-tuned model (`clean-copilot-1.5b-q4_k_m.gguf`, 941 MB) was verified and evaluated locally on this commodity laptop environment:
+The fine-tuned model (`clean-copilot-1.5b-q4_k_m.gguf`, 941 MB, SHA-256 `d2deae6542d1…`) was evaluated and verified locally on this commodity laptop environment:
+- **Benchmark Execution Date:** 2026-11-05 05:36:16 UTC (`report_ecc-ft-laptop-cpu.json`).
+- **Environment Verification Date:** 2026-11-13 (local paths, runtime binaries, and CLI confirmed).
 - **Processor:** Intel(R) Core(TM) i5-10310U CPU @ 1.70GHz (4 cores, 8 threads).
 - **RAM:** 16 GB (15 GiB total, ~1.5 GB allocated during inference).
-- **OS:** Linux (Pop!_OS 24.04 LTS, x86_64).
-- **Inference Runtime:** `llama-server` (CPU only) on port 8095.
+- **OS:** Linux (Pop!_OS 24.04 LTS, kernel 6.18.7 x86_64).
+- **Inference Runtime & Settings:** `llama-server` (CPU only) on port 8095, `temperature=0.1`, `max_tokens=1024`.
 - **Evidence:** `evaluation/reports/laptop-ft-20261105T051232Z/`.
 
-On this machine, the model completed all 30 benchmark cases in 1,419.10 s (~47.3 s per sample, ~12 tok/s) with **0 failed prompts**, scoring **72.5 / 100.0 CAS** (30.0/30.0 Domain Boundary Isolation, 23.2/25.0 Port Decoupling, 17.7/20.0 Type Rigor). This empirically validates the cold-staging offline capability: the tool works without an internet connection or external GPU access.
+On this machine, the model completed all 30 benchmark cases in 1,419.10 s (23m 39s, ~47.3 s per sample, ~12 tok/s) with **0 failed prompts**, scoring **72.5 / 100.0 CAS** (30.0/30.0 Domain Boundary Isolation, 23.2/25.0 Port Decoupling, 17.7/20.0 Type Rigor). This empirically validates the cold-staging offline capability: the tool works without an internet connection or external GPU access.
 
 ### 4.2 Concrete architectural transformation: Fine-Tune vs. Base Model
 

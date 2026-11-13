@@ -116,14 +116,16 @@ La propuesta habla sobre todo de un **proceso**: cómo especializar, empaquetar 
 
 ### 4.1 Ejecución verificada en CPU de laptop
 
-El modelo ajustado (`clean-copilot-1.5b-q4_k_m.gguf`, 941 MB) fue verificado y evaluado localmente en este entorno de laptop estándar:
+El modelo ajustado (`clean-copilot-1.5b-q4_k_m.gguf`, 941 MB, SHA-256 `d2deae6542d1…`) fue evaluado y verificado localmente en este entorno de laptop estándar:
+- **Fecha de ejecución del benchmark:** 2026-11-05 05:36:16 UTC (`report_ecc-ft-laptop-cpu.json`).
+- **Fecha de verificación del entorno:** 2026-11-13 (rutas locales, binarios de runtime y CLI confirmados).
 - **Procesador:** Intel(R) Core(TM) i5-10310U CPU @ 1.70GHz (4 núcleos, 8 hilos).
 - **RAM:** 16 GB (15 GiB totales, ~1.5 GB asignados durante inferencia).
-- **SO:** Linux (Pop!_OS 24.04 LTS, x86_64).
-- **Runtime de inferencia:** `llama-server` (solo CPU) en puerto 8095.
+- **SO:** Linux (Pop!_OS 24.04 LTS, kernel 6.18.7 x86_64).
+- **Runtime y configuración de inferencia:** `llama-server` (solo CPU) en puerto 8095, `temperature=0.1`, `max_tokens=1024`.
 - **Evidencia:** `evaluation/reports/laptop-ft-20261105T051232Z/`.
 
-En esta máquina, el modelo completó los 30 casos del benchmark en 1,419.10 s (~47.3 s por muestra, ~12 tok/s) con **0 prompts fallidos**, alcanzando un puntaje de **72.5 / 100.0 CAS** (30.0/30.0 en aislamiento de límites de dominio, 23.2/25.0 en desacoplamiento de puertos y 17.7/20.0 en rigor de tipos). Esto valida empíricamente la capacidad offline de "cold staging": la herramienta funciona íntegramente sin conexión a internet ni GPUs externas.
+En esta máquina, el modelo completó los 30 casos del benchmark en 1,419.10 s (23m 39s, ~47.3 s por muestra, ~12 tok/s) con **0 prompts fallidos**, alcanzando un puntaje de **72.5 / 100.0 CAS** (30.0/30.0 en aislamiento de límites de dominio, 23.2/25.0 en desacoplamiento de puertos y 17.7/20.0 en rigor de tipos). Esto valida empíricamente la capacidad offline de "cold staging": la herramienta funciona íntegramente sin conexión a internet ni GPUs externas.
 
 ### 4.2 Transformación arquitectónica concreta: Fine-Tune vs. Modelo Base
 
