@@ -59,6 +59,16 @@ class TypecheckTest(unittest.TestCase):
         )
         self.assertEqual(audit.typecheck({"multi": code})["multi"]["typeErrors"], 0)
 
+    def test_callback_parameters_are_not_flagged_but_declared_ones_are(self):
+        results = audit.typecheck({
+            "callback": "app.put('/x', async (req, res) => { res.json(req.body); });",
+            "function": "export function f(x) { return x; }",
+            "method": "export class A { m(y) { return y; } }",
+        })
+        self.assertEqual(results["callback"]["typeErrors"], 0)
+        self.assertGreater(results["function"]["typeErrors"], 0)
+        self.assertGreater(results["method"]["typeErrors"], 0)
+
     def test_cli_reports_typecheck_counts(self):
         tmp = Path(tempfile.mkdtemp())
         train, held = tmp / "t.jsonl", tmp / "e.jsonl"

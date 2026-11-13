@@ -15,7 +15,7 @@ Figures were measured on 2026-11-13 unless noted. Related audit: [docs/evaluatio
 | Split | Rows | Distinct prompts |
 | :--- | ---: | ---: |
 | Used to train the published model (commit `64f3c6c`) | 138 train / 30 holdout | **18** in train |
-| Current split (`split_dataset.py`, not yet trained on) | 91 train / 34 holdout | 36 in total, 28 in train |
+| Current split (`split_dataset.py`, not yet trained on) | 67 train / 15 holdout | 32 in total, 18 in train |
 
 The 160 teacher-generated rows come from a small set of prompt templates sampled several times. The most repeated training prompts appear 13–14 times each (`python3 dataset/audit_dataset.py`). With a final training loss of 0.031, the model most likely learned these templates rather than a general refactoring skill.
 
@@ -46,7 +46,7 @@ Current distribution across train + holdout (`classify_sample` in `split_dataset
 Teacher answers are only checked for ChatML structure and balanced code fences. Nothing checks that the answer compiles or that it keeps the behavior of the input.
 
 **Next:**
-- ~~Type-check every assistant answer.~~ **Done (detection):** `python3 dataset/audit_dataset.py --typecheck [--list-failures]` type-checks each answer's TypeScript in isolation and also reports truncated answers and explicit `any`. Current split: 66/91 train and 29/34 eval answers pass; 8 train and 11 eval answers contain explicit `any`. Published split (`64f3c6c`): 82/107 pass, 49/138 truncated. **Still to do:** drop or fix the failing rows in `split_dataset.py`.
+- ~~Type-check every assistant answer.~~ **Done (detection):** `python3 dataset/audit_dataset.py --typecheck [--list-failures]` type-checks each answer's TypeScript in isolation and also reports truncated answers and explicit `any`. Before filtering, the previous split (91 train / 34 eval) had 66/91 and 29/34 passing; 8 train and 11 eval answers contain explicit `any`. Published split (`64f3c6c`): 82/107 pass, 49/138 truncated. **Done (filtering):** `split_dataset.py` now drops rows with explicit `any` or a failing type-check (`--no-verify` skips this): 17 and 26 rows respectively, on top of 61 truncated ones. Two hand-authored `ARCH_REFACTOR` answers were fixed instead of dropped: their adapters now type the external client with a minimal interface instead of `any`. The holdout now takes the smallest prompt groups first and is capped at 15 rows (previously a single 13-row prompt could drain a category). The resulting split (67 train / 15 holdout, every category on both sides) passes the audit 100%.
 - For `ARCH_REFACTOR`, keep a small runnable test with the original code and check that the refactored version passes it.
 - Score each training answer with CAS and drop low scorers, so the model is not trained on examples the benchmark would penalize.
 
@@ -58,7 +58,7 @@ The committed `train.jsonl` / `eval_holdout.jsonl` are the new split. The data t
 
 ### 1.5 The holdout set was contaminated
 
-The holdout used with the published model shared 28 of 30 prompts with training. It cannot be used as evidence about that model. The current split fixes this (0/34 overlap), but it has not been used yet.
+The holdout used with the published model shared 28 of 30 prompts with training. It cannot be used as evidence about that model. The current split fixes this (0/15 overlap), but it has not been used yet.
 
 ---
 
