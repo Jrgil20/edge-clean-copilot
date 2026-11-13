@@ -4,6 +4,12 @@
 Unifies seed_examples.jsonl and generated_examples.jsonl and splits them
 into train.jsonl and eval_holdout.jsonl with reproducible stratification (seed=42).
 Splits by normalized user prompt so no prompt appears in both train and holdout.
+
+Quality gate (before splitting): drops answers that are truncated (unbalanced
+code fence), contain explicit `any`, or whose TypeScript fails an isolated
+strict type-check (see audit_dataset.py / typecheck_answers.mjs). The
+type-check needs Node and `pnpm install` in cli/; use --no-verify to skip the
+`any` and type-check filters.
 """
 
 import argparse
@@ -14,6 +20,25 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from audit_dataset import answer_of, has_explicit_any, ts_code, typecheck  # noqa: E402
+
+
+def verify_samples(samples: List[Dict[str, Any]]):
+    """Splits samples into (kept, dropped_any, dropped_typecheck). Raises if tsc is unavailable."""
+    codes = {str(i): ts_code(answer_of(s)) for i, s in enumerate(samples)}
+    with_any = {k for k, c in codes.items() if c and has_explicit_any(c)}
+    to_check = {k: c for k, c in codes.items() if c and k not in with_any}
+    results = typecheck(to_check)
+    if results is None:
+        raise RuntimeError("type-check unavailable: install Node and run `pnpm install` in cli/, or pass --no-verify")
+    failed = {k for k, r in results.items() if r["syntaxErrors"] or r["typeErrors"]}
+    kept = [s for i, s in enumerate(samples) if str(i) not in with_any | failed]
+    dropped_any = [samples[int(k)] for k in sorted(with_any, key=int)]
+    dropped_tc = [samples[int(k)] for k in sorted(failed, key=int)]
+    return kept, dropped_any, dropped_tc
+
 
 def classify_sample(sample: Dict[str, Any]) -> str:
     """Classifies a ChatML sample into its architectural category based on user prompt content."""
@@ -47,8 +72,11 @@ def main():
     parser.add_argument("--authored-file", type=str, default=str(Path(__file__).parent / "authored_examples.jsonl"))
     parser.add_argument("--train-output", type=str, default=str(Path(__file__).parent / "train.jsonl"))
     parser.add_argument("--eval-output", type=str, default=str(Path(__file__).parent / "eval_holdout.jsonl"))
-    parser.add_argument("--eval-target-count", type=int, default=30, help="Target count for holdout evaluation set.")
+    parser.add_argument("--eval-target-count", type=int, default=15,
+                        help="Maximum row count for the holdout set (whole prompt groups are never split).")
     parser.add_argument("--seed", type=int, default=42, help="Random seed for deterministic reproducibility.")
+    parser.add_argument("--no-verify", action="store_true",
+                        help="Skip the explicit-any and type-check filters (truncated answers are always dropped).")
     args = parser.parse_args()
 
     rng = random.Random(args.seed)
@@ -89,8 +117,18 @@ def main():
                 seen_prompts.add(key)
                 all_samples.append(item)
 
-    total_samples = len(all_samples)
     print(f"Dropped (unbalanced code fence / truncated): {dropped_truncated}")
+    if args.no_verify:
+        print("Verification skipped (--no-verify): explicit `any` and type errors are NOT filtered.")
+    else:
+        try:
+            all_samples, dropped_any, dropped_tc = verify_samples(all_samples)
+        except RuntimeError as exc:
+            print(f"[ERROR] {exc}", file=sys.stderr)
+            sys.exit(2)
+        print(f"Dropped (explicit `any` in TypeScript):      {len(dropped_any)}")
+        print(f"Dropped (fails isolated tsc type-check):     {len(dropped_tc)}")
+    total_samples = len(all_samples)
     print("=" * 70)
     print("        EDGE CLEAN COPILOT — STRATIFIED DATASET SPLITTER        ")
     print("=" * 70)
@@ -114,6 +152,10 @@ def main():
         by_category[classify_sample(group[0])].append(group)
     for cat_groups in by_category.values():
         rng.shuffle(cat_groups)
+        # Smallest prompt groups first (stable sort keeps the random order within a size):
+        # the holdout gets more distinct prompts, and large groups stay in train instead
+        # of draining one category (a 13-row group once took 22 of 31 rows of a category).
+        cat_groups.sort(key=len)
 
     train_set: List[Dict[str, Any]] = []
     eval_set: List[Dict[str, Any]] = []
@@ -126,6 +168,11 @@ def main():
                 continue
             if len(eval_set) >= args.eval_target_count:
                 break
+            # Groups are sorted by size, so if the smallest one overshoots the target,
+            # every other group in this category would too: stop drawing from it.
+            if len(eval_set) + len(pending[cat][0]) > args.eval_target_count:
+                pending.pop(cat)
+                continue
             eval_set.extend(pending[cat].pop(0))
             if not pending[cat]:
                 pending.pop(cat)

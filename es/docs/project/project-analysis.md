@@ -111,7 +111,7 @@ La propuesta habla sobre todo de un **proceso**: cómo especializar, empaquetar 
 | Ingeniería del CLI | Se respeta la separación hexagonal: `domain/` y `application/` no importan nada de infraestructura. Los errores son valores (`Result<T, E>`), TypeScript es estricto y sin `any`, y 44 tests corren offline contra un motor mock. | `cli/`; `pnpm test`. |
 | Atribución y trazabilidad | Los reportes registran nombre del modelo, hash del archivo, endpoint, suite y fallos. Un script audita las fugas. El proyecto corrigió en commits sus propias afirmaciones anteriores. | `meta` de `eval_benchmark.py`; `audit_dataset.py`; commits `13fab38`, `aab8d9b`. |
 | Uso responsable del hardware compartido | Nunca toca los puertos de otros usuarios; limita memoria y tiempo; ninguna operación destructiva automatizada. | `spark_day.sh`, `train_lora.py`, bitácora §5. |
-| Higiene de datos, versión actual | La partición actual no comparte prompts (0/34 prompts del holdout en train) y descarta respuestas truncadas. La suite no comparte prompts ni código con el entrenamiento. | `python3 dataset/audit_dataset.py`. |
+| Higiene de datos, versión actual | La partición actual no comparte prompts (0/15 prompts del holdout en train) y descarta las respuestas truncadas, con `any` explícito o que no pasan un chequeo de tipos aislado. La suite no comparte prompts ni código con el entrenamiento. | `python3 dataset/audit_dataset.py`. |
 | Tests | 44 tests de Vitest y los tests de Python con stdlib pasan (el del loop de entrenamiento se omite sin torch). | Ejecutados el 2026-11-13. |
 
 ---
@@ -134,7 +134,7 @@ El modelo publicado se entrenó con `dataset/train.jsonl` del commit `64f3c6c`.
 | D6 | Media | **Contenido fuera de objetivo**: 13 filas son Python (FastAPI/SQLAlchemy) en un proyecto de TypeScript. | Contar los lenguajes de los bloques. |
 | D7 | Media | **Lo aprendido no se transfiere.** 120/138 respuestas usan `Result`, pero el fine-tune usa `Result` en 2/30 respuestas del benchmark. El patrón se aprendió para "escribe un caso de uso", no para "refactoriza esta clase". | Comparar las respuestas de entrenamiento con las salidas del Spark. |
 | D8 | Media | **El holdout anterior estaba contaminado**: 28/30 prompts del holdout también estaban en train (auditoría F1). Por eso la evaluación depende solo de la suite de 30 casos. | `audit_dataset.py` sobre `64f3c6c`. |
-| D9 | Baja | **La partición actual es mejor pero sigue siendo pequeña**: 91 filas de train (28 prompts distintos) y 34 de holdout (8 prompts distintos); un prompt aún se repite 14 veces. No se ha entrenado con ella. | `python3 dataset/audit_dataset.py`. |
+| D9 | Media | **La partición actual está más limpia pero es muy pequeña**: tras el filtro de calidad, 67 filas de train (18 prompts distintos) y 15 de holdout (14 prompts distintos); un prompt aún se repite 13 veces en train, y `ARCH_REFACTOR` tiene solo 8 filas en total. No se ha entrenado con ella. | `python3 dataset/audit_dataset.py`. |
 
 ### 5.2 Entrenamiento
 
@@ -212,7 +212,7 @@ python3 -m unittest dataset/test_split_dataset.py -v
 
 # Partición publicada frente a la actual
 git show 64f3c6c:dataset/train.jsonl > /tmp/train_published.jsonl
-python3 dataset/audit_dataset.py                       # partición actual: 0/34 de solapamiento
+python3 dataset/audit_dataset.py                       # partición actual: 0/15 de solapamiento, todas pasan --typecheck
 
 # Código de entrenamiento que produjo el modelo publicado
 git show fb3e812:training/train_lora.py | grep -n "batch_size=2 if dry_run"

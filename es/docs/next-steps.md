@@ -15,7 +15,7 @@ Cifras medidas el 2026-11-13 salvo que se indique otra cosa. Auditoría relacion
 | Partición | Filas | Prompts distintos |
 | :--- | ---: | ---: |
 | Usada para entrenar el modelo publicado (commit `64f3c6c`) | 138 train / 30 holdout | **18** en train |
-| Partición actual (`split_dataset.py`, aún sin entrenar) | 91 train / 34 holdout | 36 en total, 28 en train |
+| Partición actual (`split_dataset.py`, aún sin entrenar) | 67 train / 15 holdout | 32 en total, 18 en train |
 
 Las 160 filas generadas por el maestro salen de un conjunto pequeño de plantillas de prompt muestreadas varias veces. Los prompts más repetidos de entrenamiento aparecen 13–14 veces cada uno (`python3 dataset/audit_dataset.py`). Con un loss final de entrenamiento de 0.031, lo más probable es que el modelo haya aprendido esas plantillas y no una habilidad general de refactorización.
 
@@ -46,7 +46,7 @@ Distribución actual en train + holdout (`classify_sample` en `split_dataset.py`
 Las respuestas del maestro solo se comprueban por estructura ChatML y por bloques de código bien cerrados. Nada comprueba que la respuesta compile ni que conserve el comportamiento de la entrada.
 
 **Siguiente:**
-- ~~Chequear los tipos de cada respuesta del asistente.~~ **Hecho (detección):** `python3 dataset/audit_dataset.py --typecheck [--list-failures]` chequea en aislamiento los tipos del TypeScript de cada respuesta y además reporta respuestas truncadas y `any` explícito. Partición actual: pasan 66/91 respuestas de train y 29/34 de eval; 8 de train y 11 de eval contienen `any` explícito. Partición publicada (`64f3c6c`): pasan 82/107, 49/138 truncadas. **Falta:** descartar o corregir las filas que fallan en `split_dataset.py`.
+- ~~Chequear los tipos de cada respuesta del asistente.~~ **Hecho (detección):** `python3 dataset/audit_dataset.py --typecheck [--list-failures]` chequea en aislamiento los tipos del TypeScript de cada respuesta y además reporta respuestas truncadas y `any` explícito. Antes del filtro, la partición anterior (91 train / 34 eval) tenía 66/91 y 29/34 aprobadas; 8 de train y 11 de eval contienen `any` explícito. Partición publicada (`64f3c6c`): pasan 82/107, 49/138 truncadas. **Hecho (filtrado):** `split_dataset.py` ahora descarta las filas con `any` explícito o que no pasan el chequeo de tipos (`--no-verify` lo desactiva): 17 y 26 filas respectivamente, además de 61 truncadas. Dos respuestas `ARCH_REFACTOR` escritas a mano se corrigieron en vez de descartarse: sus adaptadores ahora tipan el cliente externo con una interfaz mínima en lugar de `any`. El holdout ahora toma primero los grupos de prompts más pequeños y tiene un tope de 15 filas (antes un solo prompt de 13 filas podía vaciar una categoría). La partición resultante (67 train / 15 holdout, todas las categorías en ambos lados) pasa la auditoría al 100%.
 - Para `ARCH_REFACTOR`, guardar un test ejecutable pequeño con el código original y comprobar que la versión refactorizada lo pasa.
 - Puntuar cada respuesta de entrenamiento con CAS y descartar las de puntuación baja, para no entrenar el modelo con ejemplos que el propio benchmark penalizaría.
 
@@ -58,7 +58,7 @@ Los `train.jsonl` / `eval_holdout.jsonl` del repo son la partición nueva. Los d
 
 ### 1.5 El holdout estaba contaminado
 
-El holdout usado con el modelo publicado compartía 28 de 30 prompts con el entrenamiento. No sirve como evidencia sobre ese modelo. La partición actual lo corrige (0/34 de solapamiento), pero todavía no se ha usado.
+El holdout usado con el modelo publicado compartía 28 de 30 prompts con el entrenamiento. No sirve como evidencia sobre ese modelo. La partición actual lo corrige (0/15 de solapamiento), pero todavía no se ha usado.
 
 ---
 

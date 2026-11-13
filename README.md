@@ -110,7 +110,7 @@ ChatML JSONL (`system` / `user` / `assistant`).
 
 **The published model was trained on an earlier split** (commit `64f3c6c`): 138 training rows built from only **18 distinct prompts**, with a holdout that shared 28 of its 30 prompts with training. That split is no longer in the working tree.
 
-The current `split_dataset.py` splits by normalized prompt and drops truncated answers. Rerunning it gives 91 training / 34 holdout rows from 36 distinct prompts, with no prompt overlap (`python3 dataset/audit_dataset.py`). **This split has not been used for training.**
+The current `split_dataset.py` splits by normalized prompt and drops answers that are truncated, contain explicit `any` or fail an isolated `tsc` type-check. Rerunning it gives 67 training / 15 holdout rows from 32 distinct prompts, with no prompt overlap (`python3 dataset/audit_dataset.py`). **This split has not been used for training.**
 
 The evaluation suite (`evaluation/legacy_benchmark_suite.jsonl`, 30 cases) shares no prompts or code with the training data.
 

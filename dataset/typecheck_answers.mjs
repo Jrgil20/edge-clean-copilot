@@ -6,8 +6,10 @@
  * stdout: JSON array of {"id", "syntaxErrors", "typeErrors", "codes"}
  *
  * Snippets are fragments, so diagnostics about unresolved modules and names
- * (missing imports, test globals, other files) are ignored. Everything else
- * under `strict: true` counts as a type error.
+ * (missing imports, test globals, other files) are ignored, imports are
+ * blanked, and implicit-any on callback parameters passed to a call is ignored
+ * (real library typings would type them). Everything else under
+ * `strict: true` counts as a type error.
  */
 import { createRequire } from "node:module";
 import { fileURLToPath } from "node:url";
@@ -64,6 +66,32 @@ export function stripImports(code) {
   return out + "\nexport {};\n";
 }
 
+// "Parameter implicitly has an 'any' type" / same for binding elements.
+const IMPLICIT_ANY_PARAM = new Set([7006, 7031]);
+
+/**
+ * True when an implicit-any diagnostic sits on a parameter of a callback passed
+ * as a call argument (e.g. `app.put('/x', (req, res) => ...)`). With real
+ * library typings those parameters are contextually typed; here the callee is
+ * unresolved, so the diagnostic says nothing about the snippet itself.
+ */
+function isCallbackParameter(sourceFile, position) {
+  let node = findNode(sourceFile, position);
+  while (node && !ts.isParameter(node)) node = node.parent;
+  const fn = node?.parent;
+  if (!fn || !(ts.isArrowFunction(fn) || ts.isFunctionExpression(fn))) return false;
+  let outer = fn.parent;
+  while (outer && ts.isParenthesizedExpression(outer)) outer = outer.parent;
+  return !!outer && (ts.isCallExpression(outer) || ts.isNewExpression(outer)) && outer.arguments?.includes(fn);
+}
+
+function findNode(node, position) {
+  for (const child of node.getChildren()) {
+    if (child.getStart() <= position && position < child.getEnd()) return findNode(child, position);
+  }
+  return node;
+}
+
 // Parsed lib.*.d.ts files, shared by every snippet: parsing them dominates run time.
 const LIB_CACHE = new Map();
 
@@ -86,7 +114,8 @@ function check(id, rawCode) {
   const syntax = program.getSyntacticDiagnostics();
   const semantic = program
     .getSemanticDiagnostics()
-    .filter((d) => d.file && d.file.fileName === fileName && !IGNORED_CODES.has(d.code));
+    .filter((d) => d.file && d.file.fileName === fileName && !IGNORED_CODES.has(d.code))
+    .filter((d) => !(IMPLICIT_ANY_PARAM.has(d.code) && isCallbackParameter(d.file, d.start)));
   return {
     id,
     syntaxErrors: syntax.length,

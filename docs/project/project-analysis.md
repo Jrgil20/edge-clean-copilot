@@ -109,7 +109,7 @@ The proposal is mostly about a **process**: how to specialise, package and evalu
 | CLI engineering | Hexagonal layering is respected: `domain/` and `application/` have no infrastructure imports. Errors are values (`Result<T, E>`), TypeScript is strict with no `any`, and 44 tests run offline against a mock engine. | `cli/`; `pnpm test`. |
 | Attribution and audit trail | Reports record model name, file hash, endpoint, suite and failures. An audit script checks leakage. The project corrected its own earlier claims in commits. | `eval_benchmark.py` `meta`; `audit_dataset.py`; commits `13fab38`, `aab8d9b`. |
 | Responsible use of shared hardware | Never touches other tenants' ports; caps memory and wall-clock time; no automated destructive operations. | `spark_day.sh`, `train_lora.py`, session log §5. |
-| Data hygiene, current version | The current split is prompt-disjoint (0/34 holdout prompts in train) and drops truncated answers. The suite shares no prompts or code with training. | `python3 dataset/audit_dataset.py`. |
+| Data hygiene, current version | The current split is prompt-disjoint (0/15 holdout prompts in train) and drops truncated answers, explicit `any` and answers that fail an isolated type-check. The suite shares no prompts or code with training. | `python3 dataset/audit_dataset.py`. |
 | Tests | 44 Vitest tests and the Python stdlib tests pass (the training-loop test skips without torch). | Run on 2026-11-13. |
 
 ---
@@ -132,7 +132,7 @@ The published model was trained on `dataset/train.jsonl` at commit `64f3c6c`.
 | D6 | Medium | **Off-target content**: 13 rows are Python (FastAPI/SQLAlchemy) in a TypeScript project. | Count fence languages. |
 | D7 | Medium | **Learned patterns do not transfer.** 120/138 answers use `Result`, yet the fine-tune uses `Result` in 2/30 benchmark answers. The pattern was learned for "write a use case", not for "refactor this class". | Compare training answers with Spark completions. |
 | D8 | Medium | **The old holdout was contaminated**: 28/30 holdout prompts also appear in train (audit F1). Evaluation therefore relies only on the 30-case suite. | `audit_dataset.py` on `64f3c6c`. |
-| D9 | Low | **The current split is better but still small**: 91 train rows (28 distinct prompts) and 34 holdout rows (8 distinct prompts); one prompt is still repeated 14 times. It has not been trained on. | `python3 dataset/audit_dataset.py`. |
+| D9 | Medium | **The current split is cleaner but very small**: after the quality gate, 67 train rows (18 distinct prompts) and 15 holdout rows (14 distinct prompts); one prompt is still repeated 13 times in train, and `ARCH_REFACTOR` has only 8 rows in total. It has not been trained on. | `python3 dataset/audit_dataset.py`. |
 
 ### 5.2 Training
 
@@ -210,7 +210,7 @@ python3 -m unittest dataset/test_split_dataset.py -v
 
 # Published training split vs current split
 git show 64f3c6c:dataset/train.jsonl > /tmp/train_published.jsonl
-python3 dataset/audit_dataset.py                       # current split: 0/34 overlap
+python3 dataset/audit_dataset.py                       # current split: 0/15 overlap, all answers pass --typecheck
 
 # Training code that produced the published model
 git show fb3e812:training/train_lora.py | grep -n "batch_size=2 if dry_run"
