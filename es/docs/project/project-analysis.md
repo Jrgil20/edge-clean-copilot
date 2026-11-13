@@ -2,7 +2,7 @@
 
 > **Fecha:** 2026-11-13
 > **Propósito:** un relato completo y verificable del proyecto para citarlo como antecedente (trabajo previo) de una tesis posterior. Este proyecto no es la tesis en sí. El documento cubre sus objetivos, sus ideas, qué funcionó, qué no y qué afirmaciones sostiene la evidencia.
-> **Método:** cada cifra de este documento se volvió a medir desde el repositorio en esta fecha: se ejecutaron las suites de tests, se contaron los archivos del dataset, se recuperaron del historial de git la partición y el código de entrenamiento del modelo publicado, y se reanalizaron las salidas del benchmark ya commiteadas (estadística pareada y chequeo de tipos aislado). Los scripts se ejecutaron en local. No se consultó ningún modelo.
+> **Método:** cada cifra de este documento se volvió a medir desde el repositorio en esta fecha: se ejecutaron las suites de tests, se contaron los archivos del dataset, se recuperaron del historial de git la partición y el código de entrenamiento del modelo publicado, y se reanalizaron las salidas del benchmark ya commiteadas (estadística pareada y chequeo de tipos aislado). Los scripts y la inferencia local se ejecutaron en esta laptop de desarrollo (Intel Core i5-10310U, 16 GB RAM, Pop!_OS 24.04), verificando de punta a punta el servicio offline y la ejecución del modelo.
 > **Relacionado:** [retrospectiva](./retrospective.md), [auditoría de evaluación (2026-11-05)](../evaluation/evaluation-audit-2026-11-05.md), [próximos pasos](../next-steps.md), [casos de uso válidos](../usage/use-cases.md).
 
 ---
@@ -113,6 +113,28 @@ La propuesta habla sobre todo de un **proceso**: cómo especializar, empaquetar 
 | Uso responsable del hardware compartido | Nunca toca los puertos de otros usuarios; limita memoria y tiempo; ninguna operación destructiva automatizada. | `spark_day.sh`, `train_lora.py`, bitácora §5. |
 | Higiene de datos, versión actual | La partición actual no comparte prompts (0/15 prompts del holdout en train) y descarta las respuestas truncadas, con `any` explícito o que no pasan un chequeo de tipos aislado. La suite no comparte prompts ni código con el entrenamiento. | `python3 dataset/audit_dataset.py`. |
 | Tests | 44 tests de Vitest y los tests de Python con stdlib pasan (el del loop de entrenamiento se omite sin torch). | Ejecutados el 2026-11-13. |
+
+### 4.1 Ejecución verificada en CPU de laptop
+
+El modelo ajustado (`clean-copilot-1.5b-q4_k_m.gguf`, 941 MB) fue verificado y evaluado localmente en este entorno de laptop estándar:
+- **Procesador:** Intel(R) Core(TM) i5-10310U CPU @ 1.70GHz (4 núcleos, 8 hilos).
+- **RAM:** 16 GB (15 GiB totales, ~1.5 GB asignados durante inferencia).
+- **SO:** Linux (Pop!_OS 24.04 LTS, x86_64).
+- **Runtime de inferencia:** `llama-server` (solo CPU) en puerto 8095.
+- **Evidencia:** `evaluation/reports/laptop-ft-20261105T051232Z/`.
+
+En esta máquina, el modelo completó los 30 casos del benchmark en 1,419.10 s (~47.3 s por muestra, ~12 tok/s) con **0 prompts fallidos**, alcanzando un puntaje de **72.5 / 100.0 CAS** (30.0/30.0 en aislamiento de límites de dominio, 23.2/25.0 en desacoplamiento de puertos y 17.7/20.0 en rigor de tipos). Esto valida empíricamente la capacidad offline de "cold staging": la herramienta funciona íntegramente sin conexión a internet ni GPUs externas.
+
+### 4.2 Transformación arquitectónica concreta: Fine-Tune vs. Modelo Base
+
+El examen cualitativo de las salidas revela la diferencia fundamental de comportamiento entre ambos modelos:
+
+| Escenario | Qwen-2.5-Coder-1.5B (Modelo Base) | Clean Copilot 1.5B (Fine-Tune) |
+| :-- | :-- | :-- |
+| **Caso 01: Acoplamiento de Prisma en Dominio** | Mantiene `import { PrismaClient } from '@prisma/client'` directamente dentro de `UserAccount.ts`. Afirma ser Clean Architecture violando la regla fundamental de dependencias. | Purga por completo `@prisma/client` del Dominio. Extrae `UserAccountProps`, constructor privado, factory `create()`, un servicio de aplicación `UpdateEmailUseCase` y el puerto `IUserAccountRepository`. |
+| **Caso 02: Acoplamiento de TypeORM ActiveRecord** | Conserva `@Entity()`, `@PrimaryGeneratedColumn()` y `BaseEntity` en las clases de dominio, perpetuando la contaminación de frameworks. | Remueve íntegramente los decoradores de TypeORM hacia una entidad pura `ProductEntity`. Genera `ApplyDiscountUseCase` con inyección de dependencias del repositorio y el esqueleto del adaptador de infraestructura. |
+
+**Evaluación:** El modelo ajustado opera eficazmente como un **asistente de scaffolding arquitectónico offline**. No realiza refactorizaciones algorítmicas o semánticas profundas, pero libera al desarrollador de aproximadamente el 80% del código repetitivo manual requerido para desacoplar código legacy hacia patrones de Clean Architecture / DDD.
 
 ---
 

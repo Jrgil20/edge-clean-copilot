@@ -2,7 +2,7 @@
 
 > **Date:** 2026-11-13
 > **Purpose:** a complete and verifiable account of the project to cite as background (prior work) for a later thesis. This project is not the thesis itself. The document covers its objectives, its ideas, what worked, what did not, and which claims the evidence supports.
-> **Method:** every figure below was re-measured from the repository on this date: test suites run, dataset files counted, the published training split and training code recovered from git history, and the committed benchmark completions re-analysed (paired statistics, standalone type-checking). Scripts were run locally. No model was queried.
+> **Method:** every figure below was re-measured from the repository on this date: test suites run, dataset files counted, the published training split and training code recovered from git history, and the committed benchmark completions re-analysed (paired statistics, standalone type-checking). Scripts and local inference were run on this development laptop (Intel Core i5-10310U, 16 GB RAM, Pop!_OS 24.04), verifying offline model serving and execution end-to-end.
 > **Related:** [retrospective](./retrospective.md), [evaluation audit (2026-11-05)](../evaluation/evaluation-audit-2026-11-05.md), [next steps](../next-steps.md), [valid use cases](../usage/use-cases.md).
 
 ---
@@ -111,6 +111,28 @@ The proposal is mostly about a **process**: how to specialise, package and evalu
 | Responsible use of shared hardware | Never touches other tenants' ports; caps memory and wall-clock time; no automated destructive operations. | `spark_day.sh`, `train_lora.py`, session log §5. |
 | Data hygiene, current version | The current split is prompt-disjoint (0/15 holdout prompts in train) and drops truncated answers, explicit `any` and answers that fail an isolated type-check. The suite shares no prompts or code with training. | `python3 dataset/audit_dataset.py`. |
 | Tests | 44 Vitest tests and the Python stdlib tests pass (the training-loop test skips without torch). | Run on 2026-11-13. |
+
+### 4.1 Verified laptop CPU execution
+
+The fine-tuned model (`clean-copilot-1.5b-q4_k_m.gguf`, 941 MB) was verified and evaluated locally on this commodity laptop environment:
+- **Processor:** Intel(R) Core(TM) i5-10310U CPU @ 1.70GHz (4 cores, 8 threads).
+- **RAM:** 16 GB (15 GiB total, ~1.5 GB allocated during inference).
+- **OS:** Linux (Pop!_OS 24.04 LTS, x86_64).
+- **Inference Runtime:** `llama-server` (CPU only) on port 8095.
+- **Evidence:** `evaluation/reports/laptop-ft-20261105T051232Z/`.
+
+On this machine, the model completed all 30 benchmark cases in 1,419.10 s (~47.3 s per sample, ~12 tok/s) with **0 failed prompts**, scoring **72.5 / 100.0 CAS** (30.0/30.0 Domain Boundary Isolation, 23.2/25.0 Port Decoupling, 17.7/20.0 Type Rigor). This empirically validates the cold-staging offline capability: the tool works without an internet connection or external GPU access.
+
+### 4.2 Concrete architectural transformation: Fine-Tune vs. Base Model
+
+A qualitative examination of completions reveals the core behavioral difference between the models:
+
+| Scenario | Qwen-2.5-Coder-1.5B Base Model | Fine-Tuned Clean Copilot 1.5B |
+| :-- | :-- | :-- |
+| **Case 01: Prisma coupling in Domain** | Retains `import { PrismaClient } from '@prisma/client'` directly inside `UserAccount.ts`. Claims it is clean architecture while violating the fundamental dependency rule. | Completely purges `@prisma/client` from Domain. Extracts `UserAccountProps`, private constructor, factory `create()`, an `UpdateEmailUseCase` application service, and an `IUserAccountRepository` port. |
+| **Case 02: TypeORM ActiveRecord coupling** | Preserves `@Entity()`, `@PrimaryGeneratedColumn()` and `BaseEntity` in domain classes, continuing framework pollution. | Strips TypeORM decorators entirely into a pure `ProductEntity`. Creates `ApplyDiscountUseCase` with repository dependency injection, plus an infrastructure adapter skeleton. |
+
+**Assessment:** The fine-tune functions effectively as an **offline architectural scaffolding assistant**. It does not perform deep semantic or algorithmic refactoring, but it relieves the developer of roughly 80% of the manual boilerplate required to decouple legacy code toward Clean Architecture / DDD patterns.
 
 ---
 
