@@ -30,6 +30,7 @@ pnpm run dev refactor <file> --url http://127.0.0.1:8080 --diff
 ```bash
 python3 -m unittest discover -s evaluation/tests -v
 python3 -m unittest dataset/test_split_dataset.py -v
+python3 -m unittest dataset/test_audit_dataset.py -v   # typecheck tests skip without cli/node_modules
 python3 -m unittest training/test_train_loop.py -v      # skipped if torch is missing
 ```
 
@@ -37,7 +38,8 @@ python3 -m unittest training/test_train_loop.py -v      # skipped if torch is mi
 ```bash
 python3 dataset/validate_dataset.py dataset/train.jsonl
 python3 dataset/split_dataset.py        # deterministic (seed=42) train/holdout split
-python3 dataset/audit_dataset.py        # prompt-overlap audit between partitions
+python3 dataset/audit_dataset.py        # prompt-overlap audit + truncated answers / explicit any
+python3 dataset/audit_dataset.py --typecheck --list-failures   # also tsc-check answers (needs pnpm install in cli/)
 ```
 
 ### Training (GPU / DGX Spark; `--dry-run` works on CPU)

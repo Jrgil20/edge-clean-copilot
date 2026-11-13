@@ -70,7 +70,7 @@ Cada caso indica qué respalda la evidencia. "Medido" significa que lo cubrió e
 
 | No usar para | Por qué |
 | :-- | :-- |
-| Aplicar refactorizaciones a código en producción sin revisión | Solo 12/30 respuestas del benchmark pasaron el chequeo de tipos, y eso aisladas; el comportamiento nunca se verifica. |
+| Aplicar refactorizaciones a código en producción sin revisión | Solo 14/30 respuestas del benchmark pasaron el chequeo de tipos, y eso aisladas; el comportamiento nunca se verifica. |
 | Archivos grandes o cambios en varios archivos | Se entrenó con secuencias de 2,048 tokens; se evaluó con entradas de 18 líneas o menos. |
 | Invariantes, validación y manejo de errores con `Result` | Es el componente más débil (2.7/25); casi nunca los produce. |
 | Completado en línea en tiempo real (enrutando Copilot en VS Code) | No se entrenó para fill-in-the-middle; unos 12 tok/s en CPU; nunca se evaluó. |

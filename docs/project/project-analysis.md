@@ -106,7 +106,6 @@ The proposal is mostly about a **process**: how to specialise, package and evalu
 | Pipeline | Complete and reproducible in structure: data, training, merge, GGUF, serving, CLI and benchmark all exist and connect through files. | Repository layout; [README](../../README.md) §2. |
 | Measured gain | The fine-tune beats the base on every CAS component. The paired difference is robust within this metric: mean +16.8, SD 21.5, t ≈ 4.3, bootstrap 95% CI [10.0, 25.2], 24 wins / 6 ties / 0 losses. | `evaluation/reports/spark-20261105T143540Z/` |
 | Fair comparison | Same suite, same quantization, same server settings, same scoring engine; models identified by SHA-256; 0 failed or empty answers. | `RESULT.md`, report `meta` blocks. |
-| Code quality, partly | The fine-tune's answers are more often type-correct on their own: **12/30** type-check in isolation versus **5/30** for the base. Neither has syntax errors. | §5.3 E5 (approximate check). |
 | CLI engineering | Hexagonal layering is respected: `domain/` and `application/` have no infrastructure imports. Errors are values (`Result<T, E>`), TypeScript is strict with no `any`, and 44 tests run offline against a mock engine. | `cli/`; `pnpm test`. |
 | Attribution and audit trail | Reports record model name, file hash, endpoint, suite and failures. An audit script checks leakage. The project corrected its own earlier claims in commits. | `eval_benchmark.py` `meta`; `audit_dataset.py`; commits `13fab38`, `aab8d9b`. |
 | Responsible use of shared hardware | Never touches other tenants' ports; caps memory and wall-clock time; no automated destructive operations. | `spark_day.sh`, `train_lora.py`, session log §5. |
@@ -129,7 +128,7 @@ The published model was trained on `dataset/train.jsonl` at commit `64f3c6c`.
 | D2 | High | **Task mismatch.** Only 42 rows (4 distinct prompts) ask to refactor given code. The rest ask the model to write new entities, value objects, ports or tests from a description. Every benchmark case is a refactoring. | Classify user prompts by their opening verb. |
 | D3 | High | **49/138 answers (35%) are truncated**: an odd number of code fences, ending mid-code. The model was trained to produce cut-off answers. (The current `split_dataset.py` drops these.) | Count answers with an odd number of fences. |
 | D4 | Medium | **20/138 answers contain explicit `any`** (e.g. `(mockRepository as any)`, `private stripe: any`), although the project's rule is zero `any`. | `grep` for `: any`, `as any`, `<any>`. |
-| D5 | Medium | **Answers are unverified.** Of the 107 answers with closed TypeScript blocks, 46 type-check in isolation when unresolved names are ignored. Nothing checks behavior. | Type-check script in §7. |
+| D5 | Medium | **Answers are unverified.** Of the 107 answers with closed TypeScript blocks, 82 type-check in isolation (strict; imports and unresolved names ignored), so about 1 in 4 has real type errors. Nothing checks behavior. | `python3 dataset/audit_dataset.py --typecheck` (see §7). |
 | D6 | Medium | **Off-target content**: 13 rows are Python (FastAPI/SQLAlchemy) in a TypeScript project. | Count fence languages. |
 | D7 | Medium | **Learned patterns do not transfer.** 120/138 answers use `Result`, yet the fine-tune uses `Result` in 2/30 benchmark answers. The pattern was learned for "write a use case", not for "refactor this class". | Compare training answers with Spark completions. |
 | D8 | Medium | **The old holdout was contaminated**: 28/30 holdout prompts also appear in train (audit F1). Evaluation therefore relies only on the 30-case suite. | `audit_dataset.py` on `64f3c6c`. |
@@ -152,7 +151,7 @@ The published model was trained on `dataset/train.jsonl` at commit `64f3c6c`.
 | E2 | High | **The "ports" component counts any `interface` or `type` alias**, including props and DTOs. It does not check naming (`I…Repository`) or constructor injection, although the docs say it does. Of the fine-tune's 91 detected "contracts", about 37 have port-like names. | `evaluation/ast_analyzer.ts`, ports block; report notes such as `Port: UserAccountProps`. |
 | E3 | Medium | **The "invariants" component is shallow.** A guard is any `if` or `throw` directly in a constructor. "Result" is any type reference whose name contains `Result`. | `ast_analyzer.ts`. |
 | E4 | Medium | **The boundary score rewards omission.** Only 4/30 fine-tune answers contain any import at all, versus 23/30 for the base. The full 30/30 boundary score partly comes from leaving imports out, and nothing checks that the original functionality is still there. | Spark completions. |
-| E5 | High | **Compilation and behavior are not part of the score.** An approximate standalone type-check (strict, unresolved names ignored) passes **12/30 fine-tune** answers and **5/30 base** answers. No behavior check exists. | §7 script. |
+| E5 | High | **Compilation and behavior are not part of the score.** A standalone type-check (strict; imports and unresolved names ignored) passes **14/30 fine-tune** answers and **17/30 base** answers. Neither has syntax errors. The fine-tune is **not** better at producing type-correct code, and no behavior check exists. | §7. |
 | E6 | Medium | **Suite validity.** The suite has 30 cases, all written by the author and all opening with the same instruction. Inputs are **3–18 lines (median 8.5)**. Results say nothing about real files. | `legacy_benchmark_suite.jsonl`. |
 | E7 | Medium | **The fine-tune converges on one template.** 26/30 of its scores fall between 65 and 75. Invariant safety is 0 in 26/30 cases. Almost all of the gain comes from boundary (+6.0) and ports (+6.7); invariants add +2.4. | Report score distributions. |
 | E8 | Medium | **The evaluation prompt differs from use and training.** The benchmark sends only a user message. Training and the CLI both use a system prompt. | `eval_benchmark.py` payload; `RefactorCodeUseCase.ts`. |
@@ -190,13 +189,12 @@ These statements are still in the repository and should **not** be cited as writ
 
 1. A LoRA-tuned 1.5B model, quantized to 4 bits, runs fully offline on a CPU-only laptop at about 12 tok/s with about 1 GB on disk.
 2. On a 30-case, self-authored TypeScript refactoring suite scored by an AST pattern metric, it scores 74.8 vs 58.0 for its base model under identical conditions (95% CI of the difference: [10.0, 25.2]). Most of the gain is in dropping framework imports and declaring interfaces.
-3. Its answers type-check in isolation more often than the base's (12/30 vs 5/30, approximate check).
-4. The "Cold Staging, Hot Burst" method made it possible to train and evaluate on a shared GPU in short windows without disturbing other users.
+3. The "Cold Staging, Hot Burst" method made it possible to train and evaluate on a shared GPU in short windows without disturbing other users.
 
 **Claims to avoid:**
 
 - That it outperforms, matches or approaches frontier or commercial models.
-- That it produces correct or behavior-preserving refactorings.
+- That it produces correct or behavior-preserving refactorings, or more type-correct code than its base (14/30 vs 17/30 type-check).
 - That it is fast.
 - That the training data was large, diverse, verified or leakage-free (for the published model).
 
@@ -221,7 +219,9 @@ git show fb3e812:training/train_lora.py | grep -n "batch_size=2 if dry_run"
 cat evaluation/reports/spark-20261105T143540Z/RESULT.md
 ```
 
-The paired statistics (bootstrap with 10,000 resamples, seed 0) and the standalone type-check used the committed completions in `evaluation/reports/spark-20261105T143540Z/cas/`. The type-check used the TypeScript compiler from `cli/node_modules` with `strict: true`, targeting ES2022 + DOM. Diagnostics for unresolved modules and names (TS2304, TS2307 and related) were ignored, because the snippets are fragments. Turning these checks into committed scripts is listed in [next-steps.md](../next-steps.md).
+The paired statistics (bootstrap with 10,000 resamples, seed 0) and the standalone type-check used the committed completions in `evaluation/reports/spark-20261105T143540Z/cas/`. The type-check used the TypeScript compiler from `cli/node_modules` with `strict: true`, targeting ES2022 + DOM. Because the snippets are fragments, `import` and `export … from` statements are blanked before checking (answers often hold several files in one block that import each other), and diagnostics for unresolved modules and names (TS2304, TS2307 and related) are ignored. The check is committed as `dataset/typecheck_answers.mjs` and runs on dataset answers with `python3 dataset/audit_dataset.py --typecheck`.
+
+> **Correction (2026-11-13):** an earlier version of this document used a check that did not blank imports. Those imports collided with declarations in the same snippet, which understated pass rates: it reported 46/107 for the published training answers (now 82/107) and 12/30 vs 5/30 for the benchmark (now 14/30 vs 17/30). That earlier version wrongly listed type-correctness as a strength of the fine-tune.
 
 ---
 

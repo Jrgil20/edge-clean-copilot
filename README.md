@@ -147,9 +147,10 @@ cd cli && pnpm install && pnpm test        # CLI tests (offline)
 
 python3 -m unittest discover -s evaluation/tests -v
 python3 -m unittest dataset/test_split_dataset.py -v
+python3 -m unittest dataset/test_audit_dataset.py -v
 
 python3 dataset/validate_dataset.py dataset/train.jsonl
-python3 dataset/audit_dataset.py           # duplicate / leakage audit
+python3 dataset/audit_dataset.py --typecheck   # duplicates, leakage, truncation, any, tsc
 ```
 
 ### 5.1 Refactor a file

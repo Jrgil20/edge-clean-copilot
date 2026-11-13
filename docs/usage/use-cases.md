@@ -70,7 +70,7 @@ Each case states what the evidence supports. "Measured" means it was covered by 
 
 | Do not use for | Why |
 | :-- | :-- |
-| Applying refactors to production code without review | Only 12/30 benchmark answers type-checked even in isolation; behavior is never checked. |
+| Applying refactors to production code without review | Only 14/30 benchmark answers type-checked even in isolation; behavior is never checked. |
 | Large files or multi-file changes | Trained with 2,048-token sequences; benchmarked on inputs of 18 lines or fewer. |
 | Invariants, validation and `Result`-based error handling | Weakest component (2.7/25); rarely produced. |
 | Real-time inline completion (VS Code Copilot routing) | Not trained for fill-in-the-middle; about 12 tok/s on CPU; never evaluated. |
