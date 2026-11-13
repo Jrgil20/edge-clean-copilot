@@ -69,6 +69,20 @@ class TypecheckTest(unittest.TestCase):
         self.assertGreater(results["function"]["typeErrors"], 0)
         self.assertGreater(results["method"]["typeErrors"], 0)
 
+    def test_imported_names_that_match_lib_globals_are_not_flagged(self):
+        results = audit.typecheck({
+            # NestJS `Body` would otherwise resolve to the DOM `Body` interface once imports are blanked
+            "imported": "import { Body, Post } from '@nestjs/common';\n"
+                        "export class C { @Post() create(@Body() b: { x: number }) { return b.x; } }",
+            # Express `Request`/`Response` would otherwise be the DOM fetch types (no `.header`, `.status(n)`)
+            "express": "import { Request, Response } from 'express';\n"
+                       "export function h(req: Request, res: Response) { res.status(401).json({ t: req.header('x') }); }",
+            "not_imported": "export const b = Body;",
+        })
+        self.assertEqual(results["imported"]["typeErrors"], 0)
+        self.assertEqual(results["express"]["typeErrors"], 0)
+        self.assertGreater(results["not_imported"]["typeErrors"], 0)
+
     def test_cli_reports_typecheck_counts(self):
         tmp = Path(tempfile.mkdtemp())
         train, held = tmp / "t.jsonl", tmp / "e.jsonl"

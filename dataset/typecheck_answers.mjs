@@ -45,10 +45,13 @@ const OPTIONS = {
  * Answers often hold several files in one block that import each other; the
  * imports cannot be resolved here and would collide with the local declarations.
  * Names declared in the snippet still resolve; external ones become ignored
- * "cannot find name" diagnostics. Newlines are kept so positions stay stable.
+ * "cannot find name" diagnostics. An imported name that matches a lib global
+ * (Express `Request`/`Response`, NestJS `Body`) would silently resolve to the
+ * DOM type instead, so it is shadowed with an untyped local declaration.
+ * Newlines are kept so positions stay stable.
  */
 export function stripImports(code) {
-  const sf = ts.createSourceFile("strip.ts", code, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+  const sf = ts.createSourceFile("strip.ts", code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
   let out = code;
   const ranges = sf.statements
     .filter(
@@ -62,8 +65,51 @@ export function stripImports(code) {
   for (const [start, end] of ranges) {
     out = out.slice(0, start) + out.slice(start, end).replace(/[^\n]/g, " ") + out.slice(end);
   }
+  const local = new Set(sf.statements.flatMap(declaredNames));
+  const shadows = [...importedNames(sf)]
+    .filter((name) => !local.has(name) && libGlobals().has(name))
+    .map((name) => `type ${name}<A = any, B = any, C = any, D = any> = any;\ndeclare const ${name}: any;\n`);
   // Keep the snippet a module so top-level names do not merge with globals.
-  return out + "\nexport {};\n";
+  return out + "\n" + shadows.join("") + "export {};\n";
+}
+
+/** Names brought in by import declarations (default, named, namespace, import =). */
+function importedNames(sf) {
+  const names = new Set();
+  for (const s of sf.statements) {
+    if (ts.isImportEqualsDeclaration(s)) names.add(s.name.text);
+    if (!ts.isImportDeclaration(s) || !s.importClause) continue;
+    const clause = s.importClause;
+    if (clause.name) names.add(clause.name.text);
+    const bindings = clause.namedBindings;
+    if (bindings && ts.isNamespaceImport(bindings)) names.add(bindings.name.text);
+    if (bindings && ts.isNamedImports(bindings)) for (const el of bindings.elements) names.add(el.name.text);
+  }
+  return names;
+}
+
+/** Top-level names a statement declares (its own sibling "files" in the same block). */
+function declaredNames(s) {
+  if (ts.isVariableStatement(s)) {
+    return s.declarationList.declarations.flatMap((d) => (ts.isIdentifier(d.name) ? [d.name.text] : []));
+  }
+  return s.name && ts.isIdentifier(s.name) ? [s.name.text] : [];
+}
+
+let LIB_GLOBALS;
+/** Global value and type names visible to a snippet (lib.es2022 + lib.dom), computed once. */
+function libGlobals() {
+  if (LIB_GLOBALS) return LIB_GLOBALS;
+  const fileName = "/virtual/globals.ts";
+  const host = ts.createCompilerHost(OPTIONS);
+  const baseGetSourceFile = host.getSourceFile;
+  host.getSourceFile = (f, lang) => (f === fileName ? ts.createSourceFile(f, "export {};", lang, true) : baseGetSourceFile(f, lang));
+  const program = ts.createProgram([fileName], OPTIONS, host);
+  const checker = program.getTypeChecker();
+  const sf = program.getSourceFile(fileName);
+  const flags = ts.SymbolFlags.Value | ts.SymbolFlags.Type;
+  LIB_GLOBALS = new Set(checker.getSymbolsInScope(sf, flags).map((sym) => sym.name));
+  return LIB_GLOBALS;
 }
 
 // "Parameter implicitly has an 'any' type" / same for binding elements.
