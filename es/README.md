@@ -1,202 +1,185 @@
 # Edge Clean Copilot (ECC)
 
-> **Small Language Model (SLM) especializado y nativo en el borde, con CLI Hexagonal para refactorización estricta de Clean Architecture y Domain-Driven Design.**
+> **Prueba de concepto:** un modelo de lenguaje pequeño (Qwen2.5-Coder-1.5B-Instruct + LoRA) que corre offline como archivo GGUF y refactoriza fragmentos pequeños de TypeScript hacia Clean Architecture / DDD, más un CLI hexagonal para usarlo.
 
-[![Progreso de Fase](https://img.shields.io/badge/Progreso-70%25%20Verificado-blue.svg)](docs/progress-and-milestones.md)
-[![Arquitectura](https://img.shields.io/badge/Arquitectura-Hexagonal%20%2F%20Clean-emerald.svg)](propuesta.md)
-[![Modelo Base](https://img.shields.io/badge/SLM%20Base-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
-[![Cuantización](https://img.shields.io/badge/Borde%20Offline-GGUF%20Q4__K__M%20(~12%20tok%2Fs%20CPU)-purple.svg)](../training/convert_to_gguf.sh)
-[![Tests](https://img.shields.io/badge/Vitest-41%2F41%20en%20Verde-brightgreen.svg)](../cli/tests/)
-[![Portal Web](https://img.shields.io/badge/Docs-Portal%20Interactivo-teal.svg)](docs/index.html)
+[![Estado](https://img.shields.io/badge/Estado-Prueba%20de%20Concepto-yellow.svg)](docs/next-steps.md)
+[![Modelo Base](https://img.shields.io/badge/Base-Qwen2.5--Coder--1.5B--Instruct-orange.svg)](https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct)
+[![Cuantización](https://img.shields.io/badge/GGUF-Q4__K__M%20(~12%20tok%2Fs%20CPU)-purple.svg)](../training/convert_to_gguf.sh)
+[![Tests](https://img.shields.io/badge/Vitest-44%20en%20verde-brightgreen.svg)](../cli/tests/)
 [![Licencia](https://img.shields.io/badge/Licencia-Académica%20%2F%20MIT-lightgrey.svg)](README.md)
 
 🌐 **[English version available →](../README.md)**
 
 ---
 
-## 1. Resumen Ejecutivo
+## 1. Qué es (y qué no es)
 
-**Edge Clean Copilot (ECC)** es un asistente de código offline y especializado, diseñado para aplicar principios de **Clean Architecture**, **Puertos y Adaptadores (Arquitectura Hexagonal)** y **Domain-Driven Design (DDD)** directamente en la estación de trabajo del desarrollador, sin depender de conexiones a APIs en la nube.
+ECC pone a prueba una idea: **¿puede un modelo de 1.5B parámetros, ajustado con un conjunto pequeño de ejemplos de arquitectura, producir código que siga las convenciones de Clean Architecture con más frecuencia que su modelo base, corriendo offline en la CPU de un portátil?**
 
-Los modelos comerciales de código suelen fallar en los límites arquitectónicos: introducen tipos `any`, generan acoplamientos circulares entre capas, mezclan SDKs de bases de datos dentro de entidades de dominio y crean dependencias innecesarias de frameworks. ECC resuelve esto entrenando un Small Language Model ágil (**Qwen2.5-Coder-1.5B-Instruct**) con pares curados de refactorización arquitectónica de alta señal, desplegándolo localmente mediante cuantización **GGUF Q4_K_M** servido con `llama.cpp`. Medido en **~12 tokens/segundo** en CPU (Intel Core i5-10310U); no está optimizado para velocidad.
+En el benchmark propio del proyecto la respuesta es un sí con matices (ver §3). El modelo se entrenó, se fusionó, se cuantizó a GGUF y se sirve con `llama.cpp`; el pipeline completo está en este repositorio.
 
-> **Valor Arquitectónico Clave:** Más allá de un checkpoint único, ECC está concebido como una **[Factoría de Modelos](docs/model-factory-architecture.md)** reproducible. El pipeline está desacoplado de pesos específicos, permitiendo incorporar, especializar y cuantizar nuevos SLMs de pesos abiertos (Llama-3.2, Gemma-2, DeepSeek) a través de un flujo automatizado y estandarizado.
+**No** es una herramienta de producción:
 
----
+- Los datos de entrenamiento son pocos y repetitivos (18 prompts distintos detrás de 138 filas de entrenamiento).
+- El benchmark mide si la salida *parece* arquitectónicamente limpia (patrones como puertos, `Result`, ausencia de `any`), no si compila ni si conserva el comportamiento.
+- Los resultados vienen de una sola suite de 30 casos escrita por el propio autor. Ningún modelo frontera se ha evaluado con ella.
+- Es lento por diseño: unos 12 tokens/segundo en un portátil solo con CPU (Intel Core i5-10310U). Está pensado para fragmentos pequeños y acotados.
 
-## 2. Metodología Principal: "Cold Staging, Hot Burst"
-
-Para compatibilizar la infraestructura de cómputo compartida (como clusters universitarios) con el desarrollo local continuo, el proyecto sigue el modelo operativo **Cold Staging, Hot Burst**:
-
-```
-[ Cold Staging (Laptop de Desarrollo Local) ]
-  ├── Curaduría de pares semilla ChatML canónicos
-  ├── Partición estratificada determinista del dataset (train/eval holdout)
-  ├── Ejecuciones de prueba offline de 1 paso (--dry-run)
-  └── Tests unitarios offline de capas CLI mediante MockInferenceAdapter (28/28 en verde)
-               │
-               ▼ (Ráfaga de Red — SSH / Subred /26)
-[ Hot Burst (Cluster NVIDIA DGX Spark) ]
-  ├── Destilación de alto rendimiento con Modelo Teacher (Qwen3-Coder-30B en puerto 8085)
-  ├── Fine-tuning LoRA multiepoca (train_lora.py con --max-time-minutes 15.0)
-  └── Fusión consolidada de pesos (adaptador LoRA + modelo base -> FP16)
-               │
-               ▼ (Consolidación de Artefactos)
-[ Despliegue en el Borde (Máquina Local 100% Offline) ]
-  └── Cuantización GGUF (Q4_K_M) servida vía llama-server (cero nube)
-```
+Los problemas conocidos y el trabajo para resolverlos están en **[docs/next-steps.md](docs/next-steps.md)**.
 
 ---
 
-## 3. Arquitectura de Subsistemas
+## 2. Cómo se construyó: "Cold Staging, Hot Burst"
 
-El repositorio se divide en cinco subsistemas desacoplados:
+El tiempo de GPU solo estaba disponible en ventanas cortas en un NVIDIA DGX Spark (GB10) compartido. Todo lo que no necesita GPU se preparó antes en un portátil:
+
+```
+[ Cold Staging: portátil ]
+  ├── Ejemplos semilla escritos a mano (ChatML)
+  ├── Partición determinista train/holdout (seed=42)
+  ├── Ejecuciones de prueba de 1 paso (--dry-run)
+  └── Tests unitarios del CLI contra un motor de inferencia mock
+               │
+               ▼
+[ Hot Burst: DGX Spark ]
+  ├── Generación de pares con un modelo maestro (Qwen3-Coder-30B)
+  ├── Fine-tuning LoRA con límite de tiempo (--max-time-minutes 15)
+  └── Fusión del adaptador con los pesos base (FP16)
+               │
+               ▼
+[ Borde: portátil, offline ]
+  └── GGUF Q4_K_M servido con llama-server
+```
+
+---
+
+## 3. Resultados medidos
+
+Comparación directa en el DGX Spark: misma suite, misma cuantización (Q4_K_M), misma configuración de `llama-server`, motor de puntuación AST. Evidencia: [`evaluation/reports/spark-20261105T143540Z/`](../evaluation/reports/spark-20261105T143540Z/RESULT.md).
+
+| Componente CAS (máx.) | Fine-tune | Base | Delta |
+| :--- | ---: | ---: | ---: |
+| Frontera de dominio (30) | 30.0 | 24.0 | +6.0 |
+| Seguridad de invariantes (25) | 2.7 | 0.3 | +2.4 |
+| Desacople por puertos (25) | 22.5 | 15.8 | +6.7 |
+| Tipado TypeScript (20) | 19.7 | 17.8 | +1.9 |
+| **CAS compuesto (100)** | **74.8** | **58.0** | **+16.8** |
+
+Cómo leer estas cifras:
+
+- **Una respuesta vacía saca 50.** Gana 30 por no tener imports prohibidos y 20 por no tener `any`. El modelo base queda 8 puntos por encima de no hacer nada; el fine-tune, unos 25. Ninguna de las dos ejecuciones produjo salidas vacías ni rechazos.
+- **La seguridad de invariantes es débil en ambos modelos** (2.7 / 25). El fine-tune rara vez produce constructores con validación o manejo con `Result`.
+- **El ruido entre ejecuciones es grande.** Dos ejecuciones del mismo GGUF en el portátil dieron 72.5 y 76.3, con una diferencia media por caso de 17.8 puntos. Diferencias menores a unos 5 puntos deben tratarse como ruido.
+- **Aún sin medir:** si el código compila, si conserva el comportamiento, cuánto saca el modelo base con un prompt few-shot, y cuánto sacan el maestro de 30B o un modelo frontera.
+
+Auditoría completa: [docs/evaluation-audit-2026-11-05.md](docs/evaluation-audit-2026-11-05.md).
+
+---
+
+## 4. Estructura del repositorio
 
 ```
 edge-clean-copilot/
-├── cli/          # Cliente CLI hexagonal en TypeScript (Puertos y Adaptadores, sin any)
-├── dataset/      # Semillas canónicas, generador sintético y particiones estratificadas
-├── training/     # Pipeline de fine-tuning LoRA en PyTorch y scripts de exportación GGUF
-├── evaluation/   # Harness automatizado de benchmark Clean Architecture Score (CAS 0-100)
-├── docs/         # Especificaciones técnicas, bitácoras de telemetría y roadmaps de ejecución
-├── es/           # Espejo completo de documentación en español
-└── status.py     # Diagnóstico instantáneo y tablero de reanudación sin dependencias
+├── cli/          # CLI en TypeScript (hexagonal: domain / application / infrastructure)
+├── dataset/      # Ejemplos ChatML, generador con maestro, scripts de partición y auditoría
+├── training/     # Entrenamiento LoRA (basado en recetas) y exportación GGUF
+├── evaluation/   # Harness del benchmark CAS, suites y reportes atribuidos
+├── docs/         # Runbooks, auditoría, bitácoras de progreso
+├── es/           # Espejo de la documentación en español
+└── status.py     # Panel rápido de estado del proyecto
 ```
 
-### 3.1 Subsistema CLI Hexagonal (`cli/`)
+### 4.1 CLI (`cli/`)
 
-El cliente CLI respeta Clean Architecture internamente mientras refactoriza código de usuario externamente:
+Un CLI pequeño en TypeScript que lee un archivo, lo envía a un endpoint de `llama-server` (o a un motor mock) e imprime o escribe el resultado refactorizado. Sigue las mismas convenciones que el modelo aprende a producir:
 
-```
-cli/src/
-├── domain/             # Reglas de negocio de la empresa
-│   └── entities/       # Entidad SourceFile (validación de rutas, invariantes de lenguaje)
-├── application/        # Reglas de negocio de la aplicación
-│   ├── use-cases/      # RefactorCodeUseCase (orquestación funcional)
-│   ├── ports/          # IInferenceEngine (contrato abstracto de inferencia)
-│   └── dtos/           # RefactorDTO (estructuras tipadas de entrada y salida)
-├── infrastructure/     # Adaptadores y herramientas externas
-│   ├── ai/             # LlamaServerAdapter (HTTP) y MockInferenceAdapter (testing unitario offline)
-│   ├── fs/             # FileDiskReader (I/O determinista sobre disco)
-│   └── cli/            # Punto de entrada con Commander.js e interfaz de terminal
-└── shared/             # Primitivas transversales
-    ├── types/          # Mónada Result<T, E> para manejo determinista de errores
-    └── errors/         # Jerarquía tipada DomainError (sin throws descontrolados)
-```
+- `domain/` y `application/` no importan de `infrastructure/` ni de paquetes de terceros.
+- La inferencia pasa por un puerto (`IInferenceEngine`), con `LlamaServerAdapter` y `MockInferenceAdapter` como adaptadores.
+- Las funciones devuelven `Result<T, E>` con errores tipados en vez de lanzar excepciones.
+- TypeScript estricto, sin `any`. Todos los tests corren offline contra el motor mock.
 
-#### Guardas Arquitectónicas No Negociables
-1. **Regla de Dependencia:** Las capas internas (`domain`, `application`) tienen cero dependencias de capas externas (`infrastructure`, frameworks, file system o red).
-2. **Política Zero `any`:** Tipado estricto en todo el codebase; prohibido el uso de `any`.
-3. **Mónada de Error Determinista:** Los casos de uso retornan `Result<T, DomainError>` en lugar de lanzar excepciones no tipadas.
-4. **Testabilidad 100% Offline:** La suite de tests corre de forma totalmente aislada vía `MockInferenceAdapter` sin requerir un servidor de inferencia activo.
+### 4.2 Dataset (`dataset/`)
 
-### 3.2 Subsistema de Dataset (`dataset/`)
+ChatML en JSONL (`system` / `user` / `assistant`).
 
-- **Ejemplos Semilla Canónicos (`dataset/seed_examples.jsonl`):** 8 pares de refactorización de grado productivo extraídos de modelos reales de dominio (ArrowMaze).
-- **Generador por Destilación del Teacher (`dataset/generate_with_teacher.py`):** Pipeline automatizado que interroga al modelo teacher de 30B (`Qwen3-Coder-30B-A3B-Instruct`) desplegado en el puerto aislado `8085` de la NVIDIA DGX Spark.
-- **Partición Estratificada (`dataset/split_dataset.py`):** División determinista (`seed=42`) generando:
-  - `dataset/train.jsonl`: **138 pares** (82.1%, ~156k tokens) para adaptación LoRA.
-  - `dataset/eval_holdout.jsonl`: **30 pares** (17.9%, ~35k tokens) aislados estrictamente para evaluación post-entrenamiento (cero fuga de datos).
-- **Motor de Validación (`dataset/validate_dataset.py`):** Linter de sintaxis ChatML y cumplimiento de contratos.
+| Fuente | Filas | Notas |
+| :--- | ---: | :--- |
+| `seed_examples.jsonl` | 8 | Escritos a mano, tomados de un proyecto real (ArrowMaze). |
+| `generated_examples.jsonl` | 160 | Generados por el maestro de 30B a partir de un conjunto pequeño de plantillas de prompt. |
+| `authored_examples.jsonl` | 19 | Ejemplos `ARCH_REFACTOR` y `SOLID_CRITIQUE` escritos a mano, añadidos después del entrenamiento. |
 
-### 3.3 Subsistema de Entrenamiento y Cuantización (`training/`)
+**El modelo publicado se entrenó con una partición anterior** (commit `64f3c6c`): 138 filas de entrenamiento construidas a partir de solo **18 prompts distintos**, con un holdout que compartía 28 de sus 30 prompts con el entrenamiento. Esa partición ya no está en el árbol de trabajo.
 
-- **Pipeline Nativo LoRA en PyTorch (`training/train_lora.py`):**
-  - **Modelo Base:** `Qwen/Qwen2.5-Coder-1.5B-Instruct`
-  - **Configuración LoRA:** Rango $r=16$, $\alpha=32$, cubriendo todas las proyecciones lineales (`q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`).
-  - **Aceleración de Hardware:** Ejecución nativa en `bfloat16` sobre GPU Grace Blackwell GB10 (`2.14.1+cu130`).
-  - **Guarda Defensiva de Multi-Tenencia:** Límite estricto de tiempo (`--max-time-minutes 15.0`) para evitar agotar las colas de la máquina compartida.
-  - **Fusión de Pesos:** Flag de exportación automática con `model.merge_and_unload()` (`--merge`).
-- **Exportación GGUF (`training/convert_to_gguf.sh`):** Pipeline automatizado que convierte los pesos FP16 fusionados a GGUF `Q4_K_M` para inferencia local en `llama.cpp`.
+El `split_dataset.py` actual parte por prompt normalizado y descarta respuestas truncadas. Al ejecutarlo se obtienen 91 filas de entrenamiento / 34 de holdout a partir de 36 prompts distintos, sin solapamiento de prompts (`python3 dataset/audit_dataset.py`). **Esta partición no se ha usado para entrenar.**
 
-### 3.4 Subsistema de Evaluación (`evaluation/`)
+La suite de evaluación (`evaluation/legacy_benchmark_suite.jsonl`, 30 casos) no comparte prompts ni código con los datos de entrenamiento.
 
-El arnés de evaluación (`evaluation/eval_benchmark.py`) calcula el **Clean Architecture Score (CAS)** en una escala de 0 a 100:
+### 4.3 Entrenamiento (`training/`)
 
-| Componente | Peso | Regla de Validación |
-| :--- | :--- | :--- |
-| **Aislamiento de Capas** | 25 pts | Entidades de dominio con 0 imports de capas externas o librerías de terceros. |
-| **Inversión de Control** | 25 pts | Casos de uso interactúan con adaptadores externos exclusivamente mediante Interfaces (Puertos). |
-| **Cumplimiento Zero `any`** | 25 pts | Código TypeScript generado contiene 0 ocurrencias de `any` explícito. |
-| **Manejo de Errores Tipado** | 25 pts | Funciones retornan `Result<T, DomainError>` en lugar de throws no tipados. |
+- Base: `Qwen/Qwen2.5-Coder-1.5B-Instruct`. LoRA r=16, α=32 sobre todas las proyecciones de atención y MLP, bfloat16.
+- Los hiperparámetros están en archivos de receta (`training/recipes/*.yaml`); los flags de CLI los sobrescriben.
+- Ejecución publicada: 3 épocas, unos 5.5 minutos en el GB10; loss final de entrenamiento 0.031. No se registró loss de validación. Un loss tan bajo con 18 prompts distintos apunta a memorización.
+- `--merge` fusiona el adaptador con los pesos base; `convert_to_gguf.sh` exporta Q4_K_M (941 MB), con Q5_K_M y Q8_0 opcionales.
+
+### 4.4 Evaluación (`evaluation/`)
+
+`eval_benchmark.py` calcula el **Clean Architecture Score (CAS, 0–100)** usando el AST del compilador de TypeScript (`ast_analyzer.ts`), con una alternativa por regex:
+
+| Componente | Puntos | Regla |
+| :--- | ---: | :--- |
+| Frontera de dominio | 30 | Sin imports de frameworks/ORMs (`express`, `typeorm`, `prisma`, `axios`, …). |
+| Seguridad de invariantes | 25 | Uso de `Result` y guardas de validación en constructores. |
+| Desacople por puertos | 25 | `interface I…Repository/Port/Gateway` e inyección por constructor. |
+| Tipado TypeScript | 20 | −5 por cada `any` explícito. |
+
+Es coincidencia de patrones. No compila la salida ni verifica que el comportamiento se conserve. Los reportes registran el nombre del modelo, el SHA-256 del GGUF, el endpoint y la suite, para que cada puntuación se pueda atribuir a un modelo.
 
 ---
 
-## 4. Guía Rápida y Flujo de Desarrollo
+## 5. Inicio rápido
 
-### Requisitos Previos
-- **Python:** 3.10+ (con PyTorch y herramientas de Hugging Face para entrenamiento)
-- **Node.js y PNPM:** Node 20+, `pnpm` 10+ (gestor de paquetes obligatorio)
+Requisitos: Python 3.10+, Node 20+, `pnpm` 10+. Para entrenar se necesita además PyTorch y los paquetes de `training/requirements.txt`.
 
-### 4.1 Diagnóstico Instantáneo
-Inspeccioná la salud del proyecto, suites de tests y particiones en cualquier momento:
 ```bash
-python3 status.py
-```
+python3 status.py                          # estado del proyecto
 
-### 4.2 Ejecutar Tests Unitarios de la CLI
-La CLI hexagonal en TypeScript incluye 28 tests unitarios AAA:
-```bash
-cd cli
-pnpm install
-pnpm test
-```
+cd cli && pnpm install && pnpm test        # tests del CLI (offline)
 
-### 4.3 Validar Particiones del Dataset
-Verificá que los pares ChatML cumplan con el esquema formal:
-```bash
+python3 -m unittest discover -s evaluation/tests -v
+python3 -m unittest dataset/test_split_dataset.py -v
+
 python3 dataset/validate_dataset.py dataset/train.jsonl
-python3 dataset/validate_dataset.py dataset/eval_holdout.jsonl
+python3 dataset/audit_dataset.py           # auditoría de duplicados / fugas
 ```
 
-### 4.5 Integración Local con GitHub Copilot en VS Code (Switch Rápido)
+### 5.1 Refactorizar un archivo
 
-Podés redirigir GitHub Copilot en VS Code directamente a nuestros modelos locales / en la Spark con un solo comando:
+Requiere `llama-server` sirviendo el GGUF (por defecto `http://127.0.0.1:8080`), o `--mock` para probar sin modelo. `bin/` debe estar en tu `PATH`.
 
 ```bash
-# Redirigir GitHub Copilot a Edge Clean Copilot (Spark Puerto 8085)
-copilot-local on
+clean-copilot refactor ruta/a/Archivo.ts --diff
+clean-copilot refactor ruta/a/Archivo.ts -o ruta/a/ArchivoRefactorizado.ts
+clean-copilot refactor ruta/a/Archivo.ts --mock
+```
 
-# Redirigir GitHub Copilot a Qwen3-Coder 30B (Spark Puerto 8080)
-copilot-local on qwen
+### 5.2 Enrutar Copilot de VS Code a un modelo local
 
-# Ver estado actual de enrutamiento
+`bin/copilot-local` edita `debug.overrideProxyUrl` en `~/.config/Code/User/settings.json`. Recarga la ventana de VS Code después de cambiar.
+
+```bash
+copilot-local on        # ECC en el Spark (puerto 8085)
+copilot-local on qwen   # Qwen3-Coder 30B en el Spark (puerto 8080)
 copilot-local status
-
-# Revertir a GitHub Copilot Cloud oficial
-copilot-local off
-```
-
-> **Funcionamiento:** `copilot-local` actualiza de forma transparente `debug.overrideProxyUrl` en `~/.config/Code/User/settings.json`. Recargá la ventana de VS Code (`Developer: Reload Window`) para aplicar el cambio.
-
-### 4.6 Comando CLI Global de Refactorización
-Refactorizá cualquier archivo TypeScript o JavaScript usando el CLI global:
-```bash
-# Refactorizar mostrando diff unificado
-clean-copilot refactor ruta/a/SourceFile.ts --diff
-
-# Escribir el código refactorizado directamente a destino
-clean-copilot refactor ruta/a/SourceFile.ts -o ruta/a/RefactoredFile.ts
+copilot-local off       # volver al servicio de GitHub
 ```
 
 ---
 
-## 5. Tablero de Avance e Hitos Verificados
+## 6. Más documentación
 
-| Fase | Descripción | Alcance | Estado | Métricas Verificadas |
-| :--- | :--- | :--- | :--- | :--- |
-| **Fase 1** | Infraestructura y Dataset del Teacher | Semanas 1–3 | **100%** | Enlace directo `/26`, puerto 8085 aislado, 168 pares ChatML particionados (138 train / 30 holdout). |
-| **Fase 2** | Adaptación LoRA y Especialización | Semanas 4–7 | **100%** | 3 épocas entrenadas en 5m 30s en GPU GB10; loss 0.0312; pesos consolidados en 16-bit. |
-| **Fase 3** | Consolidación de Pesos y Exportación GGUF | Semanas 8–11 | **100%** | Exportados `Q4_K_M` (941MB), `Q5_K_M` (1.1GB), `Q8_0` (1.6GB) con `--clean-f16`. |
-| **Fase 4** | CLI Hexagonal e Inferencia Offline | Semanas 12–15 | **100%** | 41/41 tests Vitest en verde; benchmark head-to-head CAS medido en Spark: **74.8 / 100 (Grado B)** vs **58.0 base** (+16.8 delta). |
-| **GLOBAL** | **Madurez Integral del Proyecto** | **General** | **100%** | **Las 4 fases 100% completadas, verificadas y operativas.** |
-
----
-
-## 6. Índice de Documentación Técnica
-
-Para especificaciones arquitectónicas profundas, runbooks y telemetría:
-- **[Roadmap Detallado de Ejecución (Semanas 4–15)](docs/detailed-roadmap.md):** Plan táctico, hitos y entregables.
-- **[Tablero de Progreso e Hitos](docs/progress-and-milestones.md):** Registro de validación de hitos basado en evidencia.
-- **[Reporte de Sesión: 2026-10-22](docs/session-2026-10-22-burst-and-lessons.md):** Telemetría del cluster, post-mortem de puertos y destilación sintética.
-- **[Propuesta Técnica Académica](propuesta.md):** Fundamento teórico, hipótesis de investigación y articulación académica.
+- [docs/next-steps.md](docs/next-steps.md): problemas conocidos y trabajo planeado.
+- [Auditoría de evaluación](docs/evaluation-audit-2026-11-05.md): hallazgos detrás de las advertencias anteriores.
+- [Runbook de evaluación en Spark](docs/spark-eval-runbook.md) y [plan del día en Spark](docs/spark-day-plan.md): cómo se produjo la comparación directa.
+- [Model card](../MODEL_CARD.md) y [guía de uso y distribución](docs/model-usage-and-sharing-guide.md).
+- [Arquitectura de la Factoría de Modelos](docs/model-factory-architecture.md): diseño basado en recetas para entrenar otros modelos base (existen recetas para Llama-3.2 y Gemma-2, pero no se han entrenado).
+- [Bitácora de progreso](docs/progress-and-milestones.md) y [propuesta académica](docs/propuesta.md).

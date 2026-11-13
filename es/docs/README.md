@@ -19,6 +19,7 @@ Este directorio contiene la documentación técnica oficial, registros de teleme
 | **[Progreso e Hitos Verificados](./progress-and-milestones.md)** | Tablero de Estado en Vivo | Desglose empírico de avances en las Fases 1, 2, 3 y 4. |
 | **[Reporte de Sesión: 2026-10-22](./session-2026-10-22-burst-and-lessons.md)** | Informe Técnico y Análisis de Causa Raíz | Aislamiento multi-instancia en puertos (8085 vs 8080), burst de dataset a 160 muestras, setup del runtime en GB10. |
 | **[Auditoría de Evaluación: 2026-11-05](./evaluation-audit-2026-11-05.md)** | Auditoría de solo lectura de tests, benchmark y dataset | Afirmaciones verificadas, hallazgos F1–F8 (fuga en holdout, puntajes sin atribución), higiene de afirmaciones. |
+| **[Próximos Pasos](./next-steps.md)** | Problemas conocidos y trabajo planeado | Diversidad y verificación del dataset (prioridad), carencias de evaluación, condiciones para reentrenar, coherencia de la documentación. |
 | **[Plan del Día de la Spark](./spark-day-plan.md)** | Plan de un comando para la sesión en la Spark | Conectar, sincronizar, preflight, correr `spark_day.sh`, copiar resultados, tabla de fallos. |
 | **[Runbook de Evaluación en Spark](./spark-eval-runbook.md)** | Plan paso a paso para la próxima sesión en la Spark | Servir base y fine-tune, ejecutar `run_comparison.sh`, chequeos de aceptación, actualización de afirmaciones. |
 
@@ -26,7 +27,7 @@ Este directorio contiene la documentación técnica oficial, registros de teleme
 
 ## 2. Recursos Relacionados del Proyecto
 
-- **[Propuesta y Visión Técnica](../propuesta.md):** Articulación académica, hipótesis central y marco teórico.
+- **[Propuesta y Visión Técnica](./propuesta.md):** Articulación académica, hipótesis central y marco teórico.
 - **[Directorio del Dataset](../../dataset/README.md):** Generadores sintéticos, ejemplos semilla canónicos y suites de validación.
 - **[Pipeline de Entrenamiento LoRA](../../training/README.md):** Bucle de entrenamiento en PyTorch, collator dinámico y utilidades de merge.
 - **[CLI Hexagonal](../../cli/README.md):** Implementación en TypeScript con Ports & Adapters y adaptadores mock offline.

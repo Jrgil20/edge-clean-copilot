@@ -19,6 +19,7 @@ This directory contains the authoritative technical documentation, session telem
 | **[Progress & Verified Milestones](./progress-and-milestones.md)** | Live Status Board | Empirical progress breakdown across Phases 1, 2, 3, and 4. |
 | **[Session Report: 2026-10-22](./session-2026-10-22-burst-and-lessons.md)** | Technical Log & Root Cause Analysis | Multi-tenant port isolation (8085 vs 8080), 160-sample dataset burst, GB10 ML runtime setup. |
 | **[Evaluation Audit: 2026-11-05](./evaluation-audit-2026-11-05.md)** | Read-only audit of tests, benchmark and dataset | Verified claims, findings F1–F8 (holdout leakage, unattributed scores), claim hygiene. |
+| **[Next Steps](./next-steps.md)** | Known problems and planned work | Dataset diversity and verification (priority), evaluation gaps, retraining conditions, doc consistency. |
 | **[Spark Day Plan](./spark-day-plan.md)** | One-command plan for the Spark session | Connect, sync, preflight, run `spark_day.sh`, copy results back, failure table. |
 | **[Spark Evaluation Runbook](./spark-eval-runbook.md)** | Step-by-step plan for the next Spark session | Serve base and fine-tune, run `run_comparison.sh`, acceptance checks, claim updates. |
 
@@ -26,7 +27,7 @@ This directory contains the authoritative technical documentation, session telem
 
 ## 2. Related Project Assets
 
-- **[Project Vision & Proposal](../propuesta.md):** Academic articulation, core hypothesis, and theoretical framework.
+- **[Project Vision & Proposal](./propuesta.md):** Academic articulation, core hypothesis, and theoretical framework.
 - **[Dataset Directory](../dataset/README.md):** Synthetic dataset generators, seed canonical examples, and validation suites.
 - **[LoRA Training Pipeline](../training/README.md):** PyTorch training loop, dynamic collator, and adapter merge utilities.
 - **[Hexagonal CLI](../cli/README.md):** Ports & Adapters TypeScript implementation and offline mock adapters.
