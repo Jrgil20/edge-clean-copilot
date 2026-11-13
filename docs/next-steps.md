@@ -46,7 +46,7 @@ Current distribution across train + holdout (`classify_sample` in `split_dataset
 Teacher answers are only checked for ChatML structure and balanced code fences. Nothing checks that the answer compiles or that it keeps the behavior of the input.
 
 **Next:**
-- Run `tsc --noEmit` on every code block in every assistant answer, and drop or fix the ones that fail.
+- ~~Type-check every assistant answer.~~ **Done (detection):** `python3 dataset/audit_dataset.py --typecheck [--list-failures]` type-checks each answer's TypeScript in isolation and also reports truncated answers and explicit `any`. Current split: 66/91 train and 29/34 eval answers pass; 8 train and 11 eval answers contain explicit `any`. Published split (`64f3c6c`): 82/107 pass, 49/138 truncated. **Still to do:** drop or fix the failing rows in `split_dataset.py`.
 - For `ARCH_REFACTOR`, keep a small runnable test with the original code and check that the refactored version passes it.
 - Score each training answer with CAS and drop low scorers, so the model is not trained on examples the benchmark would penalize.
 

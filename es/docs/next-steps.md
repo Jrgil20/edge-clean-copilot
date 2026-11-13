@@ -46,7 +46,7 @@ Distribución actual en train + holdout (`classify_sample` en `split_dataset.py`
 Las respuestas del maestro solo se comprueban por estructura ChatML y por bloques de código bien cerrados. Nada comprueba que la respuesta compile ni que conserve el comportamiento de la entrada.
 
 **Siguiente:**
-- Ejecutar `tsc --noEmit` sobre cada bloque de código de cada respuesta del asistente, y descartar o corregir las que fallen.
+- ~~Chequear los tipos de cada respuesta del asistente.~~ **Hecho (detección):** `python3 dataset/audit_dataset.py --typecheck [--list-failures]` chequea en aislamiento los tipos del TypeScript de cada respuesta y además reporta respuestas truncadas y `any` explícito. Partición actual: pasan 66/91 respuestas de train y 29/34 de eval; 8 de train y 11 de eval contienen `any` explícito. Partición publicada (`64f3c6c`): pasan 82/107, 49/138 truncadas. **Falta:** descartar o corregir las filas que fallan en `split_dataset.py`.
 - Para `ARCH_REFACTOR`, guardar un test ejecutable pequeño con el código original y comprobar que la versión refactorizada lo pasa.
 - Puntuar cada respuesta de entrenamiento con CAS y descartar las de puntuación baja, para no entrenar el modelo con ejemplos que el propio benchmark penalizaría.
 
