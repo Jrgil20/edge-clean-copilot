@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Dataset Splitter & Stratifier for Edge Clean Copilot
 
-Unifies seed_examples.jsonl and generated_examples.jsonl and splits them
+Unifies seed, generated, hand-authored and Claude-authored examples and splits them
 into train.jsonl and eval_holdout.jsonl with reproducible stratification (seed=42).
 Splits by normalized user prompt so no prompt appears in both train and holdout.
 
@@ -70,6 +70,8 @@ def main():
     parser.add_argument("--seed-file", type=str, default=str(Path(__file__).parent / "seed_examples.jsonl"))
     parser.add_argument("--generated-file", type=str, default=str(Path(__file__).parent / "generated_examples.jsonl"))
     parser.add_argument("--authored-file", type=str, default=str(Path(__file__).parent / "authored_examples.jsonl"))
+    parser.add_argument("--claude-file", type=str, default=str(Path(__file__).parent / "claude_authored_examples.jsonl"),
+                        help="Examples written by Claude (Opus 5.5) in a Claude Code session, kept apart for provenance.")
     parser.add_argument("--train-output", type=str, default=str(Path(__file__).parent / "train.jsonl"))
     parser.add_argument("--eval-output", type=str, default=str(Path(__file__).parent / "eval_holdout.jsonl"))
     parser.add_argument("--eval-target-count", type=int, default=15,
@@ -86,7 +88,7 @@ def main():
     seen_prompts = set()
     dropped_truncated = 0
 
-    for file_path in [Path(args.seed_file), Path(args.generated_file), Path(args.authored_file)]:
+    for file_path in [Path(args.seed_file), Path(args.generated_file), Path(args.authored_file), Path(args.claude_file)]:
         if not file_path.exists():
             print(f"[WARNING] File not found: {file_path}", file=sys.stderr)
             continue

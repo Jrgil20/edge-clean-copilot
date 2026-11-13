@@ -82,7 +82,7 @@ class QualityGateTest(unittest.TestCase):
         out_t, out_e = tmp / "t.jsonl", tmp / "e.jsonl"
         subprocess.run(
             [sys.executable, "-I", str(SCRIPT), "--seed-file", str(seed), "--generated-file", str(gen),
-             "--authored-file", str(tmp / "none.jsonl"), "--train-output", str(out_t), "--eval-output", str(out_e),
+             "--authored-file", str(tmp / "none.jsonl"), "--claude-file", str(tmp / "none.jsonl"), "--train-output", str(out_t), "--eval-output", str(out_e),
              "--eval-target-count", "0", *extra],
             check=True, capture_output=True,
         )

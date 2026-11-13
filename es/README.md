@@ -107,10 +107,11 @@ ChatML en JSONL (`system` / `user` / `assistant`).
 | `seed_examples.jsonl` | 8 | Escritos a mano, tomados de un proyecto real (ArrowMaze). |
 | `generated_examples.jsonl` | 160 | Generados por el maestro de 30B a partir de un conjunto pequeño de plantillas de prompt. |
 | `authored_examples.jsonl` | 19 | Ejemplos `ARCH_REFACTOR` y `SOLID_CRITIQUE` escritos a mano, añadidos después del entrenamiento. |
+| `claude_authored_examples.jsonl` | 20 | Lote piloto de ejemplos `ARCH_REFACTOR` escritos por Claude (Opus 5.5) en una sesión de Claude Code, uno por tarea distinta, añadidos después del entrenamiento. Pendiente de revisión manual. |
 
 **El modelo publicado se entrenó con una partición anterior** (commit `64f3c6c`): 138 filas de entrenamiento construidas a partir de solo **18 prompts distintos**, con un holdout que compartía 28 de sus 30 prompts con el entrenamiento. Esa partición ya no está en el árbol de trabajo.
 
-El `split_dataset.py` actual parte por prompt normalizado y descarta las respuestas truncadas, con `any` explícito o que no pasan un chequeo de tipos aislado con `tsc`. Al ejecutarlo se obtienen 67 filas de entrenamiento / 15 de holdout a partir de 32 prompts distintos, sin solapamiento de prompts (`python3 dataset/audit_dataset.py`). **Esta partición no se ha usado para entrenar.**
+El `split_dataset.py` actual parte por prompt normalizado y descarta las respuestas truncadas, con `any` explícito o que no pasan un chequeo de tipos aislado con `tsc`. Al ejecutarlo se obtienen 88 filas de entrenamiento / 15 de holdout a partir de 53 prompts distintos, sin solapamiento de prompts (`python3 dataset/audit_dataset.py`). **Esta partición no se ha usado para entrenar.**
 
 La suite de evaluación (`evaluation/legacy_benchmark_suite.jsonl`, 30 casos) no comparte prompts ni código con los datos de entrenamiento.
 

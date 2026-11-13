@@ -52,6 +52,8 @@ To ensure full compatibility with Hugging Face `trl` (`SFTTrainer`) and Qwen's n
 To uphold strict scientific and academic validity, the cumulative dataset of 168 unified samples (`seed_examples.jsonl` + `generated_examples.jsonl`) is partitioned into two mutually exclusive sets using [`split_dataset.py`](./split_dataset.py) with a fixed random seed (`seed=42`):
 
 > **Note (2026-11-08):** the figures below describe the dataset the published model was trained on. `split_dataset.py` now splits by normalized prompt and drops answers with unbalanced code fences, and, since 2026-11-13, also drops answers with explicit `any` or that fail an isolated `tsc` type-check, so rerunning it yields 82 samples (67 train / 15 holdout, 32 distinct prompts). The holdout takes the smallest prompt groups first and is capped at 15 rows so no category is drained. `ARCH_REFACTOR` and `SOLID_CRITIQUE` were rebuilt from 19 hand-authored examples (10 per category after the split) in `authored_examples.jsonl`; they are still thin, so generate more with `generate_with_teacher.py` before retraining.
+>
+> **Update (2026-11-13):** `claude_authored_examples.jsonl` adds a pilot of 20 `ARCH_REFACTOR` examples written by Claude (Opus 5.5) in a Claude Code session, each a distinct task (Express, NestJS, Fastify, Next.js, Hono, React, Angular, Redux, Kafka, SQS, BullMQ, cron, Socket.IO, GraphQL and CLI code; two inputs are plain JavaScript). They use the CLI's system prompt and `Result<T, E>` with typed errors, and all pass the audit. They are kept in their own file for provenance and are pending manual review. With them, the split yields 103 samples (88 train / 15 holdout, 53 distinct prompts, 29 `ARCH_REFACTOR`).
 
 
 ```text
