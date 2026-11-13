@@ -2,7 +2,7 @@
 
 ECC is a proof of concept. The published model (`clean-copilot-1.5b-q4_k_m.gguf`, SHA-256 `d2deae6542d1…`) is already trained and may not be retrained. The items below are ordered by importance; **the dataset comes first** because it limits everything else, including any future retraining.
 
-Figures were measured on 2026-11-13 unless noted. Related audit: [docs/evaluation-audit-2026-11-05.md](./evaluation-audit-2026-11-05.md).
+Figures were measured on 2026-11-13 unless noted. Related audit: [docs/evaluation/evaluation-audit-2026-11-05.md](./evaluation/evaluation-audit-2026-11-05.md).
 
 🌐 **[Versión en español →](../es/docs/next-steps.md)**
 
@@ -96,7 +96,7 @@ The 30 cases were written by the same author, in the same style as the training 
 
 ### 2.5 Noise
 
-Two runs of the same GGUF scored 72.5 and 76.3, with a mean per-case difference of 17.8 points.
+The same GGUF scored 72.5 (laptop CPU) and 74.8 (Spark GPU), with a mean per-case difference of 4.7 points; an earlier, unattributed run scored 76.3 and differed from the laptop run by 17.8 points per case.
 
 **Next:** run each model 3–5 times (or at temperature 0) and report the mean and spread.
 

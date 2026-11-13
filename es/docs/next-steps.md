@@ -2,7 +2,7 @@
 
 ECC es una prueba de concepto. El modelo publicado (`clean-copilot-1.5b-q4_k_m.gguf`, SHA-256 `d2deae6542d1…`) ya está entrenado y puede que no se vuelva a entrenar. Los puntos están ordenados por importancia; **el dataset va primero** porque limita todo lo demás, incluido cualquier reentrenamiento futuro.
 
-Cifras medidas el 2026-11-13 salvo que se indique otra cosa. Auditoría relacionada: [docs/evaluation-audit-2026-11-05.md](./evaluation-audit-2026-11-05.md).
+Cifras medidas el 2026-11-13 salvo que se indique otra cosa. Auditoría relacionada: [docs/evaluation/evaluation-audit-2026-11-05.md](./evaluation/evaluation-audit-2026-11-05.md).
 
 🌐 **[English version →](../../docs/next-steps.md)**
 
@@ -96,7 +96,7 @@ Los 30 casos los escribió el mismo autor, en el mismo estilo que los datos de e
 
 ### 2.5 Ruido
 
-Dos ejecuciones del mismo GGUF dieron 72.5 y 76.3, con una diferencia media por caso de 17.8 puntos.
+El mismo GGUF dio 72.5 (CPU del portátil) y 74.8 (GPU del Spark), con una diferencia media por caso de 4.7 puntos; una ejecución anterior sin modelo registrado dio 76.3 y difería de la del portátil en 17.8 puntos por caso.
 
 **Siguiente:** ejecutar cada modelo 3–5 veces (o con temperatura 0) y reportar la media y la dispersión.
 

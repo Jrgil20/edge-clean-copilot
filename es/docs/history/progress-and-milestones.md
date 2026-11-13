@@ -1,5 +1,7 @@
 # Progreso e Hitos Verificados: Edge Clean Copilot
 
+> **Cifras superadas.** Este documento se conserva tal como se escribió en su fecha. Algunas de sus afirmaciones (comparación con modelos frontera, hiperparámetros, conteo de tests, estado de avance) están corregidas en [project-analysis.md](../project/project-analysis.md), §5.5.
+
 > **Proyecto:** Edge Clean Copilot — SLM Especializado para Clean Architecture  
 > **Asignatura:** Inteligencia Artificial Aplicada (UCAB)  
 > **Autor:** Jesús Rodolfo Gil Farías  
@@ -36,21 +38,21 @@
   - Entidades de dominio con invariantes, objetos de valor puros, casos de uso con `Result<T, DomainError>`, interfaces de puertos y tests unitarios AAA.
 
 - [x] **Generador Automatizado con Modelo Maestro:**
-  - Implementado [`dataset/generate_with_teacher.py`](../../dataset/generate_with_teacher.py) con soporte ChatML y flag defensivo `--max-time-minutes`.
-  - Generados **160 ejemplos sintéticos** (~186k tokens) en [`dataset/generated_examples.jsonl`](../../dataset/generated_examples.jsonl).
+  - Implementado [`dataset/generate_with_teacher.py`](../../../dataset/generate_with_teacher.py) con soporte ChatML y flag defensivo `--max-time-minutes`.
+  - Generados **160 ejemplos sintéticos** (~186k tokens) en [`dataset/generated_examples.jsonl`](../../../dataset/generated_examples.jsonl).
 
 - [x] **Partición Estratificada del Dataset (Cero Data Leakage):**
-  - Implementado [`dataset/split_dataset.py`](../../dataset/split_dataset.py) con semilla determinista (`seed=42`).
-  - Creado [`dataset/train.jsonl`](../../dataset/train.jsonl) (**138 muestras**, ~156k tokens, 82.1%).
-  - Creado [`dataset/eval_holdout.jsonl`](../../dataset/eval_holdout.jsonl) (**30 muestras**, ~35k tokens, 17.9%) aislado para evaluación.
-  - Sintaxis validada vía [`dataset/validate_dataset.py`](../../dataset/validate_dataset.py).
+  - Implementado [`dataset/split_dataset.py`](../../../dataset/split_dataset.py) con semilla determinista (`seed=42`).
+  - Creado [`dataset/train.jsonl`](../../../dataset/train.jsonl) (**138 muestras**, ~156k tokens, 82.1%).
+  - Creado [`dataset/eval_holdout.jsonl`](../../../dataset/eval_holdout.jsonl) (**30 muestras**, ~35k tokens, 17.9%) aislado para evaluación.
+  - Sintaxis validada vía [`dataset/validate_dataset.py`](../../../dataset/validate_dataset.py).
 
 ---
 
 ## 3. Hitos de la Fase 2 (En Progreso / 85% Completada)
 
 - [x] **Pipeline de Fine-Tuning Nativo en PyTorch:**
-  - Implementado [`training/train_lora.py`](../../training/train_lora.py) con optimizador AdamW, dynamic batch padding, `--max-time-minutes` y `--merge`.
+  - Implementado [`training/train_lora.py`](../../../training/train_lora.py) con optimizador AdamW, dynamic batch padding, `--max-time-minutes` y `--merge`.
   - Hiperparámetros base: $r=16$, $\alpha=32$, apuntando por defecto a `../dataset/train.jsonl`.
 
 - [x] **Configuración del Entorno Grace Blackwell (GB10):**
@@ -68,7 +70,7 @@
 ## 4. Hitos de la Fase 3 (Completada y Validada)
 
 - [x] **Script Automatizado One-Click de Cuantización a GGUF:**
-  - Implementado [`training/convert_to_gguf.sh`](../../training/convert_to_gguf.sh) con autodetección de `llama.cpp` y `lora_venv`.
+  - Implementado [`training/convert_to_gguf.sh`](../../../training/convert_to_gguf.sh) con autodetección de `llama.cpp` y `lora_venv`.
   - Manejo de errores defensivo ante carpetas inexistentes o binarios sin compilar.
   - Genera `Q4_K_M` (default) y matriz multi-cuantización (`Q4_K_M`, `Q5_K_M`, `Q8_0`) con `--clean-f16`.
 
@@ -80,8 +82,8 @@
 ## 5. Hitos de la Fase 4 (CLI Cliente y Benchmark — 70% Completada)
 
 - [x] **Implementación de Arquitectura Hexagonal:**
-  - Código TypeScript estructurado bajo [`proyecto/cli/`](../../cli/) separando Dominio, Aplicación, Puertos e Infraestructura.
-  - Normalización defensiva de endpoints en [`LlamaServerAdapter.ts`](../../cli/src/infrastructure/ai/LlamaServerAdapter.ts) tolerando `/`, `/v1` y `/v1/chat/completions`.
+  - Código TypeScript estructurado bajo [`proyecto/cli/`](../../../cli/) separando Dominio, Aplicación, Puertos e Infraestructura.
+  - Normalización defensiva de endpoints en [`LlamaServerAdapter.ts`](../../../cli/src/infrastructure/ai/LlamaServerAdapter.ts) tolerando `/`, `/v1` y `/v1/chat/completions`.
 
 - [x] **Suite Integral de Tests Unitarios con Vitest:**
   - **28 tests pasando en 278 ms (100% en verde)** a lo largo de las 5 suites:
@@ -92,6 +94,6 @@
     - `FileDiskReader.test.ts` (2 tests)
 
 - [x] **Arnés de Evaluación Automatizado:**
-  - Implementado [`evaluation/eval_benchmark.py`](../../evaluation/eval_benchmark.py) en Python 3 puro (0 dependencias).
+  - Implementado [`evaluation/eval_benchmark.py`](../../../evaluation/eval_benchmark.py) en Python 3 puro (0 dependencias).
   - Fórmula CAS (0–100 pts) evaluando Frontera de Dominio (30%), Invariantes (25%), Puertos (25%) y Tipado Seguro (20%).
-  - Calibrado contra los 10 casos de control en [`evaluation/test_benchmark_cases.jsonl`](../../evaluation/test_benchmark_cases.jsonl).
+  - Calibrado contra los 10 casos de control en [`evaluation/test_benchmark_cases.jsonl`](../../../evaluation/test_benchmark_cases.jsonl).

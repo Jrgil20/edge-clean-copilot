@@ -69,10 +69,10 @@ Cómo leer estas cifras:
 
 - **Una respuesta vacía saca 50.** Gana 30 por no tener imports prohibidos y 20 por no tener `any`. El modelo base queda 8 puntos por encima de no hacer nada; el fine-tune, unos 25. Ninguna de las dos ejecuciones produjo salidas vacías ni rechazos.
 - **La seguridad de invariantes es débil en ambos modelos** (2.7 / 25). El fine-tune rara vez produce constructores con validación o manejo con `Result`.
-- **El ruido entre ejecuciones es grande.** Dos ejecuciones del mismo GGUF en el portátil dieron 72.5 y 76.3, con una diferencia media por caso de 17.8 puntos. Diferencias menores a unos 5 puntos deben tratarse como ruido.
+- **El ruido entre ejecuciones existe.** El mismo GGUF (mismo SHA-256) dio 72.5 en la CPU del portátil y 74.8 en la GPU del Spark, con 17/30 casos idénticos y una diferencia media por caso de 4.7 puntos. Una ejecución anterior sin modelo registrado dio 76.3 y difería de la del portátil en 17.8 puntos por caso. Diferencias menores a unos 5 puntos deben tratarse como ruido.
 - **Aún sin medir:** si el código compila, si conserva el comportamiento, cuánto saca el modelo base con un prompt few-shot, y cuánto sacan el maestro de 30B o un modelo frontera.
 
-Auditoría completa: [docs/evaluation-audit-2026-11-05.md](docs/evaluation-audit-2026-11-05.md).
+Auditoría completa: [docs/evaluation/evaluation-audit-2026-11-05.md](docs/evaluation/evaluation-audit-2026-11-05.md).
 
 ---
 
@@ -177,9 +177,11 @@ copilot-local off       # volver al servicio de GitHub
 
 ## 6. Más documentación
 
+- [Análisis del proyecto](docs/project/project-analysis.md): objetivos frente a resultados, fortalezas, hallazgos y afirmaciones seguras (para citar el proyecto como antecedente).
+- [Casos de uso válidos](docs/usage/use-cases.md): dónde usar el modelo y dónde no.
 - [docs/next-steps.md](docs/next-steps.md): problemas conocidos y trabajo planeado.
-- [Auditoría de evaluación](docs/evaluation-audit-2026-11-05.md): hallazgos detrás de las advertencias anteriores.
-- [Runbook de evaluación en Spark](docs/spark-eval-runbook.md) y [plan del día en Spark](docs/spark-day-plan.md): cómo se produjo la comparación directa.
-- [Model card](../MODEL_CARD.md) y [guía de uso y distribución](docs/model-usage-and-sharing-guide.md).
-- [Arquitectura de la Factoría de Modelos](docs/model-factory-architecture.md): diseño basado en recetas para entrenar otros modelos base (existen recetas para Llama-3.2 y Gemma-2, pero no se han entrenado).
-- [Bitácora de progreso](docs/progress-and-milestones.md) y [propuesta académica](docs/propuesta.md).
+- [Auditoría de evaluación](docs/evaluation/evaluation-audit-2026-11-05.md): hallazgos detrás de las advertencias anteriores.
+- [Runbook de evaluación en Spark](docs/evaluation/spark-eval-runbook.md) y [plan del día en Spark](docs/evaluation/spark-day-plan.md): cómo se produjo la comparación directa.
+- [Model card](../MODEL_CARD.md) y [guía de uso y distribución](docs/usage/model-usage-and-sharing-guide.md).
+- [Arquitectura de la Factoría de Modelos](docs/architecture/model-factory-architecture.md): diseño basado en recetas para entrenar otros modelos base (existen recetas para Llama-3.2 y Gemma-2, pero no se han entrenado).
+- [Bitácora de progreso](docs/history/progress-and-milestones.md) y [propuesta académica](docs/project/propuesta.md).

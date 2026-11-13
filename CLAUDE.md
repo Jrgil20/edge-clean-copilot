@@ -10,7 +10,7 @@ Edge Clean Copilot (ECC): a LoRA fine-tune of `Qwen2.5-Coder-1.5B-Instruct` that
 dataset/ (ChatML JSONL)  →  training/ (LoRA → merged FP16 → GGUF)  →  llama-server  →  cli/ and evaluation/
 ```
 
-`docs/` holds specs, runbooks and progress logs; `es/` is a full Spanish mirror of the READMEs and `docs/`. When you change an English doc, update its `es/` counterpart too. `status.py` prints a zero-dependency project health dashboard.
+`docs/` is grouped into `project/` (proposal, ideas, `project-analysis.md`: the current assessment and errata), `usage/`, `evaluation/`, `architecture/` and `history/` (dated logs, figures may be superseded), with `next-steps.md` and the index `README.md` at the top; `es/` is a full Spanish mirror of the READMEs and `docs/`. When you change an English doc, update its `es/` counterpart too. `status.py` prints a zero-dependency project health dashboard.
 
 ## Commands
 

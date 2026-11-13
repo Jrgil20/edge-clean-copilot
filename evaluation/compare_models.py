@@ -192,7 +192,7 @@ def generate_markdown_report(models: Dict[str, Dict[str, Any]], output_path: Pat
 > **Evaluation Harness:** [`eval_benchmark.py`](./eval_benchmark.py) (Clean Architecture Score - CAS 0–100)  
 > **Benchmark Suite:** [`legacy_benchmark_suite.jsonl`](./legacy_benchmark_suite.jsonl) (30 legacy code samples)
 >
-> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier CAS and speeds are unmeasured placeholders; the ECC CAS comes from a run without model attribution. See [audit](../docs/evaluation-audit-2026-11-05.md).
+> **Figures Source:** [model card](https://huggingface.co/jrgil/edge-clean-copilot-1.5b-gguf) (self-reported). Base and frontier CAS and speeds are unmeasured placeholders; the ECC CAS comes from a run without model attribution. See [audit](../docs/evaluation/evaluation-audit-2026-11-05.md).
 >
 > **Last Verification:** {time.strftime('%Y-%m-%d %H:%M:%SZ', time.gmtime())}
 

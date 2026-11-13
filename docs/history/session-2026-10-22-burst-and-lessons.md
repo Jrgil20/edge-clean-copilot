@@ -57,14 +57,14 @@ To avoid queue contention, context overwrites, and HTTP payload interference wit
 
 ## 3. Teacher Dataset Generation Burst
 
-Using [`dataset/generate_with_teacher.py`](../dataset/generate_with_teacher.py) pointing directly to `http://192.168.6.35:8085/v1/chat/completions`, a 15-minute generation window was executed.
+Using [`dataset/generate_with_teacher.py`](../../dataset/generate_with_teacher.py) pointing directly to `http://192.168.6.35:8085/v1/chat/completions`, a 15-minute generation window was executed.
 
 ### 3.1 Quantitative Results
 - **Generation Duration:** 15.02 minutes.
 - **New Validated Pairs:** **94 synthetic ChatML pairs**.
-- **Cumulative Dataset Size:** Increased from 66 to **160 samples** in [`dataset/generated_examples.jsonl`](../dataset/generated_examples.jsonl).
+- **Cumulative Dataset Size:** Increased from 66 to **160 samples** in [`dataset/generated_examples.jsonl`](../../dataset/generated_examples.jsonl).
 - **Approximate Cumulative Tokens:** **~186,212 tokens**.
-- **Syntax & Schema Verification:** 100% passed via [`dataset/validate_dataset.py`](../dataset/validate_dataset.py).
+- **Syntax & Schema Verification:** 100% passed via [`dataset/validate_dataset.py`](../../dataset/validate_dataset.py).
 - **Domain Topics Covered:**
   - Strict Domain Entities and Value Objects (`Result<T, E>` pattern, no mutable leaks).
   - Use Cases enforcing single-responsibility and dependency inversion.
@@ -87,7 +87,7 @@ To transition into Phase 2 (LoRA adaptation), a native Python virtual environmen
 
 ### 4.2 Dry-Run & Weight Download Analysis
 
-Execution of [`training/train_lora.py --dry-run`](../training/train_lora.py) was initiated to download base model `Qwen/Qwen2.5-Coder-1.5B-Instruct` (3.09 GB) into `~/.cache/huggingface/hub/`:
+Execution of [`training/train_lora.py --dry-run`](../../training/train_lora.py) was initiated to download base model `Qwen/Qwen2.5-Coder-1.5B-Instruct` (3.09 GB) into `~/.cache/huggingface/hub/`:
 - **Observed Downlink Rate:** ~2.2 – 2.5 MB/s over public educational laboratory network.
 - **Downloaded Prior to Cutoff:** 2.26 GB out of 3.09 GB (**73.1%**).
 - **Action Taken:** Terminated gracefully prior to 13:00 lab curfew to preserve system cleanliness and avoid partial checkpoint corruption.

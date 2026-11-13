@@ -1,5 +1,7 @@
 # Edge Clean Copilot: Final Technical Report & Defense Presentation Guide
 
+> **Superseded figures.** This document is kept as written on its date. Some of its claims (frontier comparison, hyperparameters, test counts, completion status) are corrected in [project-analysis.md](./project-analysis.md), §5.5.
+
 > **Course:** Applied Artificial Intelligence (2026–2027)  
 > **Institution:** Universidad Católica Andrés Bello (UCAB) — School of Computer Engineering  
 > **Author:** Jesús Rodolfo Gil Farías  
@@ -121,7 +123,7 @@ To specialize the model, we constructed a high-signal dataset structured in the 
 3. **Stratified Partitioning (Zero Data Leakage):**
    - Partitioning script (`dataset/split_dataset.py`) using deterministic pseudo-random splitting (`seed=42`).
    - **`dataset/train.jsonl`:** 138 pairs (~156k tokens, 82.1%).
-   - **`dataset/eval_holdout.jsonl`:** 30 pairs (~35k tokens, 17.9%) NOT isolated from training (28/30 prompts also appear in `train.jsonl`, see [audit](./evaluation-audit-2026-11-05.md)); the 30-case legacy suite is the disjoint evaluation set.
+   - **`dataset/eval_holdout.jsonl`:** 30 pairs (~35k tokens, 17.9%) NOT isolated from training (28/30 prompts also appear in `train.jsonl`, see [audit](../evaluation/evaluation-audit-2026-11-05.md)); the 30-case legacy suite is the disjoint evaluation set.
    - Syntax and contract validation enforced via `dataset/validate_dataset.py`.
 
 ---
@@ -273,7 +275,7 @@ COMPOSITE CAS (0–100 PTS)        |      58.0       |         74.8         |   
 ---
 
 ### Slide 10: Empirical Results: Base vs. ECC vs. Cloud (2 min)
-- **Visuals:** Embed [`benchmark_comparison_chart.svg`](../evaluation/benchmark_comparison_chart.svg) and the comparative matrix.
+- **Visuals:** Embed [`benchmark_comparison_chart.svg`](../../evaluation/benchmark_comparison_chart.svg) and the comparative matrix.
 - **Talking Points:**
   - **Base Model (Qwen 1.5B):** 58.0 pts (measured). Struggles with port decoupling and layer boundaries.
   - **Frontier Cloud Baseline:** 90.5 pts (unmeasured reference). Strong, but requires cloud.

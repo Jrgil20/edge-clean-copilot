@@ -1,5 +1,7 @@
 # Edge Clean Copilot: Memoria Técnica Final y Guion de Defensa de Proyecto
 
+> **Cifras superadas.** Este documento se conserva tal como se escribió en su fecha. Algunas de sus afirmaciones (comparación con modelos frontera, hiperparámetros, conteo de tests, estado de avance) están corregidas en [project-analysis.md](./project-analysis.md), §5.5.
+
 > **Asignatura:** Inteligencia Artificial Aplicada (2026–2027)  
 > **Institución:** Universidad Católica Andrés Bello (UCAB) — Escuela de Ingeniería Informática  
 > **Autor:** Jesús Rodolfo Gil Farías  
@@ -121,7 +123,7 @@ Para especializar el modelo, construimos un dataset de alta señal en formato Ch
 3. **Partición Estratificada (Cero Fuga de Datos):**
    - Script de particionamiento (`dataset/split_dataset.py`) determinista (`seed=42`).
    - **`dataset/train.jsonl`:** 138 pares (~156k tokens, 82.1%).
-   - **`dataset/eval_holdout.jsonl`:** 30 pares (~35k tokens, 17.9%) NO aislados del entrenamiento (28/30 prompts también están en `train.jsonl`, ver [auditoría](./evaluation-audit-2026-11-05.md)); la suite legacy de 30 casos es el conjunto de evaluación disjunto.
+   - **`dataset/eval_holdout.jsonl`:** 30 pares (~35k tokens, 17.9%) NO aislados del entrenamiento (28/30 prompts también están en `train.jsonl`, ver [auditoría](../evaluation/evaluation-audit-2026-11-05.md)); la suite legacy de 30 casos es el conjunto de evaluación disjunto.
    - Validación sintáctica y de contratos con `dataset/validate_dataset.py`.
 
 ---
@@ -270,7 +272,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      58.0       |         74.8         |   
 ---
 
 ### Diapositiva 10: Resultados Experimentales: Base vs. ECC vs. Cloud (2 min)
-- **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
+- **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../../../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
 - **Puntos a Exponer:**
   - **Modelo Base (1.5B):** 58.0 pts (medido). Presenta dificultades con aislamiento de capas y desacoplamiento.
   - **Línea Base Cloud:** 90.5 pts (referencia no medida). Excelente, pero requiere nube.

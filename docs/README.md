@@ -1,33 +1,60 @@
-# Edge Clean Copilot — Technical Knowledge Base & Documentation Index
+# Edge Clean Copilot: Documentation
 
-> **Primary Audience:** AI Agents (Coding assistants, RAG pipelines, Autonomous planners)  
-> **Secondary Audience:** Human Engineers & Evaluators  
+🌐 **[Versión en español →](../es/docs/README.md)**
 
-This directory contains the authoritative technical documentation, session telemetry logs, milestone progress tracking, and engineering roadmaps for the **Edge Clean Copilot** semester project.
+Documentation is grouped by purpose. If you are citing this project as background (prior work), start with the analysis.
 
----
+## Reading order for citing this project as background
 
-## 1. Documentation Index
-
-| Document | Purpose | Key Content |
-| :--- | :--- | :--- |
-| **[Interactive Web Portal (docs/index.html)](./index.html)** | Visual Presentation & Interactive Showcase | Single-file responsive showcase with live Before/After diff comparator and CAS metrics. |
-| **[Model Usage & Sharing Guide](./model-usage-and-sharing-guide.md)** | Operational Guide & Distribution Blueprint | How to power on/off, use CLI, run in VS Code, share via Ollama/LM Studio/Hugging Face. |
-| **[Model Factory Architecture](./model-factory-architecture.md)** | Scalable SLM Specialization Architecture | Blueprint for ingesting new open-weight SLMs, decoupled factory stages, and reproducibility. |
-| **[Final Technical Report & Presentation](./final-report-and-presentation.md)** | Academic Capstone Paper & Defense Guide | Comprehensive engineering report, formal Clean Architecture Score findings, and 12-slide presentation script. |
-| **[Detailed Execution Roadmap](./detailed-roadmap.md)** | Operational Master Plan (Weeks 4–15) | Hyperparameters, quantization targets, automated benchmark metrics, and weekly action items. |
-| **[Progress & Verified Milestones](./progress-and-milestones.md)** | Live Status Board | Empirical progress breakdown across Phases 1, 2, 3, and 4. |
-| **[Session Report: 2026-10-22](./session-2026-10-22-burst-and-lessons.md)** | Technical Log & Root Cause Analysis | Multi-tenant port isolation (8085 vs 8080), 160-sample dataset burst, GB10 ML runtime setup. |
-| **[Evaluation Audit: 2026-11-05](./evaluation-audit-2026-11-05.md)** | Read-only audit of tests, benchmark and dataset | Verified claims, findings F1–F8 (holdout leakage, unattributed scores), claim hygiene. |
-| **[Next Steps](./next-steps.md)** | Known problems and planned work | Dataset diversity and verification (priority), evaluation gaps, retraining conditions, doc consistency. |
-| **[Spark Day Plan](./spark-day-plan.md)** | One-command plan for the Spark session | Connect, sync, preflight, run `spark_day.sh`, copy results back, failure table. |
-| **[Spark Evaluation Runbook](./spark-eval-runbook.md)** | Step-by-step plan for the next Spark session | Serve base and fine-tune, run `run_comparison.sh`, acceptance checks, claim updates. |
+1. [project/project-analysis.md](./project/project-analysis.md): objectives vs results, ideas, what is right and wrong, claims you can safely cite.
+2. [project/propuesta.md](./project/propuesta.md): the original proposal and hypothesis.
+3. [usage/use-cases.md](./usage/use-cases.md): where the model is valid to use and where it is not.
+4. [next-steps.md](./next-steps.md): known problems and planned work (dataset first).
 
 ---
 
-## 2. Related Project Assets
+## `project/`: proposal, ideas and assessment
 
-- **[Project Vision & Proposal](./propuesta.md):** Academic articulation, core hypothesis, and theoretical framework.
-- **[Dataset Directory](../dataset/README.md):** Synthetic dataset generators, seed canonical examples, and validation suites.
-- **[LoRA Training Pipeline](../training/README.md):** PyTorch training loop, dynamic collator, and adapter merge utilities.
-- **[Hexagonal CLI](../cli/README.md):** Ports & Adapters TypeScript implementation and offline mock adapters.
+| Document | Content |
+| :-- | :-- |
+| [project-analysis.md](./project/project-analysis.md) | Full analysis (2026-11-13): planned vs achieved objectives, the process stage by stage, strengths, findings, errata, safe claims. **Current reference.** |
+| [propuesta.md](./project/propuesta.md) | Original proposal: vision, hypothesis, phases, replicability. |
+| [ideas.md](./project/ideas.md) | Idea bank: selected idea and alternatives considered (RAG, linters). |
+| [final-report-and-presentation.md](./project/final-report-and-presentation.md) | Course final report and 12-slide defense guide (2026-10-23). Some claims are superseded; see the errata in the analysis (§5.5). |
+
+## `usage/`: using the model
+
+| Document | Content |
+| :-- | :-- |
+| [use-cases.md](./usage/use-cases.md) | Valid use cases, ideal environments, what not to use it for, practical tips. |
+| [model-usage-and-sharing-guide.md](./usage/model-usage-and-sharing-guide.md) | Starting and stopping the server, CLI, VS Code routing, sharing via Ollama, LM Studio and Hugging Face. |
+
+## `evaluation/`: benchmark, audit and Spark runs
+
+| Document | Content |
+| :-- | :-- |
+| [evaluation-audit-2026-11-05.md](./evaluation/evaluation-audit-2026-11-05.md) | Audit of tests, benchmark and dataset; findings F1–F10; measured head-to-head result. |
+| [spark-day-plan.md](./evaluation/spark-day-plan.md) | One-command plan for a Spark session. |
+| [spark-eval-runbook.md](./evaluation/spark-eval-runbook.md) | Step-by-step manual runbook for the base vs fine-tune comparison. |
+
+## `architecture/`: design
+
+| Document | Content |
+| :-- | :-- |
+| [model-factory-architecture.md](./architecture/model-factory-architecture.md) | Recipe-driven design for specialising other base models. Only the Qwen 1.5B recipe has been trained. |
+
+## `history/`: logs and plans as written at the time
+
+These documents record what was planned or believed on their dates. Figures in them may be superseded; the analysis is the current reference.
+
+| Document | Content |
+| :-- | :-- |
+| [progress-and-milestones.md](./history/progress-and-milestones.md) | Phase-by-phase progress log. |
+| [detailed-roadmap.md](./history/detailed-roadmap.md) | Execution plan for weeks 4–15. |
+| [session-2026-10-22-burst-and-lessons.md](./history/session-2026-10-22-burst-and-lessons.md) | Spark session log: port isolation, teacher data burst, lessons learned. |
+
+## Other
+
+- [next-steps.md](./next-steps.md): known problems and planned work.
+- [index.html](./index.html): interactive web showcase (written before the audit; its figures are not authoritative).
+- Subsystem READMEs: [dataset](../dataset/README.md), [training](../training/README.md), [evaluation](../evaluation/README.md), [CLI](../cli/README.md).
