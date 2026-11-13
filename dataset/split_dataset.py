@@ -47,6 +47,12 @@ def classify_sample(sample: Dict[str, Any]) -> str:
         if msg.get("role") == "user":
             user_content = msg.get("content", "").lower()
             break
+    # Classify by the instruction only: identifiers inside the input code
+    # (`email`, `process.env.PORT`) say nothing about the task.
+    user_content = re.sub(r"```.*?```", " ", user_content, flags=re.S)
+    # "Ports & Adapters" names the target architecture (it is the CLI's own
+    # refactor prompt), not a request to design a port.
+    user_content = re.sub(r"\bports\s*(?:&|and)\s*adapters\b", " ", user_content)
 
     def has(*patterns: str) -> bool:
         # Whole-word matching: "import"/"report" must not match "port"
