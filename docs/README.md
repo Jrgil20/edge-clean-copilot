@@ -7,9 +7,10 @@ Documentation is grouped by purpose. If you are citing this project as backgroun
 ## Reading order for citing this project as background
 
 1. [project/project-analysis.md](./project/project-analysis.md): objectives vs results, ideas, what is right and wrong, claims you can safely cite.
-2. [project/propuesta.md](./project/propuesta.md): the original proposal and hypothesis.
-3. [usage/use-cases.md](./usage/use-cases.md): where the model is valid to use and where it is not.
-4. [next-steps.md](./next-steps.md): known problems and planned work (dataset first).
+2. [project/retrospective.md](./project/retrospective.md): observations and lessons: where the value lies and where the limits come from.
+3. [project/propuesta.md](./project/propuesta.md): the original proposal and hypothesis.
+4. [usage/use-cases.md](./usage/use-cases.md): where the model is valid to use and where it is not.
+5. [next-steps.md](./next-steps.md): known problems and planned work (dataset first).
 
 ---
 
@@ -18,6 +19,7 @@ Documentation is grouped by purpose. If you are citing this project as backgroun
 | Document | Content |
 | :-- | :-- |
 | [project-analysis.md](./project/project-analysis.md) | Full analysis (2026-11-13): planned vs achieved objectives, the process stage by stage, strengths, findings, errata, safe claims. **Current reference.** |
+| [retrospective.md](./project/retrospective.md) | Observations and lessons drawn from the analysis: process over artifact, data as the binding constraint, metric blind spots, open questions. |
 | [propuesta.md](./project/propuesta.md) | Original proposal: vision, hypothesis, phases, replicability. |
 | [ideas.md](./project/ideas.md) | Idea bank: selected idea and alternatives considered (RAG, linters). |
 | [final-report-and-presentation.md](./project/final-report-and-presentation.md) | Course final report and 12-slide defense guide (2026-10-23). Some claims are superseded; see the errata in the analysis (§5.5). |

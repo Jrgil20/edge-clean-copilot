@@ -3,7 +3,7 @@
 > **Fecha:** 2026-11-13
 > **Propósito:** un relato completo y verificable del proyecto para citarlo como antecedente (trabajo previo) de una tesis posterior. Este proyecto no es la tesis en sí. El documento cubre sus objetivos, sus ideas, qué funcionó, qué no y qué afirmaciones sostiene la evidencia.
 > **Método:** cada cifra de este documento se volvió a medir desde el repositorio en esta fecha: se ejecutaron las suites de tests, se contaron los archivos del dataset, se recuperaron del historial de git la partición y el código de entrenamiento del modelo publicado, y se reanalizaron las salidas del benchmark ya commiteadas (estadística pareada y chequeo de tipos aislado). Los scripts se ejecutaron en local. No se consultó ningún modelo.
-> **Relacionado:** [auditoría de evaluación (2026-11-05)](../evaluation/evaluation-audit-2026-11-05.md), [próximos pasos](../next-steps.md), [casos de uso válidos](../usage/use-cases.md).
+> **Relacionado:** [retrospectiva](./retrospective.md), [auditoría de evaluación (2026-11-05)](../evaluation/evaluation-audit-2026-11-05.md), [próximos pasos](../next-steps.md), [casos de uso válidos](../usage/use-cases.md).
 
 ---
 
