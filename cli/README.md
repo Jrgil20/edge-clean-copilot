@@ -85,7 +85,7 @@ pnpm run dev refactor src/domain/entities/SourceFile.ts --url http://192.168.6.3
 | `-o, --output <path>` | — | — | Also write the code to `<path>` (refuses to overwrite the input) |
 | `-t, --temperature <number>` | — | `0.1` | Sampling temperature, 0–2 |
 | `--max-tokens <number>` | — | `2048` | Generation budget; a reply that hits it fails as truncated |
-| `--timeout <ms>` | `CLEAN_COPILOT_TIMEOUT_MS` | `300000` | Request timeout; CPU inference runs at ~12 tok/s, so 2048 tokens take ~165 s |
+| `--timeout <ms>` | `CLEAN_COPILOT_TIMEOUT_MS` | `300000` | Request timeout; on a CPU-only i5-10310U typical replies took 86–130 s and a full 2048-token reply took 208 s |
 
 ### Output contract
 
@@ -95,4 +95,4 @@ pnpm run dev refactor src/domain/entities/SourceFile.ts --url http://192.168.6.3
 | stderr | Banner, settings, status and errors |
 | exit code | `0` on success, `1` on any error |
 
-The model answers with prose around fenced code blocks; the CLI keeps only the code inside the fences (joined by a blank line), so `clean-copilot refactor in.ts > out.ts` and `-o out.ts` both produce a source file.
+The model answers with prose around fenced code blocks; the CLI keeps only the code inside the fences (joined by a blank line), so `clean-copilot refactor in.ts > out.ts` and `-o out.ts` both get code only. The code is not compiled or checked: review it before use (the model can leave placeholders such as `= /* implementation */;`).

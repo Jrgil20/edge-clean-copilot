@@ -52,6 +52,16 @@ describe('clean-copilot refactor (end to end, mock engine)', () => {
     expect(stderr).toContain('[Saved File]');
   });
 
+  it('prints only the diff on stdout with --diff, and its header on stderr', () => {
+    const { code, stdout, stderr } = run(['refactor', input, '--mock', '--diff']);
+    expect(code).toBe(0);
+    expect(stdout).toContain('export class RefactoredEntity');
+    expect(stdout).not.toContain('Architectural Diff');
+    expect(stdout).not.toContain('[Diff Summary]');
+    expect(stderr).toContain('Architectural Diff');
+    expect(stderr).toMatch(/\[Diff Summary\] : \+\d+ lines added, -\d+ lines removed\./);
+  });
+
   it('reports the default 300000 ms timeout', () => {
     const { code, stderr } = run(['refactor', input, '--mock']);
     expect(code).toBe(0);
