@@ -29,11 +29,11 @@ User request (verbatim, L1): "primero quiero una revision completa aca tienes ac
 | T3 | S3 | inline | done (RED→GREEN, e2e on mock) | f692230 |
 | T4 | S4, S7 | inline | done | 5db9ee3 |
 | T5 | S5, S6, S7 | inline | done | 70c2f2c |
-| T6 | S8 | inline | pending | |
-| T7 | S9 | inline (upload by user) | pending | |
-| T8 | S10 | inline | pending | |
-| T9 | S11 | inline | pending | |
-| T10 | S12 | inline | pending | |
+| T6 | S8 | inline | done (RED→GREEN) | 1c4d3d7 |
+| T7 | S9 | inline (upload by user) | prepared; upload pending user auth | c0608ad, ef4a9b5 |
+| T8 | S10 | inline | done (RED→GREEN) | 0474733 |
+| T9 | S11 | inline | done | bc0b61c |
+| T10 | S12 | inline | done (RED→GREEN) | 2586aa1, 522a9e2 |
 
 Route evidence: no Writer trigger (units are small and sequential); review mapping was delegated to 3 read-only explorers.
 
@@ -48,3 +48,4 @@ Route evidence: no Writer trigger (units are small and sequential); review mappi
 - L7 advisor follow-ups: `evaluation/benchmark_comparison_chart.svg` still drew the unmeasured "Gemini 3.8 Flash" series; replaced with the measured two-series chart (render identical to the validated index.html chart). `compare_models.py` still hardcodes three series and would redraw it on re-run (pending). `training/README.md` (en/es) unmeasured Q5/Q8/F16 speeds and quality-retention figures set to "not measured"; dataset README "183 samples" note marked superseded (en/es). CLI claims corrected to measured values (86–130 s typical, 208 s for a full 2048-token reply; "code only", not "a source file"). Added `--diff` e2e test: 61/61.
 
 - L8 (2026-11-13) user: "puedes resolver de la 5 en adelante de hecho" (items 5–9 of the pending-decision list). Pushed earlier on request: branch + parent pointer c0c017f.
+- L9 T6–T10: Gemma-2 finding verified from the template text (`raise_exception('System role not supported')`); rendering the downloaded template locally was blocked by the permission classifier, so the fold is proven with a stand-in tokenizer in `test_data_prep.py`. Loss-mask finding verified in code (`found_idx == -1` kept full labels). MODEL_CARD reading for the es mirror surfaced more unmeasured content (operational table 52/85 tok/s, "A100", "completely eliminates any", batch 2×4) — fixed in c0608ad from audit T1/T3 and the Spark report (28/30 outputs without an any penalty). HF upload needs the user's token (none on this laptop): `training/upload_to_hf.sh --card-only <repo>`. All suites: 61/61 vitest; Python evaluation, dataset, training (data_prep 12 OK, train_loop skipped without torch), test_status OK.

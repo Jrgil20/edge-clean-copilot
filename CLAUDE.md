@@ -32,6 +32,8 @@ python3 -m unittest discover -s evaluation/tests -v
 python3 -m unittest dataset/test_split_dataset.py -v
 python3 -m unittest dataset/test_audit_dataset.py -v   # typecheck tests skip without cli/node_modules
 python3 -m unittest training/test_train_loop.py -v      # skipped if torch is missing
+python3 -m unittest training/test_data_prep.py -v       # system-prompt folding + completion labels (no torch)
+python3 -m unittest test_status.py -v                   # status.py reports only what it checks
 ```
 
 ### Dataset
