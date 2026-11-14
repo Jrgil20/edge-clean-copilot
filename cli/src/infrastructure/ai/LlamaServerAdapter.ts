@@ -9,6 +9,12 @@ export interface LlamaServerConfig {
 }
 
 export class LlamaServerAdapter implements IInferenceEngine {
+  /**
+   * Measured on a CPU-only i5-10310U: ~12.6 tok/s, so the default 2048-token
+   * budget needs ~165 s. 300 s leaves headroom for prompt processing.
+   */
+  public static readonly DEFAULT_TIMEOUT_MS = 300_000;
+
   public readonly endpoint: string;
   private readonly modelName: string;
   private readonly timeoutMs: number;
@@ -17,7 +23,7 @@ export class LlamaServerAdapter implements IInferenceEngine {
     const rawUrl = (config?.baseUrl || process.env.LLAMA_SERVER_URL || 'http://127.0.0.1:8080').trim().replace(/\/+$/, '');
     this.endpoint = this.normalizeEndpoint(rawUrl);
     this.modelName = config?.modelName || process.env.LLAMA_MODEL_NAME || 'edge-clean-copilot-q4_k_m';
-    this.timeoutMs = config?.timeoutMs || 60_000;
+    this.timeoutMs = config?.timeoutMs || LlamaServerAdapter.DEFAULT_TIMEOUT_MS;
   }
 
   private normalizeEndpoint(rawUrl: string): string {

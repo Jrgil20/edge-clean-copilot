@@ -95,6 +95,31 @@ describe('RefactorCodeUseCase Application Service', () => {
     });
   });
 
+  describe('Model Reply Post-processing', () => {
+    it('should return only the fenced code of a reply wrapped in prose', async () => {
+      const chattyEngine: IInferenceEngine = {
+        async complete(_prompt: InferencePrompt): Promise<Result<InferenceOutput, InfrastructureError>> {
+          return Result.ok({
+            text: "Here's the refactored code:\n\n```typescript\nexport class Order {}\n```\n\nSummary: done.",
+            modelName: 'test-model',
+            durationMs: 1
+          });
+        }
+      };
+
+      const result = await new RefactorCodeUseCase(chattyEngine).execute({
+        filePath: 'src/order.ts',
+        fileContent: 'export class Order {}'
+      });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.refactoredCode).toBe('export class Order {}');
+        expect(result.data.modelUsed).toBe('test-model');
+      }
+    });
+  });
+
   describe('Infrastructure Error Propagation', () => {
     it('should return Result.fail with InfrastructureError when the inference engine port fails', async () => {
       // Arrange: Create a failing test double adapter

@@ -3,6 +3,7 @@ import { IInferenceEngine } from '../ports/IInferenceEngine.js';
 import { RefactorInputDTO, RefactorOutputDTO } from '../dtos/RefactorDTO.js';
 import { Result } from '../../shared/types/Result.js';
 import { DomainError, InfrastructureError } from '../../shared/errors/DomainError.js';
+import { extractCodeBlocks } from '../services/extractCodeBlocks.js';
 
 export class RefactorCodeUseCase {
   private static readonly SYSTEM_PROMPT =
@@ -42,7 +43,7 @@ export class RefactorCodeUseCase {
       const output: RefactorOutputDTO = {
         filePath: sourceFile.filePath,
         originalLineCount: sourceFile.lineCount,
-        refactoredCode: inferenceResult.data.text,
+        refactoredCode: extractCodeBlocks(inferenceResult.data.text),
         modelUsed: inferenceResult.data.modelName,
         durationMs: inferenceResult.data.durationMs
       };

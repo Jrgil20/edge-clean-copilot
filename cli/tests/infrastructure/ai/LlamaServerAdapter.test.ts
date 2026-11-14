@@ -112,7 +112,61 @@ describe('LlamaServerAdapter Infrastructure Adapter', () => {
       }
     });
 
-    it('should return Result.fail with LLAMA_SERVER_NETWORK_ERROR on network disconnect or abort', async () => {
+    it('should wait 300000ms by default before failing with LLAMA_TIMEOUT_ERROR', async () => {
+      vi.useFakeTimers();
+      try {
+        vi.spyOn(globalThis, 'fetch').mockImplementation(
+          (_url, init) =>
+            new Promise((_resolve, reject) => {
+              init?.signal?.addEventListener('abort', () => reject(new Error('aborted')));
+            })
+        );
+        const adapter = new LlamaServerAdapter({ baseUrl: 'http://127.0.0.1:8080' });
+        let settled = false;
+        const pending = adapter.complete({ systemPrompt: 'S', userPrompt: 'U' }).then((r) => {
+          settled = true;
+          return r;
+        });
+
+        await vi.advanceTimersByTimeAsync(299_999);
+        expect(settled).toBe(false);
+
+        await vi.advanceTimersByTimeAsync(1);
+        const result = await pending;
+        expect(result.success).toBe(false);
+        if (!result.success) {
+          expect(result.error.code).toBe('LLAMA_TIMEOUT_ERROR');
+          expect(result.error.message).toContain('300000ms');
+        }
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('should honor an explicit timeoutMs', async () => {
+      vi.useFakeTimers();
+      try {
+        vi.spyOn(globalThis, 'fetch').mockImplementation(
+          (_url, init) =>
+            new Promise((_resolve, reject) => {
+              init?.signal?.addEventListener('abort', () => reject(new Error('aborted')));
+            })
+        );
+        const adapter = new LlamaServerAdapter({ baseUrl: 'http://127.0.0.1:8080', timeoutMs: 5_000 });
+        const pending = adapter.complete({ systemPrompt: 'S', userPrompt: 'U' });
+        await vi.advanceTimersByTimeAsync(5_000);
+        const result = await pending;
+        expect(result.success).toBe(false);
+        if (!result.success) {
+          expect(result.error.code).toBe('LLAMA_TIMEOUT_ERROR');
+          expect(result.error.message).toContain('5000ms');
+        }
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('should return Result.fail with LLAMA_CONNECTION_ERROR on network disconnect', async () => {
       // Arrange
       vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(new Error('Connection refused (ECONNREFUSED)'));
 
