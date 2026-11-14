@@ -10,8 +10,8 @@ export interface LlamaServerConfig {
 
 export class LlamaServerAdapter implements IInferenceEngine {
   /**
-   * Measured on a CPU-only i5-10310U (~10-12.6 tok/s): typical replies of
-   * 1100-1300 tokens took 86-130 s; a reply that ran to the full 2048-token
+   * Measured on a CPU-only i5-10310U (~10-12.6 tok/s): on a 14-line input, replies
+   * of 1100-1300 tokens took 86-130 s; a reply that ran to the full 2048-token
    * budget took 208 s. 300 s covers both with headroom.
    */
   public static readonly DEFAULT_TIMEOUT_MS = 300_000;

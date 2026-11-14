@@ -54,6 +54,17 @@ class StatusReportTest(unittest.TestCase):
         self.assertIn("138 train / 30 holdout", text)
         self.assertIn("published model was trained on", text)
 
+    def test_counts_holdout_prompts_that_also_appear_in_train(self):
+        def row(prompt):
+            return json.dumps({"messages": [{"role": "user", "content": prompt}, {"role": "assistant", "content": "x"}]}) + "\n"
+        with tempfile.TemporaryDirectory() as tmp:
+            ds = Path(tmp) / "dataset"
+            ds.mkdir()
+            (ds / "train.jsonl").write_text(row("a") + row("b  c") + row("d"))
+            (ds / "eval_holdout.jsonl").write_text(row("b c") + row("b c") + row("e"))
+            text = "\n".join(status.build_report(Path(tmp)))
+        self.assertIn("3 train / 3 holdout (2 holdout rows with a prompt seen in train)", text)
+
     def test_never_prints_hardcoded_cluster_state(self):
         out = subprocess.run([sys.executable, str(ROOT / "status.py")], capture_output=True, text=True, check=True).stdout
         self.assertNotIn("Curfew", out)

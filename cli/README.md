@@ -85,7 +85,7 @@ pnpm run dev refactor src/domain/entities/SourceFile.ts --url http://192.168.6.3
 | `-o, --output <path>` | — | — | Also write the code to `<path>` (refuses to overwrite the input) |
 | `-t, --temperature <number>` | — | `0.1` | Sampling temperature, 0–2 |
 | `--max-tokens <number>` | — | `2048` | Generation budget; a reply that hits it fails as truncated (at `-t 0.1` some replies ran to the cap on the local model; `-t 0` stopped on its own in the same test) |
-| `--timeout <ms>` | `CLEAN_COPILOT_TIMEOUT_MS` | `300000` | Request timeout; on a CPU-only i5-10310U typical replies took 86–130 s and a full 2048-token reply took 208 s |
+| `--timeout <ms>` | `CLEAN_COPILOT_TIMEOUT_MS` | `300000` | Request timeout; on a CPU-only i5-10310U, with a 14-line input, replies took 86–130 s and a full 2048-token reply took 208 s |
 
 ### Output contract
 

@@ -63,7 +63,7 @@ Measured in a head-to-head reproducible run on NVIDIA DGX Spark under identical 
 
 | Metric | **Edge Clean Copilot (Q4_K_M)** |
 | :--- | :--- |
-| **Inference Speed** | **~12 tok/s measured** (CPU-only, Intel i5-10310U); a typical refactoring reply (1,100–1,300 tokens) takes 1.5–2 minutes |
+| **Inference Speed** | **~12 tok/s measured** (CPU-only, Intel i5-10310U); in our test on a 14-line Express handler, replies of 1,100–1,300 tokens took 1.5–2 minutes |
 | **RAM Footprint** | ~1.5 GB |
 | **Disk Size** | 941 MB (0.94 GB) |
 | **Offline Operation** | 100% offline (air-gapped) |

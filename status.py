@@ -28,6 +28,32 @@ def present(path: Path) -> str:
     return "OK" if path.exists() else "MISSING"
 
 
+def user_prompts(path: Path) -> list:
+    """Whitespace-normalized first user prompt of every row."""
+    prompts = []
+    if not path.is_file():
+        return prompts
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                messages = json.loads(line).get("messages", [])
+            except json.JSONDecodeError:
+                continue
+            for m in messages:
+                if isinstance(m, dict) and m.get("role") == "user":
+                    prompts.append(" ".join(str(m.get("content", "")).split()))
+                    break
+    return prompts
+
+
+def overlap(train: Path, holdout: Path) -> int:
+    """Number of holdout rows whose prompt also appears in train."""
+    seen = set(user_prompts(train))
+    return sum(1 for prompt in user_prompts(holdout) if prompt in seen)
+
+
 def find_gguf(root: Path) -> Optional[Tuple[Path, int]]:
     for rel in GGUF_CANDIDATES:
         path = root / rel
@@ -66,11 +92,14 @@ def build_report(root: Path) -> List[str]:
     )
     lines.append(
         f"  • Current split          : {count_lines(ds / 'train.jsonl')} train / "
-        f"{count_lines(ds / 'eval_holdout.jsonl')} holdout (prompt-disjoint; not trained on yet)"
+        f"{count_lines(ds / 'eval_holdout.jsonl')} holdout "
+        f"({overlap(ds / 'train.jsonl', ds / 'eval_holdout.jsonl')} holdout rows with a prompt seen in train)"
     )
     lines.append(
         f"  • Published model split  : {count_lines(ds / 'published_model_train.jsonl')} train / "
-        f"{count_lines(ds / 'published_model_holdout.jsonl')} holdout (the published model was trained on this one)"
+        f"{count_lines(ds / 'published_model_holdout.jsonl')} holdout "
+        f"({overlap(ds / 'published_model_train.jsonl', ds / 'published_model_holdout.jsonl')} holdout rows with a prompt seen in train; "
+        "the published model was trained on this one, see MODEL_CARD.md)"
     )
 
     lines.append("\n[2] TRAINING & MODEL")

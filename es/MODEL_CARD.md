@@ -44,7 +44,7 @@ Medido en una corrida reproducible cara a cara en el NVIDIA DGX Spark, con la mi
 
 | Métrica | **Edge Clean Copilot (Q4_K_M)** |
 | :--- | :--- |
-| **Velocidad de inferencia** | **~12 tok/s medidos** (solo CPU, Intel i5-10310U); una respuesta típica de refactorización (1100–1300 tokens) tarda entre 1.5 y 2 minutos |
+| **Velocidad de inferencia** | **~12 tok/s medidos** (solo CPU, Intel i5-10310U); en nuestra prueba con un handler de Express de 14 líneas, las respuestas de 1100–1300 tokens tardaron entre 1.5 y 2 minutos |
 | **Uso de RAM** | ~1.5 GB |
 | **Tamaño en disco** | 941 MB (0.94 GB) |
 | **Operación sin conexión** | 100% sin conexión |

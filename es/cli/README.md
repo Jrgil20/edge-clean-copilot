@@ -87,7 +87,7 @@ pnpm run dev refactor src/domain/entities/SourceFile.ts --url http://192.168.6.3
 | `-o, --output <path>` | — | — | Además escribe el código en `<path>` (se niega a sobrescribir la entrada) |
 | `-t, --temperature <number>` | — | `0.1` | Temperatura de muestreo, entre 0 y 2 |
 | `--max-tokens <number>` | — | `2048` | Presupuesto de generación; una respuesta que lo alcanza falla como truncada (con `-t 0.1` algunas respuestas del modelo local llegaron al tope; con `-t 0` se detuvo sola en la misma prueba) |
-| `--timeout <ms>` | `CLEAN_COPILOT_TIMEOUT_MS` | `300000` | Tiempo máximo de la petición; en un i5-10310U solo con CPU las respuestas típicas tardaron 86–130 s y una respuesta completa de 2048 tokens tardó 208 s |
+| `--timeout <ms>` | `CLEAN_COPILOT_TIMEOUT_MS` | `300000` | Tiempo máximo de la petición; en un i5-10310U solo con CPU, con una entrada de 14 líneas, las respuestas tardaron 86–130 s y una respuesta completa de 2048 tokens tardó 208 s |
 
 ### Contrato de salida
 
