@@ -114,5 +114,5 @@ El mismo GGUF dio 72.5 (CPU del portátil) y 74.8 (GPU del Spark), con una difer
 - ~~`MODEL_CARD.md` cita una puntuación frontera de **90.5**.~~ Hecho 2026-11-13: eliminada de `MODEL_CARD.md`, `docs/index.html` y la matriz del benchmark.
 - ~~`MODEL_CARD.md` dice que el modelo "erradica el 100%" de los imports prohibidos.~~ Hecho 2026-11-13: acotado a la suite de 30 casos, con la advertencia de omisión (E4).
 - `docs/progress-and-milestones.md` y `docs/final-report-and-presentation.md` todavía hablan de "100% completado". Alinearlos con el enfoque de prueba de concepto del README.
-- `status.py` imprime estados fijos en el código (por ejemplo "DGX Spark Status: Offline (Curfew)"). Calcularlos o eliminarlos.
+- ~~`status.py` imprime estados fijos en el código.~~ Hecho 2026-11-13: ahora solo informa lo que verifica (archivos, conteos de líneas, el último reporte atribuido de la Spark) e indica que la Spark no se comprueba.
 - Mantener el espejo `es/` sincronizado con cada cambio anterior.

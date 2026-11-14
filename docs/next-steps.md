@@ -114,5 +114,5 @@ The same GGUF scored 72.5 (laptop CPU) and 74.8 (Spark GPU), with a mean per-cas
 - ~~`MODEL_CARD.md` cites a frontier score of **90.5**.~~ Done 2026-11-13: removed from `MODEL_CARD.md`, `docs/index.html` and the benchmark matrix.
 - ~~`MODEL_CARD.md` says the model "eradicates 100%" of forbidden imports.~~ Done 2026-11-13: scoped to the 30-case suite, with the omission caveat (E4).
 - `docs/progress-and-milestones.md` and `docs/final-report-and-presentation.md` still use "100% complete" wording. Align them with the proof-of-concept framing of the README.
-- `status.py` prints hard-coded states (for example "DGX Spark Status: Offline (Curfew)"). Compute them or remove them.
+- ~~`status.py` prints hard-coded states.~~ Done 2026-11-13: it now reports only what it checks (files, line counts, the latest attributed Spark report) and says the Spark is not checked.
 - Keep the `es/` mirror in sync with every change above.

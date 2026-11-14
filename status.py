@@ -1,101 +1,119 @@
 #!/usr/bin/env python3
 """
-Edge Clean Copilot — Project Status Diagnostic Tool
-Zero-dependency CLI tool to instantly inspect project health, phase completion,
-dataset metrics, test suites, and provide immediate next steps for new sessions.
+Edge Clean Copilot — Project Status Dashboard
+
+Zero-dependency CLI that prints the state of the project as found on disk.
+It reports only what it checks: files, line counts and attributed benchmark
+reports. It never contacts the DGX Spark.
 """
 
 import json
-import os
 import sys
 from pathlib import Path
+from typing import List, Optional, Tuple
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-# If status.py is inside 'proyecto' directory, that directory is the project root.
-PROYECTO_DIR = SCRIPT_DIR
+PROJECT_ROOT = Path(__file__).resolve().parent
+GGUF_NAME = "clean-copilot-1.5b-q4_k_m.gguf"
+GGUF_CANDIDATES = (Path("models") / GGUF_NAME, Path("training") / "output" / "gguf" / GGUF_NAME)
 
-def count_lines(filepath: Path) -> int:
-    if not filepath.exists():
+
+def count_lines(path: Path) -> int:
+    if not path.is_file():
         return 0
-    with open(filepath, "r", encoding="utf-8") as f:
+    with open(path, "r", encoding="utf-8") as f:
         return sum(1 for line in f if line.strip())
 
-def main() -> None:
-    print("=" * 70)
-    print("  EDGE CLEAN COPILOT — SYSTEM STATUS & RESUME DASHBOARD")
-    print("=" * 70)
 
-    # 1. Dataset Status
-    print("\n[1] DATASET SUBSYSTEM")
-    seed_path = PROYECTO_DIR / "dataset" / "seed_examples.jsonl"
-    gen_path = PROYECTO_DIR / "dataset" / "generated_examples.jsonl"
-    train_path = PROYECTO_DIR / "dataset" / "train.jsonl"
-    eval_path = PROYECTO_DIR / "dataset" / "eval_holdout.jsonl"
+def present(path: Path) -> str:
+    return "OK" if path.exists() else "MISSING"
 
-    seed_count = count_lines(seed_path)
-    gen_count = count_lines(gen_path)
-    train_count = count_lines(train_path)
-    eval_count = count_lines(eval_path)
-    total_samples = train_count + eval_count
 
-    print(f"  • Seed canonical samples : {seed_count} pairs")
-    print(f"  • Raw generated pool     : {gen_count} pairs")
-    print(f"  • Train partition        : {train_count} pairs ({train_path.name})")
-    print(f"  • Holdout eval partition : {eval_count} pairs ({eval_path.name})")
-    print(f"  • Split status           : {'OK (Deterministic seed=42)' if train_count and eval_count else 'PENDING'}")
+def find_gguf(root: Path) -> Optional[Tuple[Path, int]]:
+    for rel in GGUF_CANDIDATES:
+        path = root / rel
+        if path.is_file():
+            return rel, path.stat().st_size
+    return None
 
-    # 2. Training Pipeline (Phase 2 & 3)
-    print("\n[2] TRAINING & QUANTIZATION SUBSYSTEM")
-    train_script = PROYECTO_DIR / "training" / "train_lora.py"
-    gguf_script = PROYECTO_DIR / "training" / "convert_to_gguf.sh"
-    print(f"  • PyTorch LoRA pipeline  : {'OK' if train_script.exists() else 'MISSING'} ({train_script.name})")
-    print(f"  • GGUF Quantization tool : {'OK' if gguf_script.exists() else 'MISSING'} ({gguf_script.name})")
-    print("  • DGX Spark Status       : Offline (Curfew). NVMe has lora_venv + 73% weights cached.")
 
-    # 3. CLI Client (Phase 4)
-    print("\n[3] HEXAGONAL CLI SUBSYSTEM")
-    cli_dir = PROYECTO_DIR / "cli"
-    domain_entity = cli_dir / "src" / "domain" / "entities" / "SourceFile.ts"
-    use_case = cli_dir / "src" / "application" / "use-cases" / "RefactorCodeUseCase.ts"
-    llama_adapter = cli_dir / "src" / "infrastructure" / "ai" / "LlamaServerAdapter.ts"
-    print(f"  • Domain entity          : {'OK' if domain_entity.exists() else 'MISSING'}")
-    print(f"  • Application use case   : {'OK' if use_case.exists() else 'MISSING'}")
-    print(f"  • Infrastructure adapter : {'OK' if llama_adapter.exists() else 'MISSING'}")
-    print("  • Unit test suite        : Vitest unit tests (run `cd cli && pnpm test`)")
+def latest_spark_reports(root: Path) -> Tuple[Optional[str], List[Tuple[str, float, int]]]:
+    """Returns the newest spark-* run folder and its (model, average CAS, n) rows."""
+    reports_dir = root / "evaluation" / "reports"
+    runs = sorted(p for p in reports_dir.glob("spark-*") if (p / "cas").is_dir()) if reports_dir.is_dir() else []
+    if not runs:
+        return None, []
+    run = runs[-1]
+    rows = []
+    for report in sorted((run / "cas").glob("report_*.json")):
+        try:
+            data = json.loads(report.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        name = (data.get("meta") or {}).get("model_name") or report.stem.removeprefix("report_")
+        rows.append((name, data.get("average_score"), data.get("total_samples")))
+    return run.name, rows
 
-    # 4. Evaluation Benchmark
-    print("\n[4] EVALUATION & BENCHMARK HARNESS")
-    eval_script = PROYECTO_DIR / "evaluation" / "eval_benchmark.py"
-    control_cases = PROYECTO_DIR / "evaluation" / "test_benchmark_cases.jsonl"
-    legacy_suite = PROYECTO_DIR / "evaluation" / "legacy_benchmark_suite.jsonl"
-    control_count = count_lines(control_cases)
-    legacy_count = count_lines(legacy_suite)
-    compare_script = PROYECTO_DIR / "evaluation" / "compare_models.py"
-    print(f"  • Benchmark harness      : {'OK' if eval_script.exists() else 'MISSING'} ({eval_script.name})")
-    print(f"  • Model comparison tool  : {'OK' if compare_script.exists() else 'MISSING'} ({compare_script.name})")
-    print(f"  • Clean Arch Score (CAS) : 0-100 pts calibrated")
-    print(f"  • Control test suite     : {control_count} cases ({control_cases.name})")
-    print(f"  • Legacy benchmark suite : {legacy_count} cases ({legacy_suite.name})")
 
-    # 5. Phase Completion Summary
-    print("\n" + "-" * 70)
-    print("PHASE COMPLETION MATRIX")
-    print("-" * 70)
-    print("  Phase 1: Infrastructure & Teacher Dataset  : 100% [COMPLETED & VERIFIED]")
-    print("  Phase 2: LoRA Adaptation & Specialization  : 100% [COMPLETED & VERIFIED ON SPARK]")
-    print("  Phase 3: Weights Merge & GGUF Quantization : 100% [COMPLETED & VERIFIED ON SPARK]")
-    print("  Phase 4: Hexagonal CLI, Benchmark & Report : 100% [COMPLETED & VERIFIED ON LAPTOP]")
-    print("  -------------------------------------------------------------")
-    print("  GLOBAL PROJECT PROGRESS                    : 100% [ALL PHASES COMPLETED]")
-    print("-" * 70)
+def build_report(root: Path) -> List[str]:
+    ds = root / "dataset"
+    lines = ["=" * 70, "  EDGE CLEAN COPILOT — PROJECT STATUS (proof of concept)", "=" * 70]
 
-    # 6. Operational Status & Verification
-    print("\nVERIFIED DEPLOYMENT & EVALUATION:")
-    print("  1. Quantized Models: training/output/gguf/clean-copilot-1.5b-q4_k_m.gguf")
-    print("  2. Inference: llama-server OpenAI-compatible endpoint (about 12 tok/s measured on CPU-only i5-10310U; see MODEL_CARD.md)")
-    print("  3. Benchmark Score: Clean Architecture Score (CAS) = 74.8/100, Grade B (vs 58.0 base model, measured on Spark; frontier baseline unmeasured)")
-    print("  4. CLI Unit Tests: Vitest unit tests (run `cd cli && pnpm test`)")
-    print("=" * 70)
+    lines.append("\n[1] DATASET")
+    lines.append(f"  • Seed / generated pool  : {count_lines(ds / 'seed_examples.jsonl')} / {count_lines(ds / 'generated_examples.jsonl')} rows")
+    lines.append(
+        f"  • Authored examples      : {count_lines(ds / 'authored_examples.jsonl')} hand-written, "
+        f"{count_lines(ds / 'claude_authored_examples.jsonl')} Claude-authored"
+    )
+    lines.append(
+        f"  • Current split          : {count_lines(ds / 'train.jsonl')} train / "
+        f"{count_lines(ds / 'eval_holdout.jsonl')} holdout (prompt-disjoint; not trained on yet)"
+    )
+    lines.append(
+        f"  • Published model split  : {count_lines(ds / 'published_model_train.jsonl')} train / "
+        f"{count_lines(ds / 'published_model_holdout.jsonl')} holdout (the published model was trained on this one)"
+    )
+
+    lines.append("\n[2] TRAINING & MODEL")
+    lines.append(f"  • LoRA trainer           : {present(root / 'training' / 'train_lora.py')}")
+    lines.append(f"  • GGUF converter         : {present(root / 'training' / 'convert_to_gguf.sh')}")
+    gguf = find_gguf(root)
+    if gguf:
+        rel, size = gguf
+        lines.append(f"  • GGUF model             : {rel.as_posix()} ({size / 1024 ** 3:.2f} GiB)")
+    else:
+        lines.append("  • GGUF model             : not found (gitignored; see training/README.md or the Hugging Face repo)")
+    lines.append("  • DGX Spark              : not checked (this script never opens SSH)")
+
+    lines.append("\n[3] CLI")
+    src = root / "cli" / "src"
+    lines.append(f"  • Composition root       : {present(src / 'infrastructure' / 'cli' / 'index.ts')}")
+    lines.append(f"  • Use case               : {present(src / 'application' / 'use-cases' / 'RefactorCodeUseCase.ts')}")
+    lines.append(f"  • llama-server adapter   : {present(src / 'infrastructure' / 'ai' / 'LlamaServerAdapter.ts')}")
+    lines.append(f"  • Dependencies installed : {'yes' if (root / 'cli' / 'node_modules').is_dir() else 'no (run: cd cli && pnpm install)'}")
+
+    lines.append("\n[4] EVALUATION")
+    ev = root / "evaluation"
+    lines.append(f"  • Legacy benchmark suite : {count_lines(ev / 'legacy_benchmark_suite.jsonl')} cases")
+    lines.append(f"  • Control suite          : {count_lines(ev / 'test_benchmark_cases.jsonl')} cases")
+    run, rows = latest_spark_reports(root)
+    if rows:
+        lines.append(f"  • Latest attributed run  : evaluation/reports/{run}/")
+        for name, score, n in rows:
+            lines.append(f"      - {name:<16} CAS {score} (n={n})")
+    else:
+        lines.append("  • Benchmark results      : no attributed report found in evaluation/reports/spark-*/")
+
+    lines.append("\nRun the checks:")
+    lines.append("  cd cli && pnpm test")
+    lines.append("  python3 -m unittest discover -s evaluation/tests")
+    lines.append("=" * 70)
+    return lines
+
+
+def main() -> int:
+    print("\n".join(build_report(PROJECT_ROOT)))
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
