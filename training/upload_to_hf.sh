@@ -9,8 +9,15 @@ GGUF_DIR="${SCRIPT_DIR}/output/gguf"
 GGUF_FILE="${GGUF_DIR}/clean-copilot-1.5b-q4_k_m.gguf"
 MODEL_CARD="${SCRIPT_DIR}/../MODEL_CARD.md"
 
+CARD_ONLY=0
+if [ "${1:-}" = "--card-only" ]; then
+  CARD_ONLY=1
+  shift
+fi
+
 if [ $# -lt 1 ]; then
-  echo "Usage: $0 <hf-username>/<repo-name>"
+  echo "Usage: $0 [--card-only] <hf-username>/<repo-name>"
+  echo "  --card-only  upload only MODEL_CARD.md as README.md (skip the GGUF binary)"
   echo "Example: $0 Jrgil20/edge-clean-copilot-1.5b-gguf"
   exit 1
 fi
@@ -21,7 +28,11 @@ if ! [[ "${REPO_ID}" =~ ^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$ ]]; then
   echo "Error: repo id must look like <user>/<repo> (letters, digits, '.', '_', '-')."
   exit 1
 fi
-for required in "${GGUF_FILE}" "${MODEL_CARD}"; do
+REQUIRED_FILES=("${MODEL_CARD}")
+if [ "${CARD_ONLY}" -eq 0 ]; then
+  REQUIRED_FILES+=("${GGUF_FILE}")
+fi
+for required in "${REQUIRED_FILES[@]}"; do
   if [ ! -f "${required}" ]; then
     echo "Error: required file not found: ${required}"
     exit 1
@@ -54,12 +65,16 @@ if ! hf auth whoami 2>/dev/null && ! python3 -c "from huggingface_hub import HfF
 fi
 
 # Upload repository folder
-echo "[3/3] Uploading GGUF binary and Model Card to https://huggingface.co/${REPO_ID}..."
-python3 - "${REPO_ID}" "${MODEL_CARD}" "${GGUF_FILE}" <<'EOF'
+if [ "${CARD_ONLY}" -eq 1 ]; then
+  echo "[3/3] Uploading the Model Card to https://huggingface.co/${REPO_ID}..."
+else
+  echo "[3/3] Uploading GGUF binary and Model Card to https://huggingface.co/${REPO_ID}..."
+fi
+python3 - "${REPO_ID}" "${MODEL_CARD}" "${GGUF_FILE}" "${CARD_ONLY}" <<'EOF'
 import sys
 from huggingface_hub import HfApi, create_repo
 
-repo_id, model_card, gguf_file = sys.argv[1], sys.argv[2], sys.argv[3]
+repo_id, model_card, gguf_file, card_only = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4] == "1"
 api = HfApi()
 
 try:
@@ -77,6 +92,10 @@ api.upload_file(
     repo_type="model",
 )
 print("--> [OK] Uploaded README.md (Model Card)")
+
+if card_only:
+    print(f"\nModel card updated: https://huggingface.co/{repo_id}")
+    sys.exit(0)
 
 # Upload GGUF Binary
 api.upload_file(

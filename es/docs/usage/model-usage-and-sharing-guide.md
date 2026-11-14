@@ -116,6 +116,13 @@ huggingface-cli upload <tu-usuario>/edge-clean-copilot-1.5b-GGUF \
   clean-copilot-1.5b-q4_k_m.gguf
 ```
 
+O use el script del proyecto, que además sube `MODEL_CARD.md` como `README.md` del repositorio:
+
+```bash
+proyecto/training/upload_to_hf.sh <tu-usuario>/edge-clean-copilot-1.5b-gguf               # GGUF + model card
+proyecto/training/upload_to_hf.sh --card-only <tu-usuario>/edge-clean-copilot-1.5b-gguf   # solo la model card
+```
+
 ---
 
 ## 5. API HTTP Compatible con OpenAI
