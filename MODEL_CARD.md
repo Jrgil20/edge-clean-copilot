@@ -40,7 +40,7 @@ Fine-tuned from `Qwen/Qwen2.5-Coder-1.5B-Instruct` via Parameter-Efficient Fine-
 - **100% Offline & Air-Gapped:** Zero code leakage. Runs entirely within local RAM (~1.5 GB).
 - **Domain Purity (Zero Leakage):** On the 30-case legacy suite, every output scored the full 30/30 on domain boundary isolation: no prohibited framework/database imports (`express`, `mongoose`, `axios`, `typeorm`, `prisma`) in the domain layer. This is partly by omission: only 4/30 answers contain any import at all (audit E4 in `docs/project/project-analysis.md`).
 - **Hexagonal Port & Adapter Decoupling:** Generates abstract interfaces (`IRepository`, `IPort`, `IGateway`) with constructor dependency injection.
-- **Strict TypeScript Rigor:** Enforces deterministic typing and completely eliminates explicit `any` types.
+- **Strict TypeScript Rigor:** Avoids explicit `any`: 28 of 30 benchmark outputs had no `any` penalty (type rigor 19.7 / 20).
 - **Measured Gain:** Scores **74.8 / 100 Clean Architecture Score (CAS)**, Grade B, on our 30-case legacy refactoring benchmark (+16.8 points over the base foundation model at 58.0).
 
 ---
@@ -61,13 +61,15 @@ Measured in a head-to-head reproducible run on NVIDIA DGX Spark under identical 
 
 ### Operational Edge Metrics
 
-| Metric | Base Model (1.5B F16) | **Edge Clean Copilot (Q4_K_M)** | Frontier Cloud API |
-| :--- | :---: | :---: | :---: |
-| **Inference Speed** | ~52.0 tok/s (unverified) | **~12 tok/s measured (CPU-only, Intel i5-10310U); not optimized for speed** | ~85.0 tok/s (unverified) |
-| **RAM Footprint** | ~3.1 GB | **~1.5 GB** | 0 GB (Cloud) |
-| **Disk Size** | ~3.10 GB | **941 MB (0.94 GB)** | 0 MB |
-| **Offline Operation** | Yes | **100% Offline (Air-Gapped)** | No (Internet Req) |
-| **API Cost** | $0.00 | **$0.00** | Metered billing |
+| Metric | **Edge Clean Copilot (Q4_K_M)** |
+| :--- | :--- |
+| **Inference Speed** | **~12 tok/s measured** (CPU-only, Intel i5-10310U); a typical refactoring reply (1,100–1,300 tokens) takes 1.5–2 minutes |
+| **RAM Footprint** | ~1.5 GB |
+| **Disk Size** | 941 MB (0.94 GB) |
+| **Offline Operation** | 100% offline (air-gapped) |
+| **API Cost** | $0.00 |
+
+The base model and cloud APIs were not measured on this hardware.
 
 ---
 
@@ -158,15 +160,16 @@ print(response["choices"][0]["message"]["content"])
 
 - **Foundation Model:** `Qwen/Qwen2.5-Coder-1.5B-Instruct`
 - **Methodology:** LoRA (Parameter-Efficient Fine-Tuning) via PyTorch & Hugging Face `peft`
-- **Hardware:** NVIDIA DGX Spark (Grace Blackwell GB10 / Ampere A100)
+- **Hardware:** NVIDIA DGX Spark (Grace Blackwell GB10)
 - **Target Modules:** `q_proj`, `k_proj`, `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`
 - **Hyperparameters:**
   - LoRA Rank ($r$): 16
   - LoRA Alpha ($\alpha$): 32
   - Dropout: 0.05
   - Learning Rate: 2e-4
-  - Optimizer: AdamW (`bfloat16`)
-  - Epochs: 3 (Batch Size 2, Gradient Accumulation 4)
+  - Optimizer: AdamW (`bfloat16`), constant learning rate (no warmup or decay), no fixed seed
+  - Epochs: 3 (per-device batch 1, gradient accumulation 4, effective batch 4; about 105 optimizer steps)
+  - Reproduction needs data from commit `64f3c6c` and training code from commit `fb3e812`; the current `train_lora.py` trains a different model (audit T1, T3 in `docs/project/project-analysis.md`)
 - **Dataset:** 138 curated ChatML instruction pairs enforcing strict Domain Boundaries, Value Objects with invariant validation, Port & Adapter contracts, and functional `Result<T, E>` error handling. The exact training and holdout files are `dataset/published_model_train.jsonl` and `dataset/published_model_holdout.jsonl` (from commit `64f3c6c`; 18 distinct training prompts, and 28 of the 30 holdout prompts also appear in training, see `docs/next-steps.md` 1.1 and 1.5).
 - **Quantization:** Consolidated 16-bit weights exported to GGUF using `llama.cpp` quantizer (`Q4_K_M` medium-precision 4-bit).
 
