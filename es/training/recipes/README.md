@@ -26,7 +26,8 @@ training/recipes/
 | `model_id` | `str` | Identificador del modelo en Hugging Face (e.g. `Qwen/Qwen2.5-Coder-1.5B-Instruct`). |
 | `architecture_family` | `str` | Familia arquitectónica (`qwen2`, `llama3`, `gemma2`, `deepseek`). |
 | `target_modules` | `list[str]` | Nombres exactos de las capas lineales donde aplicar adaptadores LoRA. |
-| `response_template` | `str` | Delimitador que precede a la respuesta del asistente para enmascaramiento de pérdida. |
+| `response_template` | `str` | Delimitador que precede a la respuesta del asistente para enmascaramiento de pérdida. Las filas en las que este delimitador (o la respuesta) queda fuera de `max_seq_len` se descartan con una advertencia. |
+| `merge_system_prompt` | `bool` | Integra el mensaje de sistema en el primer turno del usuario, para plantillas de chat sin rol de sistema (Gemma-2). Por defecto `false`. |
 | `torch_dtype` | `str` | Tipo de dato del tensor (`bfloat16`, `float16`, `float32`). |
 | `r` / `lora_alpha` | `int` | Rango LoRA y factor de escala alfa. |
 | `recommended_quant` | `str` | Formato de cuantización GGUF recomendado (`Q4_K_M`, `Q8_0`). |
@@ -37,7 +38,7 @@ training/recipes/
 
 1. Crear un archivo YAML en `training/recipes/<nombre-modelo>.yaml`.
 2. Verificar los nombres de las proyecciones lineales del modelo (`q_proj`, `k_proj`, etc.).
-3. Identificar el delimitador de cabecera del asistente para `response_template`.
+3. Identificar el delimitador de cabecera del asistente para `response_template`, y activar `merge_system_prompt: true` si la plantilla rechaza el rol de sistema.
 4. Ejecutar la verificación con dry-run:
    ```bash
    python3 proyecto/training/train_lora.py --recipe proyecto/training/recipes/<nombre-modelo>.yaml --dry-run

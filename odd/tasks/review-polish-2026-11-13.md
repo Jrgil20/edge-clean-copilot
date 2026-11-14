@@ -14,6 +14,11 @@ User request (verbatim, L1): "primero quiero una revision completa aca tienes ac
 - S5 — Current docs carry no unmeasured metrics: frontier 90.5, unmeasured tok/s, TTFT, "Eradicates 100%" without scope. History docs get the existing "Superseded figures" banner instead of rewrites.
 - S6 — `dataset/README.md` English text matches the Spanish one about the current prompt-disjoint split and states that `eval_holdout.jsonl` overlaps `published_model_train.jsonl` (11/30), so it cannot evaluate the published model.
 - S7 — `es/` mirrors the English changes of this feature.
+- S8 (item 5) — The three unattributed 2026-10-29 reports (`evaluation/benchmark_report.json`, `_final`, `_edge_copilot`) move to `evaluation/reports/legacy-2026-10-29/` with a README saying they are superseded; `eval_benchmark.py` no longer defaults `--output` to a tracked file (default goes to a gitignored `evaluation/reports/local/`).
+- S9 (item 6) — The Hugging Face card matches `MODEL_CARD.md`. Evidence: live card = previous MODEL_CARD (frontier 90.5, "Eradicates 100%"). No HF token on this laptop, so the upload is prepared and the final command handed to the user.
+- S10 (item 7) — `status.py` prints only what it checks: no hardcoded Spark state, GGUF path checked on disk, CAS read from the Spark report JSON, both dataset splits listed with which one the published model was trained on.
+- S11 (item 8) — Spanish mirrors exist for `cli/README.md` and `MODEL_CARD.md`.
+- S12 (item 9) — Both findings verified: the Gemma-2 chat template raises "System role not supported" (fetched from the public `unsloth/gemma-2-2b-it` tokenizer_config), and `collate_fn` keeps the whole sequence as labels when the response template is not found. Fix: recipe flag to fold the system prompt into the first user turn (on for Gemma-2); rows without an assistant span after truncation are dropped with a warning instead of training on the prompt.
 
 ## Tasks
 
@@ -24,6 +29,11 @@ User request (verbatim, L1): "primero quiero una revision completa aca tienes ac
 | T3 | S3 | inline | done (RED→GREEN, e2e on mock) | f692230 |
 | T4 | S4, S7 | inline | done | 5db9ee3 |
 | T5 | S5, S6, S7 | inline | done | 70c2f2c |
+| T6 | S8 | inline | pending | |
+| T7 | S9 | inline (upload by user) | pending | |
+| T8 | S10 | inline | pending | |
+| T9 | S11 | inline | pending | |
+| T10 | S12 | inline | pending | |
 
 Route evidence: no Writer trigger (units are small and sequential); review mapping was delegated to 3 read-only explorers.
 
@@ -36,3 +46,5 @@ Route evidence: no Writer trigger (units are small and sequential); review mappi
 - L5 found during T5: `docs/index.html` (en/es) chart/table/slides used demo data (76.3/48.2/90.5); regenerated from the Spark report and checked with a headless-Chrome render. Holdout overlap verified with `audit_dataset.user_prompt`: 11/30 rows in published_model_train, 0 prompts shared with current train.
 - L6 not done: es mirror for `cli/README.md` (no `es/cli/` exists), `MODEL_CARD.md`, matrix.
 - L7 advisor follow-ups: `evaluation/benchmark_comparison_chart.svg` still drew the unmeasured "Gemini 3.8 Flash" series; replaced with the measured two-series chart (render identical to the validated index.html chart). `compare_models.py` still hardcodes three series and would redraw it on re-run (pending). `training/README.md` (en/es) unmeasured Q5/Q8/F16 speeds and quality-retention figures set to "not measured"; dataset README "183 samples" note marked superseded (en/es). CLI claims corrected to measured values (86–130 s typical, 208 s for a full 2048-token reply; "code only", not "a source file"). Added `--diff` e2e test: 61/61.
+
+- L8 (2026-11-13) user: "puedes resolver de la 5 en adelante de hecho" (items 5–9 of the pending-decision list). Pushed earlier on request: branch + parent pointer c0c017f.

@@ -26,7 +26,8 @@ training/recipes/
 | `model_id` | `str` | Hugging Face model identifier (e.g. `Qwen/Qwen2.5-Coder-1.5B-Instruct`). |
 | `architecture_family` | `str` | Architectural lineage (`qwen2`, `llama3`, `gemma2`, `deepseek`). |
 | `target_modules` | `list[str]` | Exact linear projection names to apply LoRA adapters to. |
-| `response_template` | `str` | Delimiter preceding the assistant response for completion-only loss masking. |
+| `response_template` | `str` | Delimiter preceding the assistant response for completion-only loss masking. Rows where it (or the answer) falls outside `max_seq_len` are dropped with a warning. |
+| `merge_system_prompt` | `bool` | Fold the system message into the first user turn, for chat templates without a system role (Gemma-2). Default `false`. |
 | `torch_dtype` | `str` | Precision tensor type (`bfloat16`, `float16`, `float32`). |
 | `r` / `lora_alpha` | `int` | LoRA rank dimension and scaling factor. |
 | `recommended_quant` | `str` | Target GGUF quantization format (`Q4_K_M`, `Q8_0`). |
@@ -37,7 +38,7 @@ training/recipes/
 
 1. Create a new YAML file `training/recipes/<model-name>.yaml`.
 2. Inspect the model's named modules to verify projection names (`q_proj`, `k_proj`, etc.).
-3. Identify the model's chat template assistant header for `response_template`.
+3. Identify the model's chat template assistant header for `response_template`, and set `merge_system_prompt: true` if the template rejects the system role.
 4. Run dry-run verification:
    ```bash
    python3 proyecto/training/train_lora.py --recipe proyecto/training/recipes/<model-name>.yaml --dry-run
