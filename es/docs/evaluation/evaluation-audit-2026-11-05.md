@@ -9,7 +9,7 @@
 | Afirmación | Evidencia |
 | :--- | :--- |
 | Pasan los 41 tests del CLI | `cd cli && pnpm test` → 8 archivos, 41 aprobados. |
-| El puntaje 76.3 de ECC tiene reporte crudo | `evaluation/benchmark_report_edge_copilot.json`: `total_samples=30`, `average_score=76.33`. |
+| El puntaje 76.3 de ECC tiene reporte crudo | `evaluation/reports/legacy-2026-10-29/benchmark_report_edge_copilot.json`: `total_samples=30`, `average_score=76.33`. |
 | La suite legacy no se solapa con el entrenamiento | 0/30 prompts y 0/30 bloques de código de la suite aparecen en `dataset/train.jsonl`. |
 | Los subpuntajes suman el compuesto | p. ej. ECC 30.0 + 11.7 + 16.0 + 18.7 = 76.4 (redondeo). |
 | Los subpuntajes de `DEMO_DATA["ecc"]` coinciden con el reporte crudo | Recalculados desde `benchmark_report_edge_copilot.json`: 30.0 / 11.67 / 16.0 / 18.67. |

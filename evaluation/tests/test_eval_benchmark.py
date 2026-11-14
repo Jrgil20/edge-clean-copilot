@@ -42,6 +42,25 @@ class ReportMetaTests(unittest.TestCase):
         self.assertIn("degenerate_samples", report["meta"])
         self.assertIn("average_score", report)  # pre-existing key preserved
 
+    def test_default_output_goes_to_the_gitignored_local_reports_dir(self):
+        # Run a copy of the script so the default path resolves inside the temp dir.
+        with tempfile.TemporaryDirectory() as tmp:
+            script = Path(tmp) / "eval_benchmark.py"
+            script.write_text((EVAL_DIR / "eval_benchmark.py").read_text())
+            subprocess.run(
+                [sys.executable, str(script), "--cases", str(EVAL_DIR / "test_benchmark_cases.jsonl"), "--no-ast"],
+                check=True, capture_output=True,
+            )
+            self.assertTrue((Path(tmp) / "reports" / "local" / "benchmark_report.json").is_file())
+            self.assertFalse((Path(tmp) / "benchmark_report.json").exists())
+
+    def test_local_reports_dir_is_gitignored(self):
+        result = subprocess.run(
+            ["git", "check-ignore", "-q", "evaluation/reports/local/benchmark_report.json"],
+            cwd=EVAL_DIR.parent, capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0)
+
 
 if __name__ == "__main__":
     unittest.main()

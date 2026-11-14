@@ -9,7 +9,7 @@
 | Claim | Evidence |
 | :--- | :--- |
 | 41 CLI tests pass | `cd cli && pnpm test` → 8 files, 41 passed. |
-| ECC score 76.3 has a raw report | `evaluation/benchmark_report_edge_copilot.json`: `total_samples=30`, `average_score=76.33`. |
+| ECC score 76.3 has a raw report | `evaluation/reports/legacy-2026-10-29/benchmark_report_edge_copilot.json`: `total_samples=30`, `average_score=76.33`. |
 | Legacy suite is disjoint from training data | 0/30 suite prompts and 0/30 suite code blocks appear in `dataset/train.jsonl`. |
 | Category sub-scores sum to the composite | e.g. ECC 30.0 + 11.7 + 16.0 + 18.7 = 76.4 (rounding). |
 | `DEMO_DATA["ecc"]` sub-scores match the raw report | Recomputed from `benchmark_report_edge_copilot.json`: 30.0 / 11.67 / 16.0 / 18.67. |

@@ -72,6 +72,8 @@ python3 eval_benchmark.py \
   --output "live_report.json"
 ```
 
+Without `--output`, the report goes to `reports/local/benchmark_report.json` (gitignored). Committed runs live in [`reports/`](./reports/README.md); the canonical one is `reports/spark-20261105T143540Z/`.
+
 ---
 
 ## 4. Benchmark Suites & Datasets

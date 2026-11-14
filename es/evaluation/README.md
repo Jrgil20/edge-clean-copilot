@@ -68,6 +68,8 @@ python3 eval_benchmark.py \
   --output "live_report.json"
 ```
 
+Sin `--output`, el reporte se guarda en `reports/local/benchmark_report.json` (ignorado por git). Las corridas versionadas están en [`reports/`](./reports/README.md); la canónica es `reports/spark-20261105T143540Z/`.
+
 ---
 
 ## 4. Suites de Benchmark y Datasets

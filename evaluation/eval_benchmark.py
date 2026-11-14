@@ -286,7 +286,12 @@ def parse_args():
     parser.add_argument("--offline", "--cases", type=str, default=None, dest="offline", help="Path to JSONL dataset to evaluate offline.")
     parser.add_argument("--url", type=str, default=None, help="llama-server endpoint (e.g. http://127.0.0.1:8085/v1/chat/completions).")
     parser.add_argument("--prompts", type=str, default=None, help="Path to prompts JSONL file for live evaluation.")
-    parser.add_argument("--output", type=str, default=str(Path(__file__).parent / "benchmark_report.json"), help="Path to export JSON report.")
+    parser.add_argument(
+        "--output",
+        type=str,
+        default=str(Path(__file__).parent / "reports" / "local" / "benchmark_report.json"),
+        help="Path to export JSON report (default: reports/local/, gitignored; committed runs go in reports/<run>/).",
+    )
     parser.add_argument("--no-ast", action="store_true", help="Disable deterministic TypeScript AST engine and force heuristic regex fallback.")
     parser.add_argument("--model-name", type=str, default=None, help="Identifier of the model under test (recorded in the report meta block).")
     parser.add_argument("--model-file", type=str, default=None, help="Path to the model file served (its SHA-256 is recorded in the report meta block).")
@@ -445,6 +450,7 @@ def main():
         "average_score": round(sum(r["total_score"] for r in eval_results) / len(eval_results), 2) if eval_results else 0,
         "results": eval_results,
     }
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(report_data, f, indent=2, ensure_ascii=False)
 

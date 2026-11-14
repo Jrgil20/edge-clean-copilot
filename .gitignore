@@ -30,3 +30,6 @@ output/
 coverage/
 *.tsbuildinfo
 .DS_Store
+
+# Ad-hoc benchmark runs (eval_benchmark.py default output)
+evaluation/reports/local/
