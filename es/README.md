@@ -165,7 +165,7 @@ clean-copilot refactor ruta/a/Archivo.ts --mock
 clean-copilot refactor ruta/a/Archivo.ts > ArchivoRefactorizado.ts   # stdout solo contiene el código
 ```
 
-Los mensajes de estado van a stderr. En CPU una respuesta completa tarda minutos (~12 tok/s); el tiempo de espera por defecto es 300 s (`--timeout <ms>` o `CLEAN_COPILOT_TIMEOUT_MS`). Todas las opciones: [`cli/README.md`](../cli/README.md#refactor-options).
+Los mensajes de estado van a stderr. En CPU una respuesta completa tarda minutos (~12 tok/s); el tiempo de espera por defecto es 300 s (`--timeout <ms>` o `CLEAN_COPILOT_TIMEOUT_MS`). Todas las opciones: [`es/cli/README.md`](cli/README.md#opciones-de-refactor).
 
 ### 5.2 Enrutar Copilot de VS Code a un modelo local
 
@@ -187,6 +187,6 @@ copilot-local off       # volver al servicio de GitHub
 - [docs/next-steps.md](docs/next-steps.md): problemas conocidos y trabajo planeado.
 - [Auditoría de evaluación](docs/evaluation/evaluation-audit-2026-11-05.md): hallazgos detrás de las advertencias anteriores.
 - [Runbook de evaluación en Spark](docs/evaluation/spark-eval-runbook.md) y [plan del día en Spark](docs/evaluation/spark-day-plan.md): cómo se produjo la comparación directa.
-- [Model card](../MODEL_CARD.md) y [guía de uso y distribución](docs/usage/model-usage-and-sharing-guide.md).
+- [Model card](MODEL_CARD.md) ([original en inglés](../MODEL_CARD.md)) y [guía de uso y distribución](docs/usage/model-usage-and-sharing-guide.md).
 - [Arquitectura de la Factoría de Modelos](docs/architecture/model-factory-architecture.md): diseño basado en recetas para entrenar otros modelos base (existen recetas para Llama-3.2 y Gemma-2, pero no se han entrenado).
 - [Bitácora de progreso](docs/history/progress-and-milestones.md) y [propuesta académica](docs/project/propuesta.md).
