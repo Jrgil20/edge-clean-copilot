@@ -146,8 +146,81 @@ class ChatDataset:
         return self.samples[idx]
 
 
-def collate_fn_factory(pad_token_id: int, response_token_ids: Optional[List[int]] = None):
-    """Creates a collate function that pads dynamically and applies completion-only loss masking."""
+def merge_system_into_user(messages: List[Dict[str, str]]) -> List[Dict[str, str]]:
+    """Folds a leading system message into the first user turn.
+
+    Some chat templates (Gemma-2) raise "System role not supported" on a system
+    message; every dataset row starts with one, so recipes for those models set
+    `merge_system_prompt: true`.
+    """
+    if not messages or messages[0].get("role") != "system":
+        return [dict(m) for m in messages]
+    system_text = messages[0].get("content", "")
+    merged: List[Dict[str, str]] = []
+    folded = False
+    for message in messages[1:]:
+        message = dict(message)
+        if not folded and message.get("role") == "user":
+            message["content"] = f"{system_text}\n\n{message.get('content', '')}"
+            folded = True
+        merged.append(message)
+    return merged
+
+
+def completion_labels(input_ids: List[int], response_token_ids: Optional[List[int]]) -> Optional[List[int]]:
+    """Labels for completion-only loss: everything up to the end of the response template is -100.
+
+    Returns None when the template is configured but absent, or nothing follows it
+    (for example the answer was truncated away): such a row would otherwise train
+    on the prompt or on nothing.
+    """
+    if not response_token_ids:
+        return list(input_ids)
+    resp_len = len(response_token_ids)
+    for i in range(len(input_ids) - resp_len + 1):
+        if input_ids[i : i + resp_len] == response_token_ids:
+            start = i + resp_len
+            if start >= len(input_ids):
+                return None
+            return [-100] * start + list(input_ids[start:])
+    return None
+
+
+def prepare_samples(
+    rows: List[Dict[str, Any]],
+    tokenizer: Any,
+    max_seq_len: int,
+    response_template: Optional[str],
+    merge_system_prompt: bool,
+):
+    """Tokenizes ChatML rows and builds completion-only labels.
+
+    Returns (samples, dropped): rows whose assistant answer is not inside the
+    first `max_seq_len` tokens are dropped instead of trained on.
+    """
+    response_token_ids = (
+        tokenizer.encode(response_template, add_special_tokens=False) if response_template else None
+    )
+    samples: List[Dict[str, List[int]]] = []
+    dropped = 0
+    for row in rows:
+        messages = row.get("messages", [])
+        if merge_system_prompt:
+            messages = merge_system_into_user(messages)
+        formatted_text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False)
+        input_ids = tokenizer(
+            formatted_text, truncation=True, max_length=max_seq_len, add_special_tokens=False
+        )["input_ids"]
+        labels = completion_labels(input_ids, response_token_ids)
+        if labels is None:
+            dropped += 1
+            continue
+        samples.append({"input_ids": input_ids, "labels": labels})
+    return samples, dropped
+
+
+def collate_fn_factory(pad_token_id: int):
+    """Creates a collate function that pads input ids and their precomputed labels."""
     import torch
 
     def collate_fn(batch: List[Dict[str, List[int]]]) -> Dict[str, torch.Tensor]:
@@ -159,31 +232,10 @@ def collate_fn_factory(pad_token_id: int, response_token_ids: Optional[List[int]
         for item in batch:
             input_ids = item["input_ids"]
             padding_len = max_len - len(input_ids)
-
-            padded_input_ids = input_ids + [pad_token_id] * padding_len
-            padded_mask = [1] * len(input_ids) + [0] * padding_len
-
-            # Build labels with optional completion-only masking
-            labels = list(input_ids)
-            if response_token_ids and len(response_token_ids) > 0:
-                resp_len = len(response_token_ids)
-                found_idx = -1
-                for i in range(len(input_ids) - resp_len + 1):
-                    if input_ids[i : i + resp_len] == response_token_ids:
-                        found_idx = i + resp_len
-                        break
-
-                if found_idx != -1:
-                    # Mask everything before the assistant response
-                    for k in range(found_idx):
-                        labels[k] = -100
-
-            # Mask out padding tokens with -100
-            padded_labels = labels + [-100] * padding_len
-
-            input_ids_list.append(padded_input_ids)
-            attention_mask_list.append(padded_mask)
-            labels_list.append(padded_labels)
+            input_ids_list.append(input_ids + [pad_token_id] * padding_len)
+            attention_mask_list.append([1] * len(input_ids) + [0] * padding_len)
+            # Padding never contributes to the loss
+            labels_list.append(list(item["labels"]) + [-100] * padding_len)
 
         return {
             "input_ids": torch.tensor(input_ids_list, dtype=torch.long),
@@ -201,6 +253,7 @@ def load_dataset(
     dry_run: bool = False,
     response_template: Optional[str] = None,
     batch_size: int = 1,
+    merge_system_prompt: bool = False,
 ):
     """Loads ChatML JSONL, tokenizes via chat template, and configures loss masking."""
     import torch
@@ -210,42 +263,32 @@ def load_dataset(
     if not path.exists():
         raise FileNotFoundError(f"Dataset file not found at: {dataset_path}")
 
-    # Encode response template for completion-only loss masking
-    response_token_ids = None
-    if response_template:
-        response_token_ids = tokenizer.encode(response_template, add_special_tokens=False)
-        print(f"Completion loss masking active. Template: {repr(response_template)} -> Token IDs: {response_token_ids}")
-
-    tokenized_samples: List[Dict[str, List[int]]] = []
+    rows: List[Dict[str, Any]] = []
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
-            if not line:
-                continue
-            entry = json.loads(line)
-            messages = entry.get("messages", [])
-
-            formatted_text = tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=False,
-            )
-
-            tokens = tokenizer(
-                formatted_text,
-                truncation=True,
-                max_length=max_seq_len,
-                add_special_tokens=False,
-            )
-            tokenized_samples.append({"input_ids": tokens["input_ids"]})
-
-            if dry_run and len(tokenized_samples) >= 2:
+            if line:
+                rows.append(json.loads(line))
+            if dry_run and len(rows) >= 2:
                 break
+
+    if response_template:
+        print(f"Completion loss masking active. Template: {repr(response_template)}")
+    if merge_system_prompt:
+        print("System prompt folded into the first user turn (recipe merge_system_prompt).")
+    tokenized_samples, dropped = prepare_samples(rows, tokenizer, max_seq_len, response_template, merge_system_prompt)
+    if dropped:
+        print(
+            f"[WARN] Dropped {dropped}/{len(rows)} rows: the response template or the answer is not "
+            f"within the first {max_seq_len} tokens (truncated, or the template tokenizes differently in context)."
+        )
+    if not tokenized_samples:
+        raise ValueError("No trainable rows left after completion-only masking; check response_template and max_seq_len.")
 
     print(f"Loaded {len(tokenized_samples)} samples from {dataset_path}")
 
     pad_id = tokenizer.pad_token_id if tokenizer.pad_token_id is not None else tokenizer.eos_token_id
-    collate = collate_fn_factory(pad_id, response_token_ids=response_token_ids)
+    collate = collate_fn_factory(pad_id)
     dataset = ChatDataset(tokenized_samples)
     return DataLoader(dataset, batch_size=2 if dry_run else batch_size, shuffle=not dry_run, collate_fn=collate)
 
@@ -423,6 +466,7 @@ def main():
         max_seq_len,
         dry_run=args.dry_run,
         response_template=recipe.response_template,
+        merge_system_prompt=recipe.merge_system_prompt,
         batch_size=batch_size,
     )
 

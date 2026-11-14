@@ -21,6 +21,8 @@ bias: "none"
 
 # Tokenization & Masking
 response_template: "<start_of_turn>model\n"
+# Gemma-2 chat template raises "System role not supported"; every dataset row starts with a system message
+merge_system_prompt: true
 max_seq_len: 2048
 trust_remote_code: false
 

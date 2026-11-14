@@ -40,6 +40,8 @@ class ModelRecipe:
     
     # Tokenization & Loss Masking
     response_template: Optional[str] = None
+    # Fold the system message into the first user turn (templates without a system role, e.g. Gemma-2)
+    merge_system_prompt: bool = False
     max_seq_len: int = 2048
     trust_remote_code: bool = False
     
