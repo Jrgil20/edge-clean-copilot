@@ -31,17 +31,17 @@ Fine-tuned from `Qwen/Qwen2.5-Coder-1.5B-Instruct` via Parameter-Efficient Fine-
 
 - **Purpose:** an extremely light, private refactoring assistant for small, bounded TypeScript artifacts (single entities, services or classes) that must stay on the machine.
 - **Not optimized for speed:** ~12 tokens/s measured on a CPU-only laptop (Intel Core i5-10310U, 15 GB RAM). Long inputs will be slow.
-- **Not a frontier replacement:** 74.8 vs 90.5 for the frontier baseline on our benchmark. Review every output before use.
+- **Not a frontier replacement:** 74.8 / 100 on our benchmark; no frontier model was measured on it. Review every output before use.
 
 ---
 
 ## Key Highlights
 
 - **100% Offline & Air-Gapped:** Zero code leakage. Runs entirely within local RAM (~1.5 GB).
-- **Domain Purity (Zero Leakage):** Eradicates 100% of prohibited external framework/database imports (`express`, `mongoose`, `axios`, `typeorm`, `prisma`) from the core domain layer.
+- **Domain Purity (Zero Leakage):** On the 30-case legacy suite, every output scored the full 30/30 on domain boundary isolation: no prohibited framework/database imports (`express`, `mongoose`, `axios`, `typeorm`, `prisma`) in the domain layer. This is partly by omission: only 4/30 answers contain any import at all (audit E4 in `docs/project/project-analysis.md`).
 - **Hexagonal Port & Adapter Decoupling:** Generates abstract interfaces (`IRepository`, `IPort`, `IGateway`) with constructor dependency injection.
 - **Strict TypeScript Rigor:** Enforces deterministic typing and completely eliminates explicit `any` types.
-- **Measured Gain:** Scores **74.8 / 100 Clean Architecture Score (CAS)**, Grade B, on our 30-case legacy refactoring benchmark (+16.8 points over the base foundation model at 58.0). It does not reach frontier-model quality (90.5 / 100).
+- **Measured Gain:** Scores **74.8 / 100 Clean Architecture Score (CAS)**, Grade B, on our 30-case legacy refactoring benchmark (+16.8 points over the base foundation model at 58.0).
 
 ---
 
@@ -49,13 +49,13 @@ Fine-tuned from `Qwen/Qwen2.5-Coder-1.5B-Instruct` via Parameter-Efficient Fine-
 
 Evaluated against the **30-case Legacy Benchmark Suite** (`legacy_benchmark_suite.jsonl`) via an automated AST syntax analyzer:
 
-| Architectural Dimension | Maximum | Base Model (Qwen 1.5B Q4_K_M) | **Edge Clean Copilot (Q4_K_M)** | Frontier Cloud Reference (unmeasured) |
-| :--- | :---: | :---: | :---: | :---: |
-| **Domain Boundary Isolation** | 30 pts | 24.0 pts | **30.0 pts** | 29.0 pts |
-| **Invariant & Result Pattern** | 25 pts | 0.3 pts | **2.7 pts** | 22.5 pts |
-| **Port & Adapter Decoupling** | 25 pts | 15.8 pts | **22.5 pts** | 23.0 pts |
-| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 17.8 pts | **19.7 pts** | 16.0 pts |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **58.0 pts** | **74.8 pts (Grade B)** | **90.5 pts** |
+| Architectural Dimension | Maximum | Base Model (Qwen 1.5B Q4_K_M) | **Edge Clean Copilot (Q4_K_M)** |
+| :--- | :---: | :---: | :---: |
+| **Domain Boundary Isolation** | 30 pts | 24.0 pts | **30.0 pts** |
+| **Invariant & Result Pattern** | 25 pts | 0.3 pts | **2.7 pts** |
+| **Port & Adapter Decoupling** | 25 pts | 15.8 pts | **22.5 pts** |
+| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 17.8 pts | **19.7 pts** |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **58.0 pts** | **74.8 pts (Grade B)** |
 
 Measured in a head-to-head reproducible run on NVIDIA DGX Spark under identical quantization (Q4_K_M) using the TypeScript compiler AST analyzer (see report `evaluation/reports/spark-20261105T143540Z`).
 

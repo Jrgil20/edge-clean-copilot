@@ -156,12 +156,12 @@ We evaluated models against the **30-case Legacy Benchmark Suite** (`legacy_benc
 
 ARCHITECTURAL DIMENSION          |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD 
 --------------------------------------------------------------------------------------------
-1. Domain Boundary Isolation (30%) |    24.0 / 30    |      30.0 / 30       |    29.0 / 30    
-2. Invariant & Result Safety (25%) |     0.3 / 25    |       2.7 / 25       |    22.5 / 25    
-3. Port & Adapter Decoupling (25%) |    15.8 / 25    |      22.5 / 25       |    23.0 / 25    
-4. TypeScript Type Rigor (20%)   |    17.8 / 20    |      19.7 / 20       |    16.0 / 20    
+1. Domain Boundary Isolation (30%) |    24.0 / 30    |      30.0 / 30       |    n/a          
+2. Invariant & Result Safety (25%) |     0.3 / 25    |       2.7 / 25       |    n/a          
+3. Port & Adapter Decoupling (25%) |    15.8 / 25    |      22.5 / 25       |    n/a          
+4. TypeScript Type Rigor (20%)   |    17.8 / 20    |      19.7 / 20       |    n/a          
 ============================================================================================
-COMPOSITE CAS (0–100 PTS)        |      58.0       |         74.8         |       90.5*     
+COMPOSITE CAS (0–100 PTS)        |      58.0       |         74.8         |       n/a*      
 ============================================================================================
 * Frontier cloud baseline unmeasured on this hardware; base and ECC measured head-to-head on DGX Spark.
 ```
@@ -217,7 +217,7 @@ COMPOSITE CAS (0–100 PTS)        |      58.0       |         74.8         |   
 - **Visuals:** The 4 pillars of Clean Architecture & the CAS metric.
 - **Talking Points:**
   - **Hypothesis:** An air-gapped 1.5B SLM fine-tuned specifically on Clean Architecture refactoring can outperform 70B+ commercial models on architectural purity.
-  - Target: Sub-15ms first token, 50+ tokens/sec on standard laptop CPUs, 100% offline.
+  - Target: Sub-15ms first token, 50+ tokens/sec on standard laptop CPUs, 100% offline. (Measured: ~12 tok/s on a CPU-only i5-10310U; first-token latency was not measured.)
 
 ---
 
@@ -278,7 +278,7 @@ COMPOSITE CAS (0–100 PTS)        |      58.0       |         74.8         |   
 - **Visuals:** Embed [`benchmark_comparison_chart.svg`](../../evaluation/benchmark_comparison_chart.svg) and the comparative matrix.
 - **Talking Points:**
   - **Base Model (Qwen 1.5B):** 58.0 pts (measured). Struggles with port decoupling and layer boundaries.
-  - **Frontier Cloud Baseline:** 90.5 pts (unmeasured reference). Strong, but requires cloud.
+  - **Frontier Cloud Baseline:** not measured on this suite; no frontier comparison can be claimed.
   - **Edge Clean Copilot (GGUF):** **74.8 pts (Grade B)**. **+16.8 pt gain** over the base model.
   - Highlights: full score on domain boundary isolation (30.0 / 30); invariant (11.7 / 25) and port (16.0 / 25) scores remain below the frontier baseline.
 

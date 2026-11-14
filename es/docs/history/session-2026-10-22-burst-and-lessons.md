@@ -1,5 +1,7 @@
 # Reporte Técnico de Sesión: Generación Sintética con Teacher y Setup del Runtime ML
 
+> **Cifras superadas.** Este documento se conserva tal como se escribió en su fecha. Algunas de sus afirmaciones (latencia del primer token y throughput, que nunca se midieron de forma reproducible) están corregidas en [project-analysis.md](../project/project-analysis.md), §5.5. Velocidad medida: ~12 tok/s en un i5-10310U solo con CPU.
+
 > **Fecha de Sesión:** 22 de Octubre de 2026  
 > **Infraestructura Objetivo:** NVIDIA DGX Spark (`spark-0fbc`, `192.168.6.35/26`, Superchip GB10, 128 GB Memoria Unificada)  
 > **Metodología Operativa:** "Cold Staging, Hot Burst"  

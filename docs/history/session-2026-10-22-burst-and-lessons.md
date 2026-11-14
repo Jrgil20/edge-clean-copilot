@@ -1,5 +1,7 @@
 # Technical Session Report: Teacher Dataset Burst & ML Runtime Initialization
 
+> **Superseded figures.** This document is kept as written on its date. Some of its claims (first-token latency and throughput, which were never measured reproducibly) are corrected in [project-analysis.md](../project/project-analysis.md), §5.5. Measured speed: ~12 tok/s on a CPU-only i5-10310U.
+
 > **Session Date:** October 22, 2026  
 > **Target Infrastructure:** NVIDIA DGX Spark (`spark-0fbc`, `192.168.6.35/26`, GB10 Superchip, 128 GB Unified Memory)  
 > **Operational Paradigm:** "Cold Staging, Hot Burst"  

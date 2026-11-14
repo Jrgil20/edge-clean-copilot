@@ -156,12 +156,12 @@ Evaluamos los modelos contra la **Suite de Benchmark Legacy de 30 casos** (`lega
 
 DIMENSIÓN ARQUITECTÓNICA         |    BASE 1.5B    |  EDGE CLEAN COPILOT  |  FRONTIER CLOUD 
 --------------------------------------------------------------------------------------------
-1. Aislamiento de Dominio (30%)  |    24.0 / 30    |      30.0 / 30       |    29.0 / 30    
-2. Invariantes y Result (25%)    |     0.3 / 25    |       2.7 / 25       |    22.5 / 25    
-3. Puertos y Adaptadores (25%)   |    15.8 / 25    |      22.5 / 25       |    23.0 / 25    
-4. Rigor de Tipos (20%)          |    17.8 / 20    |      19.7 / 20       |    16.0 / 20    
+1. Aislamiento de Dominio (30%)  |    24.0 / 30    |      30.0 / 30       |    n/a          
+2. Invariantes y Result (25%)    |     0.3 / 25    |       2.7 / 25       |    n/a          
+3. Puertos y Adaptadores (25%)   |    15.8 / 25    |      22.5 / 25       |    n/a          
+4. Rigor de Tipos (20%)          |    17.8 / 20    |      19.7 / 20       |    n/a          
 ============================================================================================
-PUNTAJE COMPUESTO CAS (0–100)    |      58.0       |         74.8         |       90.5*     
+PUNTAJE COMPUESTO CAS (0–100)    |      58.0       |         74.8         |       n/a*      
 ============================================================================================
 * Línea base comercial no medida en este hardware; Base y ECC medidos head-to-head en DGX Spark.
 ```
@@ -217,7 +217,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      58.0       |         74.8         |   
 - **Visual:** Los 4 pilares de Clean Architecture y la fórmula CAS.
 - **Puntos a Exponer:**
   - **Hipótesis:** Un SLM de 1.5B parámetros offline, entrenado específicamente para refactorizar, puede superar a modelos de 70B+ en pureza arquitectónica.
-  - Objetivo: Menos de 15ms de latencia inicial, más de 50 tokens/s en CPU y 100% desconectado.
+  - Objetivo: Menos de 15ms de latencia inicial, más de 50 tokens/s en CPU y 100% desconectado. (Medido: ~12 tok/s en un i5-10310U solo con CPU; la latencia del primer token no se midió.)
 
 ---
 
@@ -275,7 +275,7 @@ PUNTAJE COMPUESTO CAS (0–100)    |      58.0       |         74.8         |   
 - **Visual:** Gráfico vectorial [`benchmark_comparison_chart.svg`](../../../evaluation/benchmark_comparison_chart.svg) y matriz comparativa.
 - **Puntos a Exponer:**
   - **Modelo Base (1.5B):** 58.0 pts (medido). Presenta dificultades con aislamiento de capas y desacoplamiento.
-  - **Línea Base Cloud:** 90.5 pts (referencia no medida). Excelente, pero requiere nube.
+  - **Línea Base Cloud:** no se midió en esta suite; no se puede afirmar ninguna comparación con modelos frontera.
   - **Edge Clean Copilot (GGUF):** **74.8 pts (Grado B)**. **+16.8 pts de ganancia** sobre la base.
   - Aislamiento de dominio al máximo (30.0 / 30) y puertos sólidos (22.5 / 25); invariantes (2.7 / 25) siguen como área de mejora.
 

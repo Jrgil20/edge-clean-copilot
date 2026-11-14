@@ -11,7 +11,7 @@
 
 ## 1. Executive Findings
 
-Measured on the 30-case legacy suite, the fine-tuned **Edge Clean Copilot** improves on its base model by 16.8 CAS points (+29.0%) but does not reach the frontier baseline:
+Measured on the 30-case legacy suite, the fine-tuned **Edge Clean Copilot** improves on its base model by 16.8 CAS points (+29.0%). No frontier model was run on this suite:
 
 $$\Delta \text{CAS} = +16.8\text{ pts} \quad (+29.0\% \text{ improvement over base foundation model})$$
 
@@ -25,13 +25,13 @@ _Single-run variance: a 2026-10-29 rerun measured 73.8 CAS (invariant 2.0), so t
 
 ## 2. Architectural Scoring Matrix (CAS 0–100)
 
-| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Frontier Cloud (Gemini 3.8 Flash) | Net Improvement (ECC vs Base) |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Domain Boundary Isolation** | 30 pts | 24.0 pts | **30.0 pts** | 29.0 pts | **+6.0 pts** |
-| **Invariant & Result Pattern** | 25 pts | 0.3 pts | **2.7 pts** | 22.5 pts | **+2.4 pts** |
-| **Port & Adapter Decoupling** | 25 pts | 15.8 pts | **22.5 pts** | 23.0 pts | **+6.7 pts** |
-| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 17.8 pts | **19.7 pts** | 16.0 pts | **+1.9 pts** |
-| **TOTAL CAS COMPOSITE** | **100 pts** | **58.0 pts** | **74.8 pts (Grade B)** | **90.5 pts (Grade A)** | **+16.8 pts (+29.0%)** |
+| Architectural Dimension | Maximum Points | Base Model (Qwen 1.5B) | **Edge Clean Copilot (GGUF)** | Net Improvement (ECC vs Base) |
+| :--- | :---: | :---: | :---: | :---: |
+| **Domain Boundary Isolation** | 30 pts | 24.0 pts | **30.0 pts** | **+6.0 pts** |
+| **Invariant & Result Pattern** | 25 pts | 0.3 pts | **2.7 pts** | **+2.4 pts** |
+| **Port & Adapter Decoupling** | 25 pts | 15.8 pts | **22.5 pts** | **+6.7 pts** |
+| **TypeScript Type Rigor (Zero `any`)** | 20 pts | 17.8 pts | **19.7 pts** | **+1.9 pts** |
+| **TOTAL CAS COMPOSITE** | **100 pts** | **58.0 pts** | **74.8 pts (Grade B)** | **+16.8 pts (+29.0%)** |
 
 ---
 
@@ -39,7 +39,7 @@ _Single-run variance: a 2026-10-29 rerun measured 73.8 CAS (invariant 2.0), so t
 
 | Metric | Base Model (1.5B F16) | **Edge Clean Copilot (`Q4_K_M`)** | Frontier Cloud LLM | Operational Advantage |
 | :--- | :---: | :---: | :---: | :--- |
-| **Generation Speed** | ~52.0 tok/s (unverified) | **~12.0 tok/s (measured, CPU)** | ~85.0 tok/s (unverified) | Usable on CPU; slow on long inputs |
+| **Generation Speed** | not measured | **~12.0 tok/s (measured, CPU)** | not measured | Usable on CPU; slow on long inputs |
 | **System RAM Footprint** | ~3.1 GB | **~1.5 GB** | 0 GB (Cloud) | Runs easily alongside developer IDE |
 | **Disk Binary Footprint** | ~0.94 GB | **~0.94 GB** | 0 MB (API) | Lightweight portable distribution |
 | **Network & Privacy** | Offline | **100% Offline / Zero Telemetry** | Internet Required | Complete proprietary code protection |
