@@ -17,6 +17,8 @@ proyecto/cli/src/
 │   │   └── RefactorDTO.ts     # Input and output boundary data transfers
 │   ├── ports/
 │   │   └── IInferenceEngine.ts # Primary outbound inference port contract
+│   ├── services/
+│   │   └── extractCodeBlocks.ts # Keeps only the fenced code of a model reply
 │   └── use-cases/
 │       └── RefactorCodeUseCase.ts # Orchestrates domain verification and inference
 │
@@ -25,9 +27,11 @@ proyecto/cli/src/
 │   │   ├── MockInferenceAdapter.ts # Deterministic offline adapter for unit testing
 │   │   └── LlamaServerAdapter.ts   # HTTP adapter for local llama-server completions
 │   ├── fs/
-│   │   └── FileDiskReader.ts       # Filesystem reader adapter
+│   │   ├── FileDiskReader.ts       # Filesystem reader adapter
+│   │   └── FileDiskWriter.ts       # Filesystem writer adapter (--output)
 │   └── cli/
-│       └── index.ts                # Commander executable composition root
+│       ├── index.ts                # Commander executable composition root
+│       └── TerminalDiffFormatter.ts # Colored +/- diff for --diff
 │
 └── shared/                    # Reusable primitives
     ├── errors/
@@ -69,3 +73,26 @@ pnpm run dev refactor src/domain/entities/SourceFile.ts
 # Custom endpoint and model name
 pnpm run dev refactor src/domain/entities/SourceFile.ts --url http://192.168.6.34:8080 --model Qwen3-Coder-30B
 ```
+
+### `refactor` options
+
+| Flag | Env var (default source) | Default | Effect |
+|------|--------------------------|---------|--------|
+| `-m, --mock` | — | off | Deterministic mock engine, no server needed |
+| `-u, --url <url>` | `CLEAN_COPILOT_URL`, then `LLAMA_SERVER_URL` | `http://127.0.0.1:8080` | llama-server base URL (`/v1/chat/completions` is appended) |
+| `-n, --model <model>` | `CLEAN_COPILOT_MODEL` | `clean-copilot` | Model name sent in the request |
+| `-d, --diff` | — | off | Print a colored diff instead of the full code |
+| `-o, --output <path>` | — | — | Also write the code to `<path>` (refuses to overwrite the input) |
+| `-t, --temperature <number>` | — | `0.1` | Sampling temperature, 0–2 |
+| `--max-tokens <number>` | — | `2048` | Generation budget; a reply that hits it fails as truncated |
+| `--timeout <ms>` | `CLEAN_COPILOT_TIMEOUT_MS` | `300000` | Request timeout; CPU inference runs at ~12 tok/s, so 2048 tokens take ~165 s |
+
+### Output contract
+
+| Stream | Content |
+|--------|---------|
+| stdout | Only the result: the refactored code, or the diff with `--diff` |
+| stderr | Banner, settings, status and errors |
+| exit code | `0` on success, `1` on any error |
+
+The model answers with prose around fenced code blocks; the CLI keeps only the code inside the fences (joined by a blank line), so `clean-copilot refactor in.ts > out.ts` and `-o out.ts` both produce a source file.

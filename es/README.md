@@ -162,7 +162,10 @@ Requiere `llama-server` sirviendo el GGUF (por defecto `http://127.0.0.1:8080`),
 clean-copilot refactor ruta/a/Archivo.ts --diff
 clean-copilot refactor ruta/a/Archivo.ts -o ruta/a/ArchivoRefactorizado.ts
 clean-copilot refactor ruta/a/Archivo.ts --mock
+clean-copilot refactor ruta/a/Archivo.ts > ArchivoRefactorizado.ts   # stdout solo contiene el código
 ```
+
+Los mensajes de estado van a stderr. En CPU una respuesta completa tarda minutos (~12 tok/s); el tiempo de espera por defecto es 300 s (`--timeout <ms>` o `CLEAN_COPILOT_TIMEOUT_MS`). Todas las opciones: [`cli/README.md`](../cli/README.md#refactor-options).
 
 ### 5.2 Enrutar Copilot de VS Code a un modelo local
 

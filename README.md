@@ -162,7 +162,10 @@ Requires `llama-server` running the GGUF (default `http://127.0.0.1:8080`), or `
 clean-copilot refactor path/to/File.ts --diff
 clean-copilot refactor path/to/File.ts -o path/to/RefactoredFile.ts
 clean-copilot refactor path/to/File.ts --mock
+clean-copilot refactor path/to/File.ts > RefactoredFile.ts   # stdout holds only the code
 ```
+
+Status lines go to stderr. On CPU a full answer takes minutes (~12 tok/s); the request timeout defaults to 300 s (`--timeout <ms>` or `CLEAN_COPILOT_TIMEOUT_MS`). All flags: [`cli/README.md`](cli/README.md#refactor-options).
 
 ### 5.2 Route VS Code Copilot to a local model
 
